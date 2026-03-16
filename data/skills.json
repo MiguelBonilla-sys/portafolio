@@ -1,0 +1,22 @@
+[
+  {
+    "id": "frontend",
+    "label": "Frontend",
+    "items": ["WordPress", "Next.js", "Vite", "JavaScript", "TypeScript", "HTML", "CSS", "Tailwind"]
+  },
+  {
+    "id": "backend",
+    "label": "Backend",
+    "items": ["Python", "Django", "FastAPI", "PHP", "Node.js", "Java", "REST APIs"]
+  },
+  {
+    "id": "db-cloud",
+    "label": "DB & Cloud",
+    "items": ["PostgreSQL", "MySQL", "Supabase", "Docker", "Linux", "Git / GitHub"]
+  },
+  {
+    "id": "automation",
+    "label": "Automatización & CRM",
+    "items": ["n8n", "Make", "GoHighLevel", "HubSpot", "Lovable Cloud"]
+  }
+]

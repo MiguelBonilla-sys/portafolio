@@ -1,0 +1,9 @@
+.toggle {
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.toggle:hover {
+  color: var(--accent);
+  background: transparent !important;
+}

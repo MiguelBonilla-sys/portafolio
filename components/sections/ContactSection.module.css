@@ -1,0 +1,156 @@
+.section {
+  padding: 7rem 4rem;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoText {
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.contactLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.contactValue {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contactValue:hover {
+  color: var(--text-bright);
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.formInput,
+.formTextarea {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  padding: 0.85rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  resize: none;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  border-color: var(--accent);
+}
+
+.formTextarea {
+  height: 140px;
+}
+
+.formSubmit {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1rem 2.5rem;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  align-self: flex-start;
+  transition: all 0.2s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.formSubmit:hover {
+  background: var(--text-bright);
+  transform: translateY(-2px);
+}
+
+.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Honeypot — visualmente invisible, accesible para humanos */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Estados de respuesta del formulario */
+.statusWrapper {
+  min-height: 1.5rem;
+}
+
+.statusSuccess {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--accent2);
+  letter-spacing: 0.05em;
+}
+
+.statusError {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--accent3);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .section {
+    grid-template-columns: 1fr;
+    padding: 4rem 1.5rem;
+    gap: 3rem;
+  }
+}

@@ -1,0 +1,123 @@
+.card {
+  /* Reset button defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transition: transform 0.3s;
+  transform-origin: left;
+}
+
+.card:hover::before,
+.card:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: rgba(0, 229, 255, 0.3);
+  transform: translateY(-4px);
+  outline: none;
+}
+
+[data-mantine-color-scheme="light"] .card:hover,
+[data-mantine-color-scheme="light"] .card:focus-visible {
+  border-color: rgba(0, 119, 204, 0.3);
+}
+
+.lang {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  color: var(--accent3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.8rem;
+}
+
+.desc {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  background: var(--bg2);
+  /* Prevent pointer-events from bubbling to the button */
+  pointer-events: none;
+}
+
+/* Subtle "Ver detalles" hint at the bottom */
+.cta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s, transform 0.25s;
+  margin-top: auto;
+  padding-top: 0.6rem;
+  border-top: 1px solid transparent;
+}
+
+.card:hover .cta,
+.card:focus-visible .cta {
+  opacity: 1;
+  transform: translateX(0);
+  border-top-color: var(--border);
+}
+
+/* Featured card — slightly elevated visual treatment */
+.cardFeatured {
+  border-color: rgba(0, 229, 255, 0.15);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(0, 229, 255, 0.03) 100%);
+}
+
+[data-mantine-color-scheme="light"] .cardFeatured {
+  border-color: rgba(0, 119, 204, 0.2);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(0, 119, 204, 0.04) 100%);
+}

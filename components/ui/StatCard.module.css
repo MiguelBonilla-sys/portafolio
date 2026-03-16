@@ -1,0 +1,36 @@
+.card {
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.number {
+  font-family: var(--font-mono), monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+  font-family: var(--font-mono), monospace;
+}

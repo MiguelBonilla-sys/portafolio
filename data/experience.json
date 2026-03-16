@@ -1,0 +1,26 @@
+[
+  {
+    "id": "coordenadas",
+    "date": "Sep 2025 — Presente",
+    "title": "Full Stack Developer",
+    "place": "Coordenadas.co · Bogotá, Colombia",
+    "description": "Desarrollo de plataformas web escalables y sistemas de automatización orientados a ecosistemas digitales. Integración de CRMs, APIs y flujos automatizados con n8n, Make y GoHighLevel.",
+    "type": "work"
+  },
+  {
+    "id": "usb",
+    "date": "2021 — Presente",
+    "title": "Ingeniería de Sistemas",
+    "place": "Universidad de San Buenaventura · Bogotá, Colombia",
+    "description": "Noveno semestre. Énfasis en arquitectura de software, sistemas distribuidos, redes y desarrollo de aplicaciones. Proyectos en Java, Python y tecnologías web modernas.",
+    "type": "education"
+  },
+  {
+    "id": "autodidacta",
+    "date": "Autodidacta",
+    "title": "Full Stack & Automatización Web",
+    "place": "Cursos / Práctica independiente",
+    "description": "Formación continua en WordPress, Next.js, Supabase, Docker y herramientas de automatización. Construcción de proyectos propios enfocados en CRM y arquitecturas cloud.",
+    "type": "self"
+  }
+]

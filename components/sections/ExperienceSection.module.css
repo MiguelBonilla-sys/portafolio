@@ -1,0 +1,45 @@
+.section {
+  position: relative;
+  padding: 7rem 4rem;
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* Canvas como fondo absoluto — ocupa toda la sección sin recuadro */
+.canvasBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Contenido por encima del canvas */
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+
+.timeline {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 4rem 1.5rem;
+  }
+  .content {
+    max-width: 100%;
+  }
+}

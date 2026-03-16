@@ -1,26 +1,90 @@
+@import "@mantine/core/styles.css";
 @import "tailwindcss";
 
+/* ── DARK THEME (default) ── */
+[data-mantine-color-scheme="dark"],
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #080c10;
+  --bg2: #0d1117;
+  --surface: #111820;
+  --border: #1e2d3d;
+  --accent: #00e5ff;
+  --accent2: #7fff00;
+  --accent3: #ff6b35;
+  --text: #c9d1d9;
+  --text-muted: #586069;
+  --text-bright: #f0f6fc;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-syne), system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+section {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.anim         { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+.anim-d1      { animation-delay: 0.1s; }
+.anim-d2      { animation-delay: 0.25s; }
+.anim-d3      { animation-delay: 0.4s; }
+.anim-d4      { animation-delay: 0.55s; }
+.anim-d5      { animation-delay: 0.7s; }
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .anim {
+    opacity: 1;
+    animation: none;
+  }
 }

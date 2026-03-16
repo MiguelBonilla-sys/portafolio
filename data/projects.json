@@ -1,0 +1,74 @@
+[
+  {
+    "id": "pizzeria-casa",
+    "title": "Pizzería de la Casa App",
+    "language": "Java",
+    "description": "Aplicación de gestión para una pizzería. Manejo de pedidos, inventario y clientes con interfaz gráfica en Java.",
+    "tags": ["Java", "Swing", "Maven"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/PizzeriaDeLaCasaApp2",
+      "demo": null
+    },
+    "featured": true
+  },
+  {
+    "id": "eco-recicla",
+    "title": "EcoRecicla",
+    "language": "Java",
+    "description": "Aplicación orientada a la sostenibilidad y el reciclaje. Gestión de puntos de reciclaje y usuarios con enfoque en impacto ambiental.",
+    "tags": ["Java", "Swing", "OOP"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/EcoRecicla",
+      "demo": null
+    },
+    "featured": true
+  },
+  {
+    "id": "redes-sockets",
+    "title": "Redes Sockets TCP/UDP",
+    "language": "Java",
+    "description": "Implementaciones de servidores TCP y UDP en Java. Los servidores reciben mensajes de clientes y exponen información sobre conexiones entrantes.",
+    "tags": ["Java", "TCP", "UDP", "Sockets"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/Redes_Sockets",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "gabinete-abogados",
+    "title": "Gabinete Abogados App",
+    "language": "Java",
+    "description": "Sistema de gestión para un gabinete de abogados. Manejo de casos, clientes y agenda jurídica en aplicación de escritorio.",
+    "tags": ["Java", "Swing", "SQL"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/GabineteAbogadosApp",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "sis-dist-tcp-udp",
+    "title": "SIS_DIST TCP/UDP",
+    "language": "Python",
+    "description": "Sistemas distribuidos con implementación de comunicación TCP y UDP en Python. Proyecto académico de redes y sistemas.",
+    "tags": ["Python", "TCP", "UDP", "Distributed Systems"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/SIS_DIST-TCP-UDP",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "more-repos",
+    "title": "Más proyectos en GitHub",
+    "language": "Ver todos →",
+    "description": "Explora más de 35 repositorios con proyectos en Java, Python, web y automatización.",
+    "tags": [],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys?tab=repositories",
+      "demo": null
+    },
+    "featured": false
+  }
+]

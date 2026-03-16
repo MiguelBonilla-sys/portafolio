@@ -1,0 +1,29 @@
+.section {
+  padding: 7rem 4rem;
+  border-top: 1px solid var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* Featured cards span 2 columns in the bento grid */
+.featured {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 4rem 1.5rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .featured {
+    grid-column: span 1;
+  }
+}
+
