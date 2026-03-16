@@ -8,6 +8,7 @@ export interface Project {
   title: string;
   language: string;
   description: string;
+  longDescription?: string;
   tags: string[];
   links: ProjectLink;
   featured: boolean;

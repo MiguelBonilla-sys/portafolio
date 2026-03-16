@@ -1,60 +1,91 @@
 [
   {
-    "id": "pizzeria-casa",
-    "title": "Pizzería de la Casa App",
-    "language": "Java",
-    "description": "Aplicación de gestión para una pizzería. Manejo de pedidos, inventario y clientes con interfaz gráfica en Java.",
-    "tags": ["Java", "Swing", "Maven"],
+    "id": "seguimiento-bibliografico-ollama",
+    "title": "Seguimiento Bibliográfico con LLM",
+    "language": "Python",
+    "description": "Genera documentos .docx de seguimiento bibliográfico a partir de referencias académicas usando un LLM local vía Ollama.",
+    "longDescription": "Sistema en Python que automatiza la generación de documentos .docx de seguimiento bibliográfico a partir de un JSON con referencias académicas (DOI, arXiv, GitHub, web, PDF). Extrae metadatos reales de CrossRef, OpenAlex y arXiv, y los combina con un análisis profundo generado por un LLM local corriendo en Ollama con detección automática de GPU (NVIDIA/CUDA, AMD/ROCm) o CPU.\n\nEl sistema cubre cuatro modos de operación: solo metadatos (sin LLM), análisis en CPU, análisis en GPU y configuración inicial. Cada documento generado incluye datos generales, referencia IEEE, abstract, análisis de contenido (metodología, resultados, aportes, limitaciones) y relación con el proyecto del investigador. Soporta modelos como Mistral, Phi-3 Mini y LLaMA 3, con tiempos de 30–90 segundos por documento en GPU.",
+    "tags": ["Python", "Ollama", "LLM", "NLP", "python-docx", "GPU"],
     "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/PizzeriaDeLaCasaApp2",
+      "repo": "https://github.com/MiguelBonilla-sys/seguimiento-bibliografico-ollama",
       "demo": null
     },
     "featured": true
   },
   {
-    "id": "eco-recicla",
-    "title": "EcoRecicla",
-    "language": "Java",
-    "description": "Aplicación orientada a la sostenibilidad y el reciclaje. Gestión de puntos de reciclaje y usuarios con enfoque en impacto ambiental.",
-    "tags": ["Java", "Swing", "OOP"],
+    "id": "api-auth-hackaton",
+    "title": "API Auth Gateway",
+    "language": "Python",
+    "description": "API Gateway con FastAPI que proporciona acceso autenticado a una API de inventario externa mediante control de propiedad basado en JWT.",
+    "longDescription": "API Gateway construido con FastAPI que actúa como proxy seguro frente a una API externa de inventario de activos universitarios. El sistema implementa autenticación completa con tokens JWT de acceso y refresh, registro de usuarios con bcrypt, y un control de acceso basado en propiedad: cada usuario solo puede consultar los activos que le pertenecen según el campo `dueno_de_activo`, mientras que los superusuarios ven el conjunto completo.\n\nEl gateway fue desplegado en Railway con PostgreSQL como base de datos, usa httpx como cliente HTTP asíncrono para el proxy, e integra Sentry para monitoreo de errores y rendimiento. La arquitectura es completamente asíncrona (async/await) con separación en capas: routers, servicios, modelos SQLAlchemy 2.0 con anotaciones tipadas, y esquemas Pydantic para validación. Incluye Docker, docker-compose y scripts de utilidad para carga masiva de usuarios.",
+    "tags": ["Python", "FastAPI", "JWT", "PostgreSQL", "SQLAlchemy", "Railway", "Docker"],
     "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/EcoRecicla",
+      "repo": "https://github.com/MiguelBonilla-sys/API_AUTH_HACKATON",
       "demo": null
     },
     "featured": true
+  },
+  {
+    "id": "flask-api",
+    "title": "Flask API — Gestión de Videojuegos",
+    "language": "Python",
+    "description": "API REST en Flask para gestión de videojuegos con CRUD completo, Swagger/OpenAPI, PostgreSQL y despliegue en Railway.",
+    "longDescription": "API REST robusta construida con Flask 3 y SQLAlchemy 2 para gestionar un catálogo de videojuegos. Expone endpoints CRUD completos con filtros por categoría, precio y valoración, paginación y endpoints de estadísticas. La documentación es automática gracias a Flasgger, que genera una UI Swagger interactiva en `/apidocs/` donde se pueden probar todos los endpoints directamente.\n\nEl proyecto sigue una arquitectura modular estricta con capas separadas: Controllers, Services, Models, Routes y Schemas. Incluye manejo centralizado de errores, logging estructurado, CORS configurado para consumo desde frontend, Dockerfile para contenedorización y configuración de Procfile + railway.json para despliegue directo en Railway con PostgreSQL como base de datos en producción.",
+    "tags": ["Python", "Flask", "PostgreSQL", "SQLAlchemy", "Swagger", "Docker", "Railway"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/FlaskAPI",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "etl-parcial",
+    "title": "ETL Pipeline — Dow Jones Sentiment",
+    "language": "Python",
+    "description": "Pipeline ETL completo con PySpark para análisis de sentimiento de noticias del Dow Jones, con visualizaciones y almacenamiento multi-formato.",
+    "longDescription": "Pipeline ETL de producción que procesa 4.101 registros de noticias del Dow Jones (2008–2016) usando PySpark con Adaptive Query Execution. La etapa de extracción valida el schema del CSV y ejecuta quality checks automáticos. La transformación aplica feature engineering: limpieza de nulos, conversión de fechas, indicadores de sentimiento, estadísticas de texto, agregación de titulares y features temporales.\n\nLa carga multi-formato escribe en Parquet (compresión Snappy), CSV, SQLite con índices optimizados y JSON. Las visualizaciones incluyen distribución de clases, evolución temporal del sentimiento, nubes de palabras, top unigramas/bigramas y un dashboard interactivo con Plotly. El pipeline completo corre en menos de 60 segundos con menos de 4 GB de RAM, incluye suite de tests unitarios e integración con pytest, y se dockeriza para reproducibilidad.",
+    "tags": ["Python", "PySpark", "ETL", "Pandas", "Plotly", "SQLite", "Docker"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/ETL_PARCIAL",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "geo-streamlit",
+    "title": "GEO Streamlit",
+    "language": "Python",
+    "description": "Dashboard geoespacial interactivo construido con Streamlit para visualización y análisis de datos geográficos.",
+    "longDescription": "Aplicación web de análisis geoespacial desarrollada con Streamlit que permite explorar y visualizar datos geográficos de forma interactiva sin necesidad de un backend separado. La app carga datasets georreferenciados, aplica filtros dinámicos por región o categoría y renderiza mapas interactivos directamente en el navegador.\n\nEl proyecto demuestra el uso de Streamlit como herramienta de prototipado rápido para dashboards de datos: sin JavaScript, sin configuración de servidor, solo Python. Los datos se procesan con pandas y las visualizaciones geoespaciales se construyen con bibliotecas como Folium o PyDeck integradas en el flujo reactivo de Streamlit.",
+    "tags": ["Python", "Streamlit", "Geoespacial", "Pandas", "Data Viz"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/GEO_STREAMLIT",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "pizzeria-casa",
+    "title": "Pizzería de la Casa App",
+    "language": "Java",
+    "description": "App móvil Android para gestión de pedidos, menú e inventario de una pizzería, con seguimiento de estado en tiempo real.",
+    "longDescription": "Aplicación móvil Android desarrollada en Java con Android Studio que digitaliza la operación completa de una pizzería. Los clientes pueden explorar el menú con imágenes y descripciones, personalizar pizzas por ingredientes, tamaño y masa, gestionar un carrito de compras y hacer seguimiento en tiempo real del estado de su pedido (preparación → en camino → entregado). También guarda historial de pedidos para repetición rápida.\n\nEl panel de administración permite al personal gestionar pedidos entrantes, actualizar su estado, controlar el inventario de ingredientes y consultar reportes de ventas. La arquitectura sigue el patrón MVC/MVVM con persistencia local en SQLite/Room, adaptadores para listas dinámicas y recursos XML para la UI. El proyecto se construye con Gradle (Kotlin DSL).",
+    "tags": ["Java", "Android", "Android Studio", "SQLite", "Gradle", "MVC"],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/PizzeriaDeLaCasaApp2",
+      "demo": null
+    },
+    "featured": false
   },
   {
     "id": "redes-sockets",
     "title": "Redes Sockets TCP/UDP",
     "language": "Java",
-    "description": "Implementaciones de servidores TCP y UDP en Java. Los servidores reciben mensajes de clientes y exponen información sobre conexiones entrantes.",
-    "tags": ["Java", "TCP", "UDP", "Sockets"],
+    "description": "Implementaciones de servidores TCP y UDP en Java con interfaces gráficas de cliente para comunicación en red.",
+    "longDescription": "Proyecto de la asignatura Redes de Computadores que implementa servidores concurrentes TCP y UDP en Java puro. El servidor TCP escucha en el puerto 5004 y viene acompañado de un cliente con interfaz gráfica que permite conectarse ingresando IP y nombre, enviar y recibir mensajes en tiempo real, y controlar la conexión con botones de desconectar/reconectar. Muestra información detallada de cada cliente conectado.\n\nEl servidor UDP escucha en el puerto 9107, recibe datagramas de múltiples clientes sin mantener estado de conexión, muestra la IP y puerto de origen de cada mensaje, y se detiene tras recibir un máximo configurable de mensajes. El proyecto está construido con Maven y demuestra las diferencias fundamentales entre los modelos de comunicación orientado a conexión (TCP) y sin conexión (UDP).",
+    "tags": ["Java", "TCP", "UDP", "Sockets", "Maven", "Redes"],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/Redes_Sockets",
-      "demo": null
-    },
-    "featured": false
-  },
-  {
-    "id": "gabinete-abogados",
-    "title": "Gabinete Abogados App",
-    "language": "Java",
-    "description": "Sistema de gestión para un gabinete de abogados. Manejo de casos, clientes y agenda jurídica en aplicación de escritorio.",
-    "tags": ["Java", "Swing", "SQL"],
-    "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/GabineteAbogadosApp",
-      "demo": null
-    },
-    "featured": false
-  },
-  {
-    "id": "sis-dist-tcp-udp",
-    "title": "SIS_DIST TCP/UDP",
-    "language": "Python",
-    "description": "Sistemas distribuidos con implementación de comunicación TCP y UDP en Python. Proyecto académico de redes y sistemas.",
-    "tags": ["Python", "TCP", "UDP", "Distributed Systems"],
-    "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/SIS_DIST-TCP-UDP",
       "demo": null
     },
     "featured": false

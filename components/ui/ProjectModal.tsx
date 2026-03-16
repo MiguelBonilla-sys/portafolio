@@ -110,7 +110,13 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             <div className={styles.divider} />
 
             {/* Description */}
-            <p className={styles.desc}>{project.description}</p>
+            <div className={styles.desc}>
+              {(project.longDescription ?? project.description)
+                .split("\n\n")
+                .map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+            </div>
 
             {/* Stats */}
             <div className={styles.stats}>

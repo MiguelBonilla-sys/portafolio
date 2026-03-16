@@ -115,6 +115,9 @@
 
 /* ── Description ── */
 .desc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   font-size: 0.95rem;
   line-height: 1.85;
   color: var(--text);
