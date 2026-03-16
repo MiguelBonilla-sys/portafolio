@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Miguel Bonilla", url: "https://github.com/MiguelBonilla-sys" }],
   creator: "Miguel Bonilla",
   icons: {
-    icon: "public/favicon.ico",
+    icon: "favicon.ico",
   },
   robots: {
     index: true,

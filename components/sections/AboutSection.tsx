@@ -13,6 +13,8 @@ const stats = [
 ];
 
 export default function AboutSection() {
+  const avatarSrc = "/avatar.png?v=20260315";
+
   return (
     <section id="sobreMi" className={styles.section}>
       <div className={styles.text}>
@@ -52,7 +54,7 @@ export default function AboutSection() {
       <AnimatedEntry delay={0.15} yOffset={40}>
         <div className={styles.imgPlaceholder}>
           <Image
-            src="/avatar.png"
+            src={avatarSrc}
             alt="Miguel Bonilla"
             width={520}
             height={580}

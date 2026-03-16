@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    localPatterns: [
+      {
+        pathname: "/avatar.png",
+        search: "?v=20260315",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
