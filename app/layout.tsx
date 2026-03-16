@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, JetBrains_Mono } from "next/font/google";
 import { ColorSchemeScript, MantineProvider, createTheme } from "@mantine/core";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import "./globals.css";
 
 const syne = Syne({
@@ -88,6 +89,7 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="dark" />
       </head>
       <body className={`${syne.variable} ${jetbrainsMono.variable}`}>
+        <GoogleAnalytics />
         <MantineProvider theme={theme} defaultColorScheme="dark">{children}</MantineProvider>
       </body>
     </html>
