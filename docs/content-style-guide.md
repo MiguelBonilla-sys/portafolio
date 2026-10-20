@@ -1,6 +1,6 @@
 # Guía de estilo anti-slop (v1.0)
 
-Esta guía es el system prompt del agente redactor y del editor en Langflow, y la referencia para revisar a mano. Se basa en:
+Esta guía es el system prompt de los nodos redactor y editor del grafo LangGraph (copiada en `agent/prompts/style-guide.md`), y la referencia para revisar a mano. Se basa en:
 - `conorbronsdon/avoid-ai-writing` (v3.38, MIT): niveles P0/P1/P2 y la regla de no inventar.
 - `blader/humanizer` (skill `humanizer`, ya activo en tu cuenta): catálogo de "Signs of AI writing" de Wikipedia.
 - `avikbal-dm/anti-ai-writing-claude-skill`: pedir los datos que faltan en vez de rellenarlos.
@@ -158,7 +158,7 @@ Marcas: emoji de apertura, apertura de plantilla, paralelismo negativo, vocabula
 - [ ] Lo diría así en una conversación con un colega.
 - [ ] El post no tiene enlaces en el cuerpo.
 
-## 9. Patrones para el linter determinista (T22)
+## 9. Patrones para el linter determinista (T22, `agent/lib/lint.ts`)
 
 Expresiones regulares iniciales, sin distinguir mayúsculas. Se amplían con cada rechazo.
 
