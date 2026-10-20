@@ -82,7 +82,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         <div className={styles.header}>
           <div className={styles.meta}>
             <span className="chip">{project.language}</span>
-            {project.featured && <span className="chip chip-acid">Destacado</span>}
+            {project.featured && <span className="chip chip-accent">Destacado</span>}
           </div>
           <button ref={closeBtnRef} className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
             <CloseIcon />

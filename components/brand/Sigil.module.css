@@ -24,7 +24,7 @@
 }
 
 .stone {
-  fill: var(--acid);
+  fill: var(--accent);
 }
 
 .stoneHero {

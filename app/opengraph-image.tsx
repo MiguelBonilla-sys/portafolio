@@ -19,7 +19,7 @@ async function loadDisplayFont(): Promise<ArrayBuffer | null> {
 }
 
 const BLUE = "#3D7BFF";
-const ACID = "#D4FF3A";
+const ACCENT = "#2EE6FF";
 const INK = "#EDEFF5";
 const GROUND = "#0A0B10";
 
@@ -59,14 +59,14 @@ export default async function Image() {
           <div style={{ fontSize: 168, fontWeight: 900, color: INK, lineHeight: 0.9, letterSpacing: -2 }}>BONILLA</div>
           <div style={{ marginTop: 28, fontSize: 64, fontWeight: 900, color: BLUE }}>FULL STACK AI ENGINEER</div>
           <div style={{ marginTop: 28, display: "flex" }}>
-            <div style={{ background: ACID, color: GROUND, fontSize: 34, fontWeight: 900, padding: "6px 16px" }}>
+            <div style={{ background: ACCENT, color: GROUND, fontSize: 34, fontWeight: 900, padding: "6px 16px" }}>
               Bogotá · Remoto
             </div>
           </div>
         </div>
         <div style={{ position: "relative", display: "flex", width: 352, height: 352 }}>
           <div style={{ position: "absolute", top: 10, left: 10, display: "flex" }}>
-            <SigilSvg stroke={ACID} />
+            <SigilSvg stroke={ACCENT} />
           </div>
           <SigilSvg stroke={BLUE} />
         </div>

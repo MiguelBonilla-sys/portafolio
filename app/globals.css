@@ -11,10 +11,10 @@
   --hair: #2a2e3a;
   --blue: #3d7bff;
   --on-blue: #0a0b10;
-  --acid: #d4ff3a;
-  --ink-on-acid: #0a0b10;
-  --shadow-hard: var(--acid);
-  --focus: var(--acid);
+  --accent: #2ee6ff;
+  --ink-on-accent: #0a0b10;
+  --shadow-hard: var(--accent);
+  --focus: var(--accent);
   --danger: #ff8a7e;
   color-scheme: dark;
 }
@@ -27,8 +27,8 @@
   --hair: #c4c7ce;
   --blue: #1d4fbf;
   --on-blue: #ffffff;
-  --acid: #c8f000;
-  --ink-on-acid: #0b0c10;
+  --accent: #22c3e6;
+  --ink-on-accent: #0b0c10;
   --shadow-hard: var(--ink);
   --focus: var(--blue);
   --danger: #b42318;
@@ -98,8 +98,8 @@ a {
 }
 
 ::selection {
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
 }
 
 :focus-visible {
@@ -133,8 +133,8 @@ time,
   top: -80px;
   z-index: 200;
   padding: 0.75rem 1rem;
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
   font-weight: 700;
   text-decoration: none;
   border: var(--border);
@@ -157,10 +157,10 @@ time,
   white-space: nowrap;
 }
 
-.chip-acid {
-  background: var(--acid);
-  border-color: var(--acid);
-  color: var(--ink-on-acid);
+.chip-accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
   font-weight: 700;
 }
 

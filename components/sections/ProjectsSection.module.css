@@ -29,8 +29,8 @@
 }
 
 .archive:hover {
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
   padding-left: 1rem;
   padding-right: 1rem;
 }
