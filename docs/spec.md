@@ -88,6 +88,6 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 
 ## Open Questions
 
-- [x] Dominio de producción: `portafolio-inky-rho.vercel.app` (por defecto en el código; cambiar `NEXT_PUBLIC_SITE_URL` si se compra un dominio propio).
+- [x] Dominio de producción: `mangel14.dev` (por defecto en el código). `www.`, `portafolio.` y el alias `.vercel.app` redirigen con 301 (`next.config.ts`).
 - [ ] Confirmar que los términos de OpenCode Go permiten este uso y elegir el proveedor de respaldo. Owner: Miguel. Antes de T21.
 - [x] Email de contacto: `miguelangelboto14@gmail.com` (confirmado por el CV).

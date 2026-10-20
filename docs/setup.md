@@ -4,13 +4,17 @@ Todo el código está listo. Solo hay que crear las cuentas, poner las variables
 
 Plantilla de variables: [`.env.example`](../.env.example).
 
-## 1. El sitio (5 min)
+## 1. El sitio (10 min)
 
-En Vercel → proyecto `portafolio` → Settings → Environment Variables (Production y Preview):
+**Dominio.** En Vercel → proyecto `portafolio` → Settings → Domains:
+- `mangel14.dev` es el dominio de producción.
+- `www.mangel14.dev` y `portafolio.mangel14.dev` pueden quedar asignados al proyecto o redirigir a `mangel14.dev`: si llegan al sitio, `next.config.ts` los redirige con 301. Lo mismo pasa con `portafolio-inky-rho.vercel.app`.
+
+**Variables** en Settings → Environment Variables (Production y Preview):
 
 | Variable | Valor |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://portafolio-inky-rho.vercel.app` (o tu dominio propio) |
+| `NEXT_PUBLIC_SITE_URL` | `https://mangel14.dev` (es el valor por defecto; ponla igual para dejarlo explícito) |
 | `NEXT_PUBLIC_WEB3FORMS_KEY` | La clave de web3forms.com (formulario de contacto) |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Opcional, Google Analytics 4 |
 
@@ -18,11 +22,10 @@ Despliega (merge a `main`). Con eso el portafolio, el blog, el CV y el SEO queda
 
 Después del primer deploy:
 
-```bash
-SITE_URL=https://portafolio-inky-rho.vercel.app npm run indexnow
-```
-
-Y da de alta el sitio en [Google Search Console](https://search.google.com/search-console) y [Bing Webmaster Tools](https://www.bing.com/webmasters) enviando `/sitemap.xml`. Bing es el índice que usan ChatGPT Search y Copilot.
+1. `npm run indexnow` avisa a Bing y a Yandex de todas las URLs del sitemap.
+2. [Google Search Console](https://search.google.com/search-console) → Agregar propiedad → **Dominio** → `mangel14.dev`. Te da un registro TXT: agrégalo en Vercel → Domains → `mangel14.dev` → DNS Records (tipo TXT, nombre `@`). La propiedad de dominio cubre también los subdominios. Luego Sitemaps → `https://mangel14.dev/sitemap.xml`.
+3. [Bing Webmaster Tools](https://www.bing.com/webmasters) → "Import from Google Search Console". Bing es el índice que usan ChatGPT Search y Copilot.
+4. Revisa en [Rich Results Test](https://search.google.com/test/rich-results) `https://mangel14.dev/es` y un artículo del blog.
 
 ## 2. Secretos propios (2 min)
 
@@ -70,7 +73,7 @@ El agente publica cada artículo con un commit a `main`, y Vercel redespliega so
 
 1. En [developer.linkedin.com](https://developer.linkedin.com/) crea una app (te pide asociarla a una página de empresa: puedes crear una página mínima con tu nombre).
 2. En **Products** agrega **Share on LinkedIn** y **Sign In with LinkedIn using OpenID Connect**. Ambos se aprueban al instante.
-3. En **Auth** → Authorized redirect URLs agrega: `https://portafolio-inky-rho.vercel.app/api/linkedin/callback`.
+3. En **Auth** → Authorized redirect URLs agrega: `https://mangel14.dev/api/linkedin/callback`.
 4. Variables: `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`. `LINKEDIN_API_VERSION` trae `202608`; si LinkedIn lo rechaza por antiguo, súbelo a un mes de los últimos 12.
 
 ## 8. Activar (2 min)
@@ -78,7 +81,7 @@ El agente publica cada artículo con un commit a `main`, y Vercel redespliega so
 Despliega con todas las variables y abre:
 
 ```
-https://portafolio-inky-rho.vercel.app/api/agent/setup?key=TU_ADMIN_SECRET
+https://mangel14.dev/api/agent/setup?key=TU_ADMIN_SECRET
 ```
 
 Esa URL crea las tablas, registra el webhook de Telegram, te manda un mensaje de prueba y te dice qué falta. Si alguna variable falta o es inválida, la respuesta lo indica por nombre.
@@ -86,7 +89,7 @@ Esa URL crea las tablas, registra el webhook de Telegram, te manda un mensaje de
 Luego conecta LinkedIn abriendo:
 
 ```
-https://portafolio-inky-rho.vercel.app/api/linkedin/auth?key=TU_ADMIN_SECRET
+https://mangel14.dev/api/linkedin/auth?key=TU_ADMIN_SECRET
 ```
 
 El token dura 60 días. El cron diario te avisa por Telegram 10 días antes con el mismo enlace.

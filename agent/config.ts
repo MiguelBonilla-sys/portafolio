@@ -3,7 +3,7 @@ import { z } from "zod";
 // Variables del Content Engine. Se validan al usarlas, no al importar, para que el sitio
 // estático compile aunque el agente no esté configurado.
 const envSchema = z.object({
-  SITE_URL: z.url().default("https://portafolio-inky-rho.vercel.app"),
+  SITE_URL: z.url().default("https://mangel14.dev"),
 
   LLM_BASE_URL: z.url().default("https://opencode.ai/zen/go/v1"),
   LLM_API_KEY: z.string().min(1),
