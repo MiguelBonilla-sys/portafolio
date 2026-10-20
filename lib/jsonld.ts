@@ -24,9 +24,13 @@ export function personSchema(locale: Locale) {
     image: `${SITE_URL}/avatar.png`,
     sameAs: [GITHUB_URL, LINKEDIN_URL, X_URL],
     worksFor: { "@type": "Organization", name: "Coordenadas.co" },
-    alumniOf: { "@type": "CollegeOrUniversity", name: "Universidad de San Buenaventura" },
+    alumniOf: [
+      { "@type": "CollegeOrUniversity", name: "Universidad de San Buenaventura" },
+      { "@type": "CollegeOrUniversity", name: "Universidad Sergio Arboleda" },
+      { "@type": "CollegeOrUniversity", name: "Universidad Nacional de Colombia" },
+    ],
     address: { "@type": "PostalAddress", addressLocality: "Bogotá", addressCountry: "CO" },
-    knowsAbout: getSkills().flatMap((c) => c.items),
+    knowsAbout: getSkills(locale).flatMap((c) => c.items),
   };
 }
 

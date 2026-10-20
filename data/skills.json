@@ -1,22 +1,16 @@
 [
   {
-    "id": "backend",
+    "id": "languages",
     "label": {
-      "es": "Backend e IA",
-      "en": "Backend & AI"
+      "es": "Lenguajes",
+      "en": "Languages"
     },
     "items": [
       "Python",
-      "FastAPI",
-      "Django",
-      "Flask",
-      "Node.js",
+      "JavaScript",
+      "TypeScript",
       "PHP",
-      "Java",
-      "REST APIs",
-      "JWT",
-      "Ollama",
-      "LLMs locales"
+      "SQL"
     ]
   },
   {
@@ -26,48 +20,107 @@
       "en": "Frontend"
     },
     "items": [
-      "Next.js",
       "React",
-      "TypeScript",
-      "JavaScript",
+      "Next.js",
       "Vite",
-      "Tailwind",
-      "HTML",
-      "CSS",
+      "Tailwind CSS",
+      "HTML/CSS",
       "WordPress"
     ]
   },
   {
-    "id": "data-cloud",
+    "id": "backend",
     "label": {
-      "es": "Datos y nube",
-      "en": "Data & cloud"
+      "es": "Backend",
+      "en": "Backend"
+    },
+    "items": [
+      "FastAPI",
+      "Django",
+      "Node.js",
+      "REST APIs",
+      "JWT",
+      "OAuth 2.0"
+    ]
+  },
+  {
+    "id": "databases",
+    "label": {
+      "es": "Bases de datos",
+      "en": "Databases"
     },
     "items": [
       "PostgreSQL",
       "MySQL",
-      "Supabase",
-      "SQLAlchemy",
-      "PySpark",
-      "Pandas",
-      "Docker",
-      "Railway",
-      "Linux",
-      "Git / GitHub"
+      "SQLite",
+      "Redis",
+      "ChromaDB"
     ]
   },
   {
-    "id": "automation",
+    "id": "cloud",
     "label": {
-      "es": "Automatización y CRM",
-      "en": "Automation & CRM"
+      "es": "Nube y DevOps",
+      "en": "Cloud & DevOps"
     },
     "items": [
+      "AWS (EC2, S3, RDS)",
+      "Docker",
+      "Docker Compose",
+      "Coolify",
+      "Traefik",
+      "Linux",
+      "Git/GitHub",
+      "CI/CD"
+    ]
+  },
+  {
+    "id": "testing",
+    "label": {
+      "es": "Testing y seguridad",
+      "en": "Testing & Security"
+    },
+    "items": [
+      "pytest",
+      {
+        "es": "Pruebas unitarias e integración",
+        "en": "Unit & integration testing"
+      },
+      "bcrypt",
+      "TOTP 2FA",
+      "OWASP Top 10"
+    ]
+  },
+  {
+    "id": "ai",
+    "label": {
+      "es": "IA y automatización",
+      "en": "AI & Automation"
+    },
+    "items": [
+      "LlamaStack",
+      "Ollama",
+      "RAG",
+      {
+        "es": "Agentes de IA",
+        "en": "AI agents"
+      },
+      "LangGraph",
+      "PySpark",
       "n8n",
       "Make",
       "GoHighLevel",
-      "HubSpot",
-      "Lovable Cloud"
+      "Webhooks"
+    ]
+  },
+  {
+    "id": "methods",
+    "label": {
+      "es": "Metodologías",
+      "en": "Methodologies"
+    },
+    "items": [
+      "Agile / Scrum"
     ]
   }
 ]

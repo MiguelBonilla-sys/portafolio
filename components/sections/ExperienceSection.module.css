@@ -44,6 +44,30 @@
   color: var(--ink-2);
 }
 
+.highlights {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--ink);
+}
+
+.highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--blue);
+}
+
 @media (max-width: 900px) {
   .row {
     grid-template-columns: 1fr;

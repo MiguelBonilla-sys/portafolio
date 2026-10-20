@@ -7,6 +7,8 @@ export interface Project {
   id: string;
   title: string;
   language: string;
+  /** Dónde vive: "Producción · app.bikans.com", "Tesis · USB Bogotá"... */
+  context?: string;
   description: string;
   longDescription?: string;
   tags: string[];
@@ -14,10 +16,13 @@ export interface Project {
   featured: boolean;
 }
 
+type Localized = { es: string; en: string };
+
 export interface SkillCategory {
   id: string;
-  label: { es: string; en: string };
-  items: string[];
+  label: Localized;
+  /** Texto igual en ambos idiomas, o traducido */
+  items: (string | Localized)[];
 }
 
 export interface ExperienceItem {
@@ -26,5 +31,6 @@ export interface ExperienceItem {
   title: string;
   place: string;
   description: string;
-  type: "work" | "education" | "self";
+  highlights?: string[];
+  type: "work" | "education" | "course";
 }

@@ -13,9 +13,9 @@ export default async function SkillsSection() {
       <div className="shell">
         <SectionHeader id="stack-title" title={t("title")} lede={t("lede")} />
         <div className={styles.grid}>
-          {getSkills().map((cat) => (
+          {getSkills(locale).map((cat) => (
             <div key={cat.id} className={styles.block}>
-              <h3 className={styles.label}>{cat.label[locale]}</h3>
+              <h3 className={styles.label}>{cat.label}</h3>
               <ul className={styles.items}>
                 {cat.items.map((item) => (
                   <li key={item} className="chip">

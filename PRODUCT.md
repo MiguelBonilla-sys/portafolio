@@ -20,18 +20,21 @@ Que Miguel lleva procesos reales a código: APIs seguras, automatizaciones en pr
 ## Primary action
 Escribirle (formulario o LinkedIn). Secundaria: abrir un proyecto y su repositorio.
 
-## Product truth (no inventar más allá de esto)
-- Full Stack Developer en Coordenadas.co, Bogotá, desde septiembre de 2025: plataformas web, integraciones de CRM y APIs, automatizaciones con n8n, Make y GoHighLevel.
-- Ingeniería de Sistemas, Universidad de San Buenaventura, Bogotá, noveno semestre.
-- Proyectos públicos: Seguimiento Bibliográfico con LLM (Ollama, 30–90 s por documento en GPU), API Auth Gateway (FastAPI, JWT, PostgreSQL, Railway, Sentry), Flask API, ETL con PySpark (4.101 registros, < 60 s, < 4 GB RAM), GEO Streamlit, app Android de pizzería, sockets TCP/UDP. Más de 35 repositorios públicos.
-- Content Engine: en construcción (LangGraph.js en Vercel).
-- No hay clientes, cifras de impacto ni testimonios publicables todavía. Lo que falte se marca como pendiente, no se inventa.
+## Product truth (fuente: CV de agosto de 2026; no inventar más allá de esto)
+- Más de 2 años de experiencia profesional en desarrollo de software.
+- Full Stack Developer en Coordenadas.co, Bogotá (remoto), desde agosto de 2025: Bikans (nómina + retención, en producción con 2FA), agente n8n para QuickBooks Online en 4 días (5 fases, 17 tareas), distribución de contenido de 6 proyectos inmobiliarios en 1 sistema, plugins e integraciones para clientes de EE. UU. en 3 industrias, infraestructura propia con Docker, Coolify y Traefik.
+- Junior Backend Engineer en Sibartech Technology SAS (feb 2024 – ago 2025): Python, Django, FastAPI, PostgreSQL, pytest, Docker.
+- Ingeniería de Sistemas, Universidad de San Buenaventura (ene 2021 – presente), décimo semestre. Tesis: sistema multiagente para detectar phishing por homógrafos IDN, 359 pruebas automatizadas.
+- Cursos: Ethical Hacking & Cyber Risk (U. Sergio Arboleda, 2025); Desarrollo de aplicaciones móviles (U. Nacional, 2023–2024).
+- Proyectos: Bikans, API Auth Gateway, detector de phishing IDN, ETL Dow Jones (4.100+ registros, < 60 s), TaskFlow, LedgerCore, Sentinel RAG, más los proyectos académicos y personales del portafolio.
+- Dominio actual: portafolio-inky-rho.vercel.app.
+- No hay testimonios ni cifras de clientes publicables más allá de las del CV.
 
 ## Brand commitments
 - Identidad: un **símbolo** propio (círculo de transmutación convertido en circuito), no un nombre de marca abreviado. Se descartaron "M14" y el rojo (decisión del dueño, 2026-10-20).
 - Estilo fijado por el dueño: **brutalismo cyberpunk**, color principal **azul**, referencias de espíritu a Fullmetal Alchemist y The Legend of Zelda (sin copiar símbolos con marca registrada).
 - Tono: directo, técnico, primera persona, sin adjetivos vacíos. Reglas en `docs/content-style-guide.md`.
-- Idioma: español ahora; inglés en la fase de i18n.
+- Idioma: español e inglés (`/es`, `/en`).
 
 ## Accessibility
 WCAG 2.1 AA. Navegación por teclado completa, foco visible, `prefers-reduced-motion` respetado, contraste ≥ 4,5:1 en texto de cuerpo en ambos temas.

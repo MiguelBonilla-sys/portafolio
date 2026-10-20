@@ -23,6 +23,7 @@ export default async function ProjectCard({ project }: ProjectCardProps) {
       <div className={styles.meta}>
         <span className="chip">{project.language}</span>
         {project.featured && <span className="chip chip-accent">{t("featured")}</span>}
+        {project.context && <span className={styles.context}>{project.context}</span>}
       </div>
       <div className={styles.main}>
         <h3 className={styles.title}>{project.title}</h3>

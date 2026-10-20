@@ -87,6 +87,11 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
+            <Link href="/cv" className={styles.link} aria-current={pathname === "/cv" ? "page" : undefined} onClick={close}>
+              {t("cv")}
+            </Link>
+          </li>
+          <li>
             <Link
               href={{ pathname: "/", hash: "contacto" }}
               className={styles.link}

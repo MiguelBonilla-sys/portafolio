@@ -244,3 +244,30 @@ time,
   background: var(--surface);
   font-size: 0.9em;
 }
+
+/* ── Impresión (CV): solo el contenido, en blanco y negro ── */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  :root,
+  [data-theme] {
+    --ground: #fff;
+    --surface: #fff;
+    --ink: #000;
+    --ink-2: #333;
+    --hair: #999;
+  }
+
+  body > header,
+  body > footer,
+  .skip {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

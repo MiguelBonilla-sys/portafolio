@@ -1,20 +1,62 @@
 [
   {
-    "id": "seguimiento-bibliografico-ollama",
-    "title": "Seguimiento Bibliográfico con LLM",
-    "language": "Python",
-    "description": "Genera documentos .docx de seguimiento bibliográfico a partir de referencias académicas usando un LLM local vía Ollama.",
-    "longDescription": "Sistema en Python que automatiza la generación de documentos .docx de seguimiento bibliográfico a partir de un JSON con referencias académicas (DOI, arXiv, GitHub, web, PDF). Extrae metadatos reales de CrossRef, OpenAlex y arXiv, y los combina con un análisis profundo generado por un LLM local corriendo en Ollama con detección automática de GPU (NVIDIA/CUDA, AMD/ROCm) o CPU.\n\nEl sistema cubre cuatro modos de operación: solo metadatos (sin LLM), análisis en CPU, análisis en GPU y configuración inicial. Cada documento generado incluye datos generales, referencia IEEE, abstract, análisis de contenido (metodología, resultados, aportes, limitaciones) y relación con el proyecto del investigador. Soporta modelos como Mistral, Phi-3 Mini y LLaMA 3, con tiempos de 30–90 segundos por documento en GPU.",
+    "id": "bikans",
+    "title": "Bikans: SaaS de nómina y retención",
+    "language": "React · Django",
+    "context": "Producción · app.bikans.com",
+    "description": "SaaS colombiano de nómina y retención en la fuente, en producción con usuarios reales. Construí el frontend, el panel de administración y el doble factor de autenticación para ambos dominios.",
+    "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción con usuarios reales.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) para los dos dominios, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
     "tags": [
-      "Python",
-      "Ollama",
-      "LLM",
-      "NLP",
-      "python-docx",
-      "GPU"
+      "React",
+      "Django",
+      "PostgreSQL",
+      "TOTP 2FA"
     ],
     "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/seguimiento-bibliografico-ollama",
+      "repo": null,
+      "demo": "https://app.bikans.com"
+    },
+    "featured": true
+  },
+  {
+    "id": "idn-phishing-detector",
+    "title": "Detector de phishing por homógrafos IDN",
+    "language": "Python",
+    "context": "Tesis · USB Bogotá",
+    "description": "Sistema de IA multiagente que detecta sitios falsos que imitan dominios conocidos sustituyendo caracteres por otros parecidos. Validado con 359 pruebas automatizadas.",
+    "longDescription": "Mi tesis de Ingeniería de Sistemas en la Universidad de San Buenaventura: un sistema multiagente que detecta dominios de phishing que imitan a dominios conocidos con caracteres visualmente parecidos (homógrafos IDN).\n\nEl backend está en FastAPI, con agentes sobre LlamaStack, sesiones con JWT y fuentes externas de inteligencia de amenazas para calcular el riesgo de URLs y correos. Usa PostgreSQL, Redis y ChromaDB, incluye procesamiento de conocimiento para RAG y está validado con 359 pruebas automatizadas.",
+    "tags": [
+      "FastAPI",
+      "LlamaStack",
+      "Agentes de IA",
+      "RAG",
+      "PostgreSQL",
+      "Redis",
+      "ChromaDB"
+    ],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/backendTesis",
+      "demo": null
+    },
+    "featured": true
+  },
+  {
+    "id": "sentinel-rag",
+    "title": "Sentinel RAG: asistente con fuentes",
+    "language": "Python",
+    "context": "Producción",
+    "description": "Pipeline RAG que ingiere documentos, genera embeddings, recupera el contexto relevante y responde citando las fuentes. Evaluado con un set de pruebas de precisión de recuperación.",
+    "longDescription": "Un pipeline de generación aumentada por recuperación (RAG): ingiere documentos, genera embeddings, recupera el contexto relevante y devuelve respuestas respaldadas con citas.\n\nEstá construido en Python con FastAPI, ChromaDB como base vectorial y modelos locales en Ollama. La calidad de la recuperación se mide con un set de pruebas dedicado a la precisión.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "ChromaDB",
+      "Ollama",
+      "Embeddings",
+      "RAG"
+    ],
+    "links": {
+      "repo": null,
       "demo": null
     },
     "featured": true
@@ -23,6 +65,7 @@
     "id": "api-auth-hackaton",
     "title": "API Auth Gateway",
     "language": "Python",
+    "context": "Producción · Railway + Sentry",
     "description": "API Gateway con FastAPI que proporciona acceso autenticado a una API de inventario externa mediante control de propiedad basado en JWT.",
     "longDescription": "API Gateway construido con FastAPI que actúa como proxy seguro frente a una API externa de inventario de activos universitarios. El sistema implementa autenticación completa con tokens JWT de acceso y refresh, registro de usuarios con bcrypt, y un control de acceso basado en propiedad: cada usuario solo puede consultar los activos que le pertenecen según el campo `dueno_de_activo`, mientras que los superusuarios ven el conjunto completo.\n\nEl gateway fue desplegado en Railway con PostgreSQL como base de datos, usa httpx como cliente HTTP asíncrono para el proxy, e integra Sentry para monitoreo de errores y rendimiento. La arquitectura es completamente asíncrona (async/await) con separación en capas: routers, servicios, modelos SQLAlchemy 2.0 con anotaciones tipadas, y esquemas Pydantic para validación. Incluye Docker, docker-compose y scripts de utilidad para carga masiva de usuarios.",
     "tags": [
@@ -41,6 +84,88 @@
     "featured": true
   },
   {
+    "id": "ledgercore",
+    "title": "LedgerCore: auth y facturación multi-tenant",
+    "language": "Python",
+    "context": "Producción",
+    "description": "Servicio backend reutilizable con autenticación JWT multi-tenant, control de acceso por roles, lógica de suscripciones, rate limiting y pruebas automatizadas.",
+    "longDescription": "Un servicio backend pensado para no reconstruir autenticación y permisos en cada producto SaaS nuevo. Tiene autenticación JWT multi-tenant, control de acceso basado en roles (RBAC), lógica de facturación por suscripción, rate limiting y pruebas automatizadas.\n\nEstá construido con FastAPI, PostgreSQL y Redis, y recorta el tiempo de arranque de autenticación y permisos en productos nuevos.",
+    "tags": [
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "JWT",
+      "RBAC"
+    ],
+    "links": {
+      "repo": null,
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "taskflow",
+    "title": "TaskFlow: dashboard de productividad",
+    "language": "TypeScript · Python",
+    "context": "Producción",
+    "description": "Dashboard full stack que une un tablero kanban, el estado de los deploys de CI/CD en vivo vía webhooks y las notificaciones del equipo en una sola interfaz autenticada.",
+    "longDescription": "Equipos de desarrollo pequeños suelen repartir su trabajo entre tres o más herramientas sueltas. TaskFlow las junta en una interfaz autenticada: un tablero kanban, el estado de los deploys de CI/CD en tiempo real recibido por webhooks y las notificaciones del equipo.\n\nEl frontend está en React con TypeScript y el backend en FastAPI con PostgreSQL; las actualizaciones en vivo llegan por WebSockets.",
+    "tags": [
+      "React",
+      "TypeScript",
+      "FastAPI",
+      "PostgreSQL",
+      "WebSockets"
+    ],
+    "links": {
+      "repo": null,
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "etl-parcial",
+    "title": "ETL Pipeline — Dow Jones Sentiment",
+    "language": "Python",
+    "context": "Open source",
+    "description": "Pipeline ETL completo con PySpark para análisis de sentimiento de noticias del Dow Jones, con visualizaciones y almacenamiento multi-formato.",
+    "longDescription": "Pipeline ETL de producción que procesa 4.101 registros de noticias del Dow Jones (2008–2016) usando PySpark con Adaptive Query Execution. La etapa de extracción valida el schema del CSV y ejecuta quality checks automáticos. La transformación aplica feature engineering: limpieza de nulos, conversión de fechas, indicadores de sentimiento, estadísticas de texto, agregación de titulares y features temporales.\n\nLa carga multi-formato escribe en Parquet (compresión Snappy), CSV, SQLite con índices optimizados y JSON. Las visualizaciones incluyen distribución de clases, evolución temporal del sentimiento, nubes de palabras, top unigramas/bigramas y un dashboard interactivo con Plotly. El pipeline completo corre en menos de 60 segundos con menos de 4 GB de RAM, incluye suite de tests unitarios e integración con pytest, y se dockeriza para reproducibilidad.",
+    "tags": [
+      "Python",
+      "PySpark",
+      "ETL",
+      "Pandas",
+      "Plotly",
+      "SQLite",
+      "Docker"
+    ],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/ETL_PARCIAL",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "seguimiento-bibliografico-ollama",
+    "title": "Seguimiento Bibliográfico con LLM",
+    "language": "Python",
+    "description": "Genera documentos .docx de seguimiento bibliográfico a partir de referencias académicas usando un LLM local vía Ollama.",
+    "longDescription": "Sistema en Python que automatiza la generación de documentos .docx de seguimiento bibliográfico a partir de un JSON con referencias académicas (DOI, arXiv, GitHub, web, PDF). Extrae metadatos reales de CrossRef, OpenAlex y arXiv, y los combina con un análisis profundo generado por un LLM local corriendo en Ollama con detección automática de GPU (NVIDIA/CUDA, AMD/ROCm) o CPU.\n\nEl sistema cubre cuatro modos de operación: solo metadatos (sin LLM), análisis en CPU, análisis en GPU y configuración inicial. Cada documento generado incluye datos generales, referencia IEEE, abstract, análisis de contenido (metodología, resultados, aportes, limitaciones) y relación con el proyecto del investigador. Soporta modelos como Mistral, Phi-3 Mini y LLaMA 3, con tiempos de 30–90 segundos por documento en GPU.",
+    "tags": [
+      "Python",
+      "Ollama",
+      "LLM",
+      "NLP",
+      "python-docx",
+      "GPU"
+    ],
+    "links": {
+      "repo": "https://github.com/MiguelBonilla-sys/seguimiento-bibliografico-ollama",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
     "id": "flask-api",
     "title": "Flask API — Gestión de Videojuegos",
     "language": "Python",
@@ -57,27 +182,6 @@
     ],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/FlaskAPI",
-      "demo": null
-    },
-    "featured": false
-  },
-  {
-    "id": "etl-parcial",
-    "title": "ETL Pipeline — Dow Jones Sentiment",
-    "language": "Python",
-    "description": "Pipeline ETL completo con PySpark para análisis de sentimiento de noticias del Dow Jones, con visualizaciones y almacenamiento multi-formato.",
-    "longDescription": "Pipeline ETL de producción que procesa 4.101 registros de noticias del Dow Jones (2008–2016) usando PySpark con Adaptive Query Execution. La etapa de extracción valida el schema del CSV y ejecuta quality checks automáticos. La transformación aplica feature engineering: limpieza de nulos, conversión de fechas, indicadores de sentimiento, estadísticas de texto, agregación de titulares y features temporales.\n\nLa carga multi-formato escribe en Parquet (compresión Snappy), CSV, SQLite con índices optimizados y JSON. Las visualizaciones incluyen distribución de clases, evolución temporal del sentimiento, nubes de palabras, top unigramas/bigramas y un dashboard interactivo con Plotly. El pipeline completo corre en menos de 60 segundos con menos de 4 GB de RAM, incluye suite de tests unitarios e integración con pytest, y se dockeriza para reproducibilidad.",
-    "tags": [
-      "Python",
-      "PySpark",
-      "ETL",
-      "Pandas",
-      "Plotly",
-      "SQLite",
-      "Docker"
-    ],
-    "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/ETL_PARCIAL",
       "demo": null
     },
     "featured": false
