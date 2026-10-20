@@ -1,48 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ActionIcon, useMantineColorScheme, useComputedColorScheme } from "@mantine/core";
+import { useMantineColorScheme, useComputedColorScheme } from "@mantine/core";
+import { MoonIcon, SunIcon } from "./icons";
 import styles from "./ThemeToggle.module.css";
 
 export default function ThemeToggle() {
   const { setColorScheme } = useMantineColorScheme();
-  const computed = useComputedColorScheme("dark");
-  const [mounted, setMounted] = useState(false);
+  const computed = useComputedColorScheme("dark", { getInitialValueInEffect: true });
 
-  useEffect(() => setMounted(true), []);
-
-  const toggle = () =>
-    setColorScheme(computed === "dark" ? "light" : "dark");
-
+  // Los dos íconos se renderizan siempre; el CSS muestra el que corresponde al tema activo,
+  // así el servidor y el cliente pintan lo mismo.
   return (
-    <ActionIcon
-      onClick={toggle}
-      variant="subtle"
-      size="md"
-      aria-label="Toggle color scheme"
+    <button
+      type="button"
+      onClick={() => setColorScheme(computed === "dark" ? "light" : "dark")}
       className={styles.toggle}
-      suppressHydrationWarning
+      aria-label="Cambiar entre tema claro y oscuro"
     >
-      {/* Render nothing until client has resolved the color scheme */}
-      {mounted && (computed === "dark" ? (
-        /* Sun icon — shown in dark mode to switch to light */
-        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="12" cy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      ) : (
-        /* Moon icon — shown in light mode to switch to dark */
-        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      ))}
-    </ActionIcon>
+      <span className={styles.sun}>
+        <SunIcon />
+      </span>
+      <span className={styles.moon}>
+        <MoonIcon />
+      </span>
+    </button>
   );
 }

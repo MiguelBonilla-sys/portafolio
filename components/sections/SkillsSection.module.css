@@ -1,24 +1,42 @@
 .section {
-  padding: 7rem 4rem;
-  border-top: 1px solid var(--border);
+  padding: clamp(5rem, 10vw, 9rem) 0;
+  border-bottom: var(--border);
 }
 
+/* Tabla de bordes compartidos: sin huecos entre bloques */
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: var(--border);
+  border-left: var(--border);
 }
 
-@media (max-width: 900px) {
-  .section {
-    padding: 4rem 1.5rem;
-  }
-  .grid {
-    grid-template-columns: 1fr 1fr;
-  }
+.block {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-right: var(--border);
+  border-bottom: var(--border);
+  transition: background-color 160ms var(--ease-out);
 }
 
-@media (max-width: 500px) {
+.block:hover {
+  background: var(--surface);
+}
+
+.label {
+  font-weight: 800;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1;
+  margin-bottom: 1.25rem;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+@media (max-width: 760px) {
   .grid {
     grid-template-columns: 1fr;
   }

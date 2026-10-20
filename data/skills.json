@@ -1,22 +1,22 @@
 [
   {
+    "id": "backend",
+    "label": "Backend e IA",
+    "items": ["Python", "FastAPI", "Django", "Flask", "Node.js", "PHP", "Java", "REST APIs", "JWT", "Ollama", "LLMs locales"]
+  },
+  {
     "id": "frontend",
     "label": "Frontend",
-    "items": ["WordPress", "Next.js", "Vite", "JavaScript", "TypeScript", "HTML", "CSS", "Tailwind"]
+    "items": ["Next.js", "React", "TypeScript", "JavaScript", "Vite", "Tailwind", "HTML", "CSS", "WordPress"]
   },
   {
-    "id": "backend",
-    "label": "Backend",
-    "items": ["Python", "Django", "FastAPI", "PHP", "Node.js", "Java", "REST APIs"]
-  },
-  {
-    "id": "db-cloud",
-    "label": "DB & Cloud",
-    "items": ["PostgreSQL", "MySQL", "Supabase", "Docker", "Linux", "Git / GitHub"]
+    "id": "data-cloud",
+    "label": "Datos y nube",
+    "items": ["PostgreSQL", "MySQL", "Supabase", "SQLAlchemy", "PySpark", "Pandas", "Docker", "Railway", "Linux", "Git / GitHub"]
   },
   {
     "id": "automation",
-    "label": "Automatización & CRM",
+    "label": "Automatización y CRM",
     "items": ["n8n", "Make", "GoHighLevel", "HubSpot", "Lovable Cloud"]
   }
 ]

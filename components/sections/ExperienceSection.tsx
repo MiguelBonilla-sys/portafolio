@@ -1,35 +1,36 @@
 import experience from "@/data/experience.json";
 import type { ExperienceItem } from "@/types";
-import TimelineItemComponent from "@/components/ui/TimelineItem";
 import SectionHeader from "@/components/ui/SectionHeader";
-import Scene3DWrapper from "@/components/ui/Scene3DWrapper";
-import AnimatedEntry from "@/components/ui/AnimatedEntry";
-import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
 import styles from "./ExperienceSection.module.css";
+
+const typeLabel: Record<ExperienceItem["type"], string> = {
+  work: "Trabajo",
+  education: "Formación",
+  self: "Autodidacta",
+};
 
 export default function ExperienceSection() {
   return (
-    <section id="formacion" className={styles.section}>
-      {/* Canvas de red ocupa todo el fondo de la sección */}
-      <div className={styles.canvasBg} aria-hidden="true">
-        <Scene3DWrapper />
-      </div>
-
-      {/* Contenido encima */}
-      <div className={styles.content}>
-        <AnimatedEntry>
-          <SectionHeader
-            label="// 03. experiencia & formación"
-            title="Trayectoria"
-          />
-        </AnimatedEntry>
-        <StaggerContainer className={styles.timeline} initialDelay={0.1}>
+    <section id="formacion" className={styles.section} aria-labelledby="trayectoria-title">
+      <div className="shell">
+        <SectionHeader id="trayectoria-title" title="Trayectoria" />
+        <ol className={styles.list}>
           {(experience as ExperienceItem[]).map((item) => (
-            <StaggerItem key={item.id}>
-              <TimelineItemComponent item={item} />
-            </StaggerItem>
+            <li key={item.id} className={styles.row}>
+              <div className={styles.meta}>
+                <span className={`data ${styles.date}`}>{item.date}</span>
+                <span className={item.type === "work" ? "chip chip-acid" : "chip"}>
+                  {typeLabel[item.type]}
+                </span>
+              </div>
+              <div>
+                <h3 className={styles.title}>{item.title}</h3>
+                <p className={styles.place}>{item.place}</p>
+              </div>
+              <p className={styles.desc}>{item.description}</p>
+            </li>
           ))}
-        </StaggerContainer>
+        </ol>
       </div>
     </section>
   );

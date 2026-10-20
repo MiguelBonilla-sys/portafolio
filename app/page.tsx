@@ -10,8 +10,11 @@ import ContactSection from "@/components/sections/ContactSection";
 export default function Home() {
   return (
     <>
+      <a href="#contenido" className="skip">
+        Saltar al contenido
+      </a>
       <Navbar />
-      <main>
+      <main id="contenido">
         <HeroSection />
         <AboutSection />
         <SkillsSection />

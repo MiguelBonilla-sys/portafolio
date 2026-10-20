@@ -1,27 +1,32 @@
 import skills from "@/data/skills.json";
 import type { SkillCategory } from "@/types";
-import SkillCategoryCard from "@/components/ui/SkillCategory";
 import SectionHeader from "@/components/ui/SectionHeader";
-import AnimatedEntry from "@/components/ui/AnimatedEntry";
-import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
 import styles from "./SkillsSection.module.css";
 
 export default function SkillsSection() {
   return (
-    <section id="habilidades" className={styles.section}>
-      <AnimatedEntry>
+    <section id="habilidades" className={styles.section} aria-labelledby="stack-title">
+      <div className="shell">
         <SectionHeader
-          label="// 02. stack tecnológico"
-          title="Herramientas & tecnologías"
+          id="stack-title"
+          title="Stack"
+          lede="Las herramientas con las que he entregado proyectos. Cada una aparece en al menos un repositorio o en mi trabajo actual."
         />
-      </AnimatedEntry>
-      <StaggerContainer className={styles.grid} initialDelay={0.1}>
-        {(skills as SkillCategory[]).map((cat) => (
-          <StaggerItem key={cat.id}>
-            <SkillCategoryCard category={cat} />
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+        <div className={styles.grid}>
+          {(skills as SkillCategory[]).map((cat) => (
+            <div key={cat.id} className={styles.block}>
+              <h3 className={styles.label}>{cat.label}</h3>
+              <ul className={styles.items}>
+                {cat.items.map((item) => (
+                  <li key={item} className="chip">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

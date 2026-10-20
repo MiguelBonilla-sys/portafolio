@@ -1,162 +1,80 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
-export const alt = "Miguel Bonilla — Full Stack Developer";
+export const alt = "Miguel Bonilla, Full Stack AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+// Satori necesita TTF/OTF: se pide a Google Fonts en el build. Si falla, usa la fuente por defecto.
+async function loadDisplayFont(): Promise<ArrayBuffer | null> {
+  try {
+    const css = await (
+      await fetch("https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@900&display=swap")
+    ).text();
+    const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
+    if (!url) return null;
+    return await (await fetch(url)).arrayBuffer();
+  } catch {
+    return null;
+  }
+}
+
+const BLUE = "#3D7BFF";
+const ACID = "#D4FF3A";
+const INK = "#EDEFF5";
+const GROUND = "#0A0B10";
+
+// Mismo trazo que components/brand/Sigil.tsx
+function SigilSvg({ stroke }: { stroke: string }) {
+  return (
+    <svg width="340" height="340" viewBox="-4 -4 130 130" style={{ position: "absolute", top: 0, left: 0 }}>
+      <g fill="none" stroke={stroke} strokeLinecap="square" strokeLinejoin="miter">
+        <circle cx="60" cy="60" r="55" strokeWidth="5" />
+        <circle cx="60" cy="60" r="44" strokeWidth="2.5" />
+        <path d="M60 16L98.11 82L21.89 82Z" strokeWidth="4" />
+        <path d="M44 82V58l16 16 16-16v24" strokeWidth="7" />
+      </g>
+    </svg>
+  );
+}
+
+export default async function Image() {
+  const font = await loadDisplayFont();
   return new ImageResponse(
     (
       <div
         style={{
-          width: "1200px",
-          height: "630px",
+          width: "100%",
+          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          padding: "80px",
-          background: "#080c10",
-          position: "relative",
-          overflow: "hidden",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "72px 80px",
+          background: GROUND,
+          border: `12px solid ${INK}`,
+          fontFamily: font ? "Big Shoulders" : undefined,
         }}
       >
-        {/* Grid background dots */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(circle, #1e2d3d 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-            opacity: 0.4,
-          }}
-        />
-
-        {/* Glow accent top-left */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-100px",
-            left: "-100px",
-            width: "500px",
-            height: "500px",
-            borderRadius: "50%",
-            background:
-              "radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%)",
-          }}
-        />
-
-        {/* Top accent bar */}
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            height: "3px",
-            background: "linear-gradient(90deg, #00e5ff, #7fff00)",
-          }}
-        />
-
-        {/* Content */}
-        <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "0px" }}>
-          {/* Eyebrow */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              marginBottom: "24px",
-            }}
-          >
-            <div
-              style={{
-                width: "32px",
-                height: "1px",
-                background: "#00e5ff",
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: "14px",
-                color: "#00e5ff",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-              }}
-            >
-              Full Stack Developer
-            </span>
-          </div>
-
-          {/* Name */}
-          <div
-            style={{
-              fontSize: "92px",
-              fontWeight: 800,
-              color: "#f0f6fc",
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-              marginBottom: "20px",
-            }}
-          >
-            Miguel
-          </div>
-          <div
-            style={{
-              fontSize: "92px",
-              fontWeight: 800,
-              color: "#f0f6fc",
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-              marginBottom: "32px",
-            }}
-          >
-            Bonilla
-          </div>
-
-          {/* Stack tags */}
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            {["Next.js", "WordPress", "Python", "Automatización", "CRM"].map(
-              (tag) => (
-                <div
-                  key={tag}
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: "14px",
-                    color: "#586069",
-                    border: "1px solid #1e2d3d",
-                    padding: "6px 14px",
-                    background: "#0d1117",
-                    letterSpacing: "0.05em",
-                  }}
-                >
-                  {tag}
-                </div>
-              )
-            )}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ fontSize: 168, fontWeight: 900, color: INK, lineHeight: 0.9, letterSpacing: -2 }}>MIGUEL</div>
+          <div style={{ fontSize: 168, fontWeight: 900, color: INK, lineHeight: 0.9, letterSpacing: -2 }}>BONILLA</div>
+          <div style={{ marginTop: 28, fontSize: 64, fontWeight: 900, color: BLUE }}>FULL STACK AI ENGINEER</div>
+          <div style={{ marginTop: 28, display: "flex" }}>
+            <div style={{ background: ACID, color: GROUND, fontSize: 34, fontWeight: 900, padding: "6px 16px" }}>
+              Bogotá · Remoto
+            </div>
           </div>
         </div>
-
-        {/* Bottom-right: terminal handle */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            right: "80px",
-            fontFamily: "monospace",
-            fontSize: "16px",
-            color: "#1e2d3d",
-            letterSpacing: "0.1em",
-          }}
-        >
-          ~/mbonilla
+        <div style={{ position: "relative", display: "flex", width: 352, height: 352 }}>
+          <div style={{ position: "absolute", top: 10, left: 10, display: "flex" }}>
+            <SigilSvg stroke={ACID} />
+          </div>
+          <SigilSvg stroke={BLUE} />
         </div>
       </div>
     ),
-    { ...size }
+    {
+      ...size,
+      fonts: font ? [{ name: "Big Shoulders", data: font, weight: 900, style: "normal" }] : undefined,
+    }
   );
 }

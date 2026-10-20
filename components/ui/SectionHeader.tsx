@@ -1,15 +1,18 @@
 import styles from "./SectionHeader.module.css";
 
 interface SectionHeaderProps {
-  label: string;
+  id: string;
   title: React.ReactNode;
+  lede?: React.ReactNode;
 }
 
-export default function SectionHeader({ label, title }: SectionHeaderProps) {
+export default function SectionHeader({ id, title, lede }: SectionHeaderProps) {
   return (
     <div className={styles.header}>
-      <div className={styles.label}>{label}</div>
-      <h2 className={styles.title}>{title}</h2>
+      <h2 id={id} className={styles.title}>
+        {title}
+      </h2>
+      {lede && <p className={styles.lede}>{lede}</p>}
     </div>
   );
 }
