@@ -71,7 +71,7 @@ El agente publica cada artículo con un commit a `main`, y Vercel redespliega so
 1. En [developer.linkedin.com](https://developer.linkedin.com/) crea una app (te pide asociarla a una página de empresa: puedes crear una página mínima con tu nombre).
 2. En **Products** agrega **Share on LinkedIn** y **Sign In with LinkedIn using OpenID Connect**. Ambos se aprueban al instante.
 3. En **Auth** → Authorized redirect URLs agrega: `https://portafolio-inky-rho.vercel.app/api/linkedin/callback`.
-4. Variables: `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`. `LINKEDIN_API_VERSION` trae `202509`; si LinkedIn lo rechaza por antiguo, súbelo a un mes de los últimos 12.
+4. Variables: `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`. `LINKEDIN_API_VERSION` trae `202608`; si LinkedIn lo rechaza por antiguo, súbelo a un mes de los últimos 12.
 
 ## 8. Activar (2 min)
 

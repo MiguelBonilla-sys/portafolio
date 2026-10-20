@@ -27,7 +27,7 @@ const envSchema = z.object({
 
   LINKEDIN_CLIENT_ID: z.string().min(1),
   LINKEDIN_CLIENT_SECRET: z.string().min(1),
-  LINKEDIN_API_VERSION: z.string().regex(/^\d{6}$/).default("202509"),
+  LINKEDIN_API_VERSION: z.string().regex(/^\d{6}$/).default("202608"),
   TOKEN_ENCRYPTION_KEY: z.string().regex(/^[0-9a-f]{64}$/i, "32 bytes en hex (64 caracteres)"),
 
   INDEXNOW_KEY: z.string().default("3a142bdab1da687057cc12b488c8e24c"),
