@@ -13,8 +13,8 @@
 }
 
 .toggle:hover {
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
 }
 
 .sun,

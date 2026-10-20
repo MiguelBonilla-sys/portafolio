@@ -118,8 +118,8 @@
 
 .success {
   padding: 0.75rem 1rem;
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
   font-weight: 700;
 }
 

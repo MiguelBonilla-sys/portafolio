@@ -18,13 +18,13 @@ Archivos: `public/brand/symbol-dark.svg`, `public/brand/symbol-light.svg`, `publ
 | Anillo exterior grueso + anillo interior con 12 marcas | El ciclo del intercambio equivalente; las marcas son pines de un chip |
 | Triángulo hacia arriba | Signo alquímico de transformación |
 | "M" trazada como pista de circuito, apoyada en la base del triángulo | Miguel; el código dentro del proceso |
-| Rombo lima en el vértice | La piedra: el resultado que vale la pena |
-| Copia desplazada 3 px en lima (oscuro) o tinta (claro) | Sombra dura brutalista, error de registro de impresión |
+| Rombo cian en el vértice | La piedra: el resultado que vale la pena |
+| Copia desplazada 3 px en cian (oscuro) o tinta (claro) | Sombra dura brutalista, error de registro de impresión |
 
 Reglas: no girar, no cambiar colores fuera de la paleta, zona de respeto igual a un cuarto del diámetro. Por debajo de 48 px se usa `mark.svg` (anillo + M + rombo, sin triángulo ni marcas).
 
 ## Color
-Estrategia: **comprometida**. Azul eléctrico como color dominante de acción, lima como acento de impacto, sobre negro o concreto. Sin rojo en la marca; el rojo solo indica errores.
+Estrategia: **comprometida y análoga**. Azul eléctrico como color dominante de acción y cian eléctrico como acento, de la misma familia fría para que la paleta se vea armónica. Sin rojo ni verde lima en la marca (decisiones del dueño, 2026-10-20); el rojo solo indica errores.
 
 | Token | Oscuro (defecto) | Claro | Uso |
 |---|---|---|---|
@@ -35,9 +35,9 @@ Estrategia: **comprometida**. Azul eléctrico como color dominante de acción, l
 | `--hair` | `#2A2E3A` | `#C4C7CE` | Divisiones menores |
 | `--blue` | `#3D7BFF` | `#1D4FBF` | Marca, acción principal, enlaces (5,1:1 / 6,0:1) |
 | `--on-blue` | `#0A0B10` | `#FFFFFF` | Texto sobre azul (5,1:1 / 7,2:1) |
-| `--acid` | `#D4FF3A` | `#C8F000` | Acento, estado activo, sombras duras en oscuro. Siempre con `--ink-on-acid` encima |
-| `--ink-on-acid` | `#0A0B10` | `#0B0C10` | 17:1 / 14,8:1 |
-| `--shadow-hard` | `--acid` | `--ink` | Sombra desplazada sin difuminado |
+| `--accent` | `#2EE6FF` | `#22C3E6` | Acento, estado activo, sombras duras en oscuro. En claro, solo como relleno con `--ink-on-accent` encima (1,7:1 contra el fondo) |
+| `--ink-on-accent` | `#0A0B10` | `#0B0C10` | 13:1 / 9,3:1 |
+| `--shadow-hard` | `--accent` | `--ink` | Sombra desplazada sin difuminado |
 | `--danger` | `#FF8A7E` | `#B42318` | Errores de formulario |
 
 ## Typography
@@ -58,9 +58,9 @@ Estrategia: **comprometida**. Azul eléctrico como color dominante de acción, l
 - Proyectos y trayectoria son filas de tabla con reglas, no rejillas de tarjetas iguales.
 
 ## Motion
-- **El momento firmado:** al cargar, el símbolo del hero se dibuja (anillo, triángulo, M), aparece la piedra lima y la copia desplazada se separa 3 px: la transmutación. 1,6 s en total, ease-out exponencial.
+- **El momento firmado:** al cargar, el símbolo del hero se dibuja (anillo, triángulo, M), aparece la piedra cian y la copia desplazada se separa 3 px: la transmutación. 1,6 s en total, ease-out exponencial.
 - Interacción: filas y botones con desplazamiento duro de sombra (160 ms).
 - `prefers-reduced-motion`: el símbolo aparece completo, sin desplazamientos.
 
 ## Browser surfaces
-`::selection` lima con texto tinta, `caret-color` azul, foco con contorno de 3 px `--acid` en oscuro y `--blue` en claro con separación de 3 px, scrollbar fina en `--hair`, subrayado con `text-underline-offset: 0.2em`.
+`::selection` cian con texto tinta, `caret-color` azul, foco con contorno de 3 px `--accent` en oscuro y `--blue` en claro con separación de 3 px, scrollbar fina en `--hair`, subrayado con `text-underline-offset: 0.2em`.

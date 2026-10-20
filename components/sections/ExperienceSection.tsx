@@ -19,7 +19,7 @@ export default function ExperienceSection() {
             <li key={item.id} className={styles.row}>
               <div className={styles.meta}>
                 <span className={`data ${styles.date}`}>{item.date}</span>
-                <span className={item.type === "work" ? "chip chip-acid" : "chip"}>
+                <span className={item.type === "work" ? "chip chip-accent" : "chip"}>
                   {typeLabel[item.type]}
                 </span>
               </div>

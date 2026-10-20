@@ -97,16 +97,16 @@
   color: var(--on-blue);
 }
 
-.row:hover :global(.chip-acid),
-.row:focus-visible :global(.chip-acid) {
-  color: var(--ink-on-acid);
+.row:hover :global(.chip-accent),
+.row:focus-visible :global(.chip-accent) {
+  color: var(--ink-on-accent);
 }
 
 .row:hover .arrow,
 .row:focus-visible .arrow {
   border-color: var(--on-blue);
-  background: var(--acid);
-  color: var(--ink-on-acid);
+  background: var(--accent);
+  color: var(--ink-on-accent);
   transform: translateX(4px);
 }
 

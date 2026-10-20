@@ -27,7 +27,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       >
         <span className={styles.meta}>
           <span className="chip">{project.language}</span>
-          {project.featured && <span className="chip chip-acid">Destacado</span>}
+          {project.featured && <span className="chip chip-accent">Destacado</span>}
         </span>
         <span className={styles.main}>
           <span className={styles.title}>{project.title}</span>
