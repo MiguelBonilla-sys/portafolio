@@ -22,7 +22,7 @@
   display: grid;
 }
 
-:global([data-mantine-color-scheme="dark"]) .moon,
-:global([data-mantine-color-scheme="light"]) .sun {
+:global([data-theme="dark"]) .moon,
+:global([data-theme="light"]) .sun {
   display: none;
 }

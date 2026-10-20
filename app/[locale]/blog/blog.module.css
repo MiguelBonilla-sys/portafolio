@@ -1,0 +1,138 @@
+.section {
+  padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: 1.75rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  max-width: 44rem;
+}
+
+.empty p {
+  color: var(--ink-2);
+  font-size: 1.125rem;
+}
+
+.list {
+  list-style: none;
+  border-top: var(--border);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: start;
+  padding: clamp(1.5rem, 3vw, 2.25rem) 0;
+  border-bottom: var(--border);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out),
+    padding 160ms var(--ease-out);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.9375rem;
+}
+
+.main {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.75rem, 3.4vw, 3rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.desc {
+  max-width: 44rem;
+  color: var(--ink-2);
+}
+
+.minutes {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: var(--border);
+}
+
+.row:hover,
+.row:focus-visible {
+  background: var(--blue);
+  color: var(--on-blue);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.row:hover .desc,
+.row:hover .minutes,
+.row:focus-visible .desc,
+.row:focus-visible .minutes {
+  color: var(--on-blue);
+}
+
+.row:hover :global(.chip),
+.row:focus-visible :global(.chip) {
+  border-color: var(--on-blue);
+  color: var(--on-blue);
+}
+
+.row:hover .arrow,
+.row:focus-visible .arrow {
+  background: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+.rss {
+  margin-top: 2rem;
+}
+
+.rss a {
+  color: var(--ink-2);
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .meta {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .main {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .arrow {
+    width: 48px;
+    height: 48px;
+  }
+}

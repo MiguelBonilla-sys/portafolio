@@ -1,0 +1,91 @@
+.prose {
+  max-width: 44rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.prose > * + * {
+  margin-top: 1.25rem;
+}
+
+.prose h2 {
+  margin-top: 3rem;
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 0.95;
+}
+
+.prose h3 {
+  margin-top: 2.25rem;
+  font-weight: 800;
+  font-size: 1.625rem;
+  line-height: 1;
+}
+
+.prose p,
+.prose li {
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+}
+
+.prose li + li {
+  margin-top: 0.4rem;
+}
+
+.prose a {
+  color: var(--blue);
+  text-decoration: underline;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose :not(pre) > code {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  font-family: var(--font-data);
+  font-size: 0.9em;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+  border: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-family: var(--font-data);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.prose blockquote {
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  border-left: 2px solid var(--ink);
+  color: var(--ink-2);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--hair);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+}

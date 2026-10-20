@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Miguel Bonilla | Full Stack AI Engineer",
+    "description": "Full Stack AI Engineer en Bogotá. Construyo APIs, automatizaciones con n8n y CRM, y sistemas con LLMs. Abierto a trabajo remoto.",
+    "ogLocale": "es_CO",
+    "ogTag": "Bogotá · Remoto"
+  },
+  "nav": {
+    "label": "Principal",
+    "skip": "Saltar al contenido",
+    "about": "Sobre mí",
+    "stack": "Stack",
+    "path": "Trayectoria",
+    "projects": "Proyectos",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "theme": "Cambiar entre tema claro y oscuro",
+    "switchLang": "EN",
+    "switchLangLabel": "Read this page in English"
+  },
+  "hero": {
+    "role": "Full Stack AI Engineer",
+    "lede": "Convierto procesos de negocio en software que funciona: APIs seguras, automatizaciones con n8n y CRM, y sistemas que usan modelos de lenguaje.",
+    "ctaContact": "Escríbeme",
+    "ctaProjects": "Ver proyectos",
+    "factBase": "Base",
+    "factBaseValue": "Bogotá, Colombia · UTC−5",
+    "factNow": "Ahora",
+    "factNowValue": "Full Stack Developer · Coordenadas.co",
+    "factSeek": "Busco",
+    "factSeekValue": "Trabajo remoto",
+    "sigilTitle": "Símbolo de Miguel Bonilla: círculo de transmutación con una M de circuito"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "p1": "Estudio noveno semestre de Ingeniería de Sistemas en la Universidad de San Buenaventura, en Bogotá, y trabajo como Full Stack Developer en Coordenadas.co desde septiembre de 2025.",
+    "p2": "Mi trabajo diario está entre el código y la operación de negocio: integro CRMs y APIs, monto automatizaciones con n8n, Make y GoHighLevel, y construyo las plataformas web que las usan.",
+    "p3": "Fuera del trabajo construyo con modelos de lenguaje. Hice un generador de documentos académicos que corre con LLMs locales en Ollama, y ahora estoy armando un agente en LangGraph que redacta mi blog y no publica nada sin mi aprobación.",
+    "portraitAlt": "Retrato en pixel art de Miguel Bonilla con gafas, camisa blanca y traje azul"
+  },
+  "stack": {
+    "title": "Stack",
+    "lede": "Las herramientas con las que he entregado proyectos. Cada una aparece en al menos un repositorio o en mi trabajo actual."
+  },
+  "path": {
+    "title": "Trayectoria",
+    "work": "Trabajo",
+    "education": "Formación",
+    "self": "Autodidacta"
+  },
+  "projects": {
+    "title": "Proyectos",
+    "lede": "Repositorios públicos. Abre cualquiera para ver cómo está construido y qué decidí en el camino.",
+    "featured": "Destacado",
+    "stack": "Stack",
+    "viewRepo": "Ver repositorio",
+    "viewDemo": "Ver demo",
+    "archive": "Explora más de 35 repositorios con proyectos en Java, Python, web y automatización.",
+    "back": "Volver a proyectos",
+    "language": "Lenguaje",
+    "otherProjects": "Otros proyectos"
+  },
+  "blog": {
+    "title": "Blog",
+    "lede": "Notas de lo que construyo: agentes, automatización, backend y lo que aprendo en el camino. Cada artículo sale de un proyecto real.",
+    "empty": "Todavía no hay artículos publicados. El primero sale pronto; mientras tanto, mira los proyectos.",
+    "emptyCta": "Ver proyectos",
+    "readMore": "Leer artículo",
+    "published": "Publicado",
+    "updated": "Actualizado",
+    "minutes": "{count} min de lectura",
+    "faq": "Preguntas frecuentes",
+    "sources": "Fuentes",
+    "back": "Volver al blog",
+    "otherLang": "Read in English",
+    "pillars": {
+      "agents": "Agentes",
+      "automation": "Automatización",
+      "backend": "Backend",
+      "career": "Carrera"
+    },
+    "rss": "RSS"
+  },
+  "contact": {
+    "title": "Hablemos",
+    "intro": "Busco trabajo remoto como Full Stack o AI Engineer, y me interesan proyectos de automatización con IA. Escríbeme por el formulario o por cualquiera de estos canales.",
+    "name": "Nombre",
+    "email": "Email",
+    "message": "Mensaje",
+    "send": "Enviar mensaje",
+    "sending": "Enviando…",
+    "success": "Mensaje enviado. Te respondo pronto.",
+    "errorDefault": "No se pudo enviar. Intenta de nuevo o escríbeme por email.",
+    "errorNetwork": "No hubo conexión. Revisa tu red e intenta de nuevo, o escríbeme por email.",
+    "errName": "Escribe tu nombre.",
+    "errEmailEmpty": "Escribe tu email para poder responderte.",
+    "errEmailInvalid": "Ese email no parece válido. Revisa que tenga @ y dominio.",
+    "errMessage": "Cuéntame un poco más (mínimo 10 caracteres)."
+  },
+  "footer": {
+    "place": "Bogotá, Colombia · © 2026"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "body": "Esta ruta no existe o se movió.",
+    "home": "Ir al inicio"
+  }
+}

@@ -1,9 +1,6 @@
-@import "@mantine/core/styles.css";
-@import "tailwindcss";
-
 /* ── Tokens (ver DESIGN.md) ── */
 :root,
-[data-mantine-color-scheme="dark"] {
+[data-theme="dark"] {
   --ground: #0a0b10;
   --surface: #12141c;
   --ink: #edeff5;
@@ -19,7 +16,7 @@
   color-scheme: dark;
 }
 
-[data-mantine-color-scheme="light"] {
+[data-theme="light"] {
   --ground: #e9eaec;
   --surface: #f7f7f8;
   --ink: #0b0c10;
@@ -117,13 +114,13 @@ time,
 .shell {
   width: 100%;
   max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 16px;
+  margin-inline: auto;
+  padding-inline: 16px;
 }
 
 @media (min-width: 640px) {
   .shell {
-    padding: 0 32px;
+    padding-inline: 32px;
   }
 }
 
@@ -239,4 +236,11 @@ time,
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.inline-code {
+  padding: 0.05rem 0.3rem;
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  font-size: 0.9em;
 }

@@ -1,26 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import Sigil from "@/components/brand/Sigil";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { Link, usePathname } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import styles from "./Navbar.module.css";
 
-const navLinks = [
-  { id: "sobreMi", label: "Sobre mí" },
-  { id: "habilidades", label: "Stack" },
-  { id: "formacion", label: "Trayectoria" },
-  { id: "proyectos", label: "Proyectos" },
-  { id: "contacto", label: "Contacto" },
-];
+const sections = [
+  { id: "sobreMi", key: "about" },
+  { id: "habilidades", key: "stack" },
+  { id: "formacion", key: "path" },
+  { id: "proyectos", key: "projects" },
+] as const;
 
 export default function Navbar() {
+  const t = useTranslations("nav");
+  const locale = useLocale();
+  const pathname = usePathname();
+  const params = useParams();
   const [active, setActive] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Marca la sección visible para el estado activo del menú
+  const isHome = pathname === "/";
+  const isBlog = pathname.startsWith("/blog");
+  const otherLocale = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale;
+
+  // Marca la sección visible (solo en la página de inicio)
   useEffect(() => {
-    const sections = navLinks
-      .map((l) => document.getElementById(l.id))
+    if (!isHome) return;
+    const targets = [...sections.map((s) => s.id), "contacto"]
+      .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
     const observer = new IntersectionObserver(
@@ -30,9 +42,9 @@ export default function Navbar() {
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    sections.forEach((s) => observer.observe(s));
+    targets.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [isHome]);
 
   useEffect(() => {
     if (!open) return;
@@ -43,33 +55,61 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const close = () => setOpen(false);
+  const current = (id: string) => (isHome && active === id ? "location" : undefined);
+
   return (
     <header className={styles.bar}>
-      <nav className={`shell ${styles.inner}`} aria-label="Principal">
-        <a href="#home" className={`brand-link ${styles.brand}`} onClick={() => setOpen(false)}>
+      <nav className={`shell ${styles.inner}`} aria-label={t("label")}>
+        <Link href="/" className={`brand-link ${styles.brand}`} onClick={close}>
           <span className={styles.mark}>
             <Sigil variant="mark" />
           </span>
           <span className={styles.name}>Miguel Bonilla</span>
-        </a>
+        </Link>
 
         <ul id="menu-principal" className={`${styles.links} ${open ? styles.open : ""}`}>
-          {navLinks.map((link) => (
-            <li key={link.id}>
-              <a
-                href={`#${link.id}`}
+          {sections.map((s) => (
+            <li key={s.id}>
+              <Link
+                href={{ pathname: "/", hash: s.id }}
                 className={styles.link}
-                aria-current={active === link.id ? "location" : undefined}
-                onClick={() => setOpen(false)}
+                aria-current={current(s.id)}
+                onClick={close}
               >
-                {link.label}
-              </a>
+                {t(s.key)}
+              </Link>
             </li>
           ))}
+          <li>
+            <Link href="/blog" className={styles.link} aria-current={isBlog ? "page" : undefined} onClick={close}>
+              {t("blog")}
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={{ pathname: "/", hash: "contacto" }}
+              className={styles.link}
+              aria-current={current("contacto")}
+              onClick={close}
+            >
+              {t("contact")}
+            </Link>
+          </li>
         </ul>
 
         <div className={styles.actions}>
-          <ThemeToggle />
+          <Link
+            // @ts-expect-error -- la ruta actual y sus params vienen del router; son válidos en ambos idiomas
+            href={{ pathname, params }}
+            locale={otherLocale}
+            className={styles.lang}
+            aria-label={t("switchLangLabel")}
+            hrefLang={otherLocale}
+          >
+            {t("switchLang")}
+          </Link>
+          <ThemeToggle label={t("theme")} />
           <button
             type="button"
             className={styles.menuBtn}
@@ -77,7 +117,7 @@ export default function Navbar() {
             aria-controls="menu-principal"
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? "Cerrar" : "Menú"}
+            {open ? t("close") : t("menu")}
           </button>
         </div>
       </nav>

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "title": "Miguel Bonilla | Full Stack AI Engineer",
+    "description": "Full Stack AI Engineer based in Bogotá. I build APIs, n8n and CRM automations, and LLM-powered systems. Open to remote work.",
+    "ogLocale": "en_US",
+    "ogTag": "Bogotá · Remote"
+  },
+  "nav": {
+    "label": "Main",
+    "skip": "Skip to content",
+    "about": "About",
+    "stack": "Stack",
+    "path": "Experience",
+    "projects": "Projects",
+    "blog": "Blog",
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "theme": "Toggle light and dark theme",
+    "switchLang": "ES",
+    "switchLangLabel": "Leer esta página en español"
+  },
+  "hero": {
+    "role": "Full Stack AI Engineer",
+    "lede": "I turn business processes into software that works: secure APIs, n8n and CRM automations, and systems that use language models.",
+    "ctaContact": "Get in touch",
+    "ctaProjects": "See projects",
+    "factBase": "Base",
+    "factBaseValue": "Bogotá, Colombia · UTC−5",
+    "factNow": "Now",
+    "factNowValue": "Full Stack Developer · Coordenadas.co",
+    "factSeek": "Looking for",
+    "factSeekValue": "Remote work",
+    "sigilTitle": "Miguel Bonilla's symbol: a transmutation circle with a circuit-trace M"
+  },
+  "about": {
+    "title": "About",
+    "p1": "I'm in my ninth semester of Systems Engineering at Universidad de San Buenaventura in Bogotá, and I've worked as a Full Stack Developer at Coordenadas.co since September 2025.",
+    "p2": "My day-to-day work sits between code and business operations: I integrate CRMs and APIs, build automations with n8n, Make and GoHighLevel, and ship the web platforms that use them.",
+    "p3": "Outside work I build with language models. I made an academic document generator that runs on local LLMs through Ollama, and I'm now building a LangGraph agent that drafts my blog and publishes nothing without my approval.",
+    "portraitAlt": "Pixel art portrait of Miguel Bonilla wearing glasses, a white shirt and a blue suit"
+  },
+  "stack": {
+    "title": "Stack",
+    "lede": "The tools I've shipped projects with. Each one appears in at least one repository or in my current job."
+  },
+  "path": {
+    "title": "Experience",
+    "work": "Work",
+    "education": "Education",
+    "self": "Self-taught"
+  },
+  "projects": {
+    "title": "Projects",
+    "lede": "Public repositories. Open any of them to see how it's built and what I decided along the way.",
+    "featured": "Featured",
+    "stack": "Stack",
+    "viewRepo": "View repository",
+    "viewDemo": "View demo",
+    "archive": "Browse 35+ repositories with Java, Python, web and automation projects.",
+    "back": "Back to projects",
+    "language": "Language",
+    "otherProjects": "Other projects"
+  },
+  "blog": {
+    "title": "Blog",
+    "lede": "Notes on what I build: agents, automation, backend, and what I learn along the way. Every post comes from a real project.",
+    "empty": "No posts published yet. The first one is coming soon; in the meantime, take a look at the projects.",
+    "emptyCta": "See projects",
+    "readMore": "Read post",
+    "published": "Published",
+    "updated": "Updated",
+    "minutes": "{count} min read",
+    "faq": "FAQ",
+    "sources": "Sources",
+    "back": "Back to the blog",
+    "otherLang": "Leer en español",
+    "pillars": {
+      "agents": "Agents",
+      "automation": "Automation",
+      "backend": "Backend",
+      "career": "Career"
+    },
+    "rss": "RSS"
+  },
+  "contact": {
+    "title": "Let's talk",
+    "intro": "I'm looking for remote work as a Full Stack or AI Engineer, and I'm interested in AI automation projects. Write to me through the form or any of these channels.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "success": "Message sent. I'll get back to you soon.",
+    "errorDefault": "It couldn't be sent. Try again or email me directly.",
+    "errorNetwork": "No connection. Check your network and try again, or email me directly.",
+    "errName": "Enter your name.",
+    "errEmailEmpty": "Enter your email so I can reply.",
+    "errEmailInvalid": "That email doesn't look valid. Check it has an @ and a domain.",
+    "errMessage": "Tell me a bit more (at least 10 characters)."
+  },
+  "footer": {
+    "place": "Bogotá, Colombia · © 2026"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This route doesn't exist or has moved.",
+    "home": "Go home"
+  }
+}

@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
 export const alt = "Miguel Bonilla, Full Stack AI Engineer";
 export const size = { width: 1200, height: 630 };
@@ -37,7 +39,13 @@ function SigilSvg({ stroke }: { stroke: string }) {
   );
 }
 
-export default async function Image() {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
   const font = await loadDisplayFont();
   return new ImageResponse(
     (
@@ -60,7 +68,7 @@ export default async function Image() {
           <div style={{ marginTop: 28, fontSize: 64, fontWeight: 900, color: BLUE }}>FULL STACK AI ENGINEER</div>
           <div style={{ marginTop: 28, display: "flex" }}>
             <div style={{ background: ACCENT, color: GROUND, fontSize: 34, fontWeight: 900, padding: "6px 16px" }}>
-              Bogotá · Remoto
+              {t("ogTag")}
             </div>
           </div>
         </div>

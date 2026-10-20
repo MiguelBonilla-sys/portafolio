@@ -3,6 +3,20 @@
 > Fecha: 2026-10-20 · Horizonte: 12 semanas · Capacidad: 10 h/semana (120 h)
 > Documentos de detalle: [spec](docs/spec.md) · [arquitectura](docs/architecture.md) · [tareas](docs/tasks.md) · [guía de estilo anti-slop](docs/content-style-guide.md)
 
+## 0. Estado (2026-10-20)
+
+| Bloque | Estado |
+|---|---|
+| Rediseño de identidad (brutalismo cyberpunk, símbolo animado, azul + cian) | 🟢 Hecho. Ver `DESIGN.md` |
+| Fase 1: dependencias, bilingüe, blog MDX + RSS, páginas de proyecto, sitemap, robots, JSON-LD, `llms.txt` | 🟢 Hecho |
+| SEO técnico y navegadores con IA | 🟢 Lighthouse móvil: SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97. `llms-full.txt`, IndexNow listo |
+| Fase 1: copy final, resultados numéricos de proyectos, demo pública, CV en PDF | 🟡 Necesita material de Miguel |
+| Fase 1: perfil de LinkedIn, Search Console, Bing, IndexNow | 🔴 Pendiente (lo hace Miguel con la guía de §5) |
+| Fase 0: línea base de métricas y dominio | 🔴 Pendiente (Miguel) |
+| Fase 2: Content Engine | 🔴 No iniciado. Arranca cuando se cierren las Open Questions de `docs/spec.md` |
+
+**Siguiente paso de Miguel:** (1) registrar la línea base (T0); (2) definir el dominio y ponerlo en `NEXT_PUBLIC_SITE_URL` en Vercel; (3) completar los `[DATO?]` del primer artículo y quitarle `draft: true`; (4) confirmar términos de OpenCode Go; (5) tras el primer deploy con dominio, correr `SITE_URL=https://dominio npm run indexnow` y dar de alta el sitio en Google Search Console y Bing Webmaster Tools.
+
 ## 1. Objetivo
 
 Conseguir empleo remoto como **Full Stack / AI Engineer** (prioridad) y abrir un canal secundario de clientes freelance de automatización con IA. El portafolio, el blog y LinkedIn trabajan como un solo sistema: el blog es la fuente, LinkedIn distribuye y los buscadores (Google, Bing, ChatGPT, Perplexity, Claude) encuentran y citan.

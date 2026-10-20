@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { ArrowIcon } from "@/components/ui/icons";
+import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { getPosts } from "@/lib/blog";
+import { alternatesFor } from "@/lib/site";
+import styles from "./blog.module.css";
+
+export async function generateMetadata({ params }: PageProps<"/[locale]/blog">): Promise<Metadata> {
+  const { locale } = (await params) as { locale: Locale };
+  const t = await getTranslations({ locale, namespace: "blog" });
+  return {
+    title: t("title"),
+    description: t("lede"),
+    alternates: alternatesFor(locale, "/blog"),
+  };
+}
+
+export default async function BlogIndex({ params }: PageProps<"/[locale]/blog">) {
+  const { locale } = (await params) as { locale: Locale };
+  setRequestLocale(locale);
+  const t = await getTranslations("blog");
+  const posts = getPosts(locale);
+  const dateFmt = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" });
+
+  return (
+    <section className={styles.section} aria-labelledby="blog-title">
+      <div className="shell">
+        <SectionHeader id="blog-title" title={t("title")} lede={t("lede")} />
+
+        {posts.length === 0 ? (
+          <div className={styles.empty}>
+            <p>{t("empty")}</p>
+            <Link href={{ pathname: "/", hash: "proyectos" }} className="btn btn-primary">
+              {t("emptyCta")}
+            </Link>
+          </div>
+        ) : (
+          <ul className={styles.list}>
+            {posts.map((post) => (
+              <li key={post.slug}>
+                <Link href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }} className={styles.row}>
+                  <span className={styles.meta}>
+                    <time dateTime={post.date}>{dateFmt.format(new Date(post.date))}</time>
+                    <span className="chip">{t(`pillars.${post.pillar}`)}</span>
+                    {post.draft && <span className="chip chip-accent">draft</span>}
+                  </span>
+                  <span className={styles.main}>
+                    <span className={styles.title}>{post.title}</span>
+                    <span className={styles.desc}>{post.description}</span>
+                    <span className={`data ${styles.minutes}`}>{t("minutes", { count: post.readingMinutes })}</span>
+                  </span>
+                  <span className={styles.arrow} aria-hidden="true">
+                    <ArrowIcon size={28} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <p className={styles.rss}>
+          <a href={`/${locale}/feed.xml`} className="data">
+            {t("rss")}
+          </a>
+        </p>
+      </div>
+    </section>
+  );
+}

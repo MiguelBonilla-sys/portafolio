@@ -16,7 +16,7 @@ export interface Project {
 
 export interface SkillCategory {
   id: string;
-  label: string;
+  label: { es: string; en: string };
   items: string[];
 }
 

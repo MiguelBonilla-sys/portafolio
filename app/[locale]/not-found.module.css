@@ -1,0 +1,22 @@
+.wrap {
+  padding-top: clamp(5rem, 12vw, 10rem);
+  padding-bottom: clamp(5rem, 12vw, 10rem);
+}
+
+.code {
+  color: var(--blue);
+  font-size: 1.125rem;
+}
+
+.title {
+  margin-top: 0.5rem;
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 0.9;
+}
+
+.body {
+  margin: 1.25rem 0 2.25rem;
+  color: var(--ink-2);
+  font-size: 1.125rem;
+}
