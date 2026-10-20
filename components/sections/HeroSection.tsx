@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Sigil from "@/components/brand/Sigil";
 import { Link } from "@/i18n/navigation";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
@@ -14,9 +14,11 @@ const socials = [
 
 export default async function HeroSection() {
   const t = await getTranslations("hero");
+  const locale = await getLocale();
   const facts = [
     { term: t("factBase"), value: t("factBaseValue") },
     { term: t("factNow"), value: t("factNowValue") },
+    { term: t("factExp"), value: t("factExpValue") },
     { term: t("factSeek"), value: t("factSeekValue") },
   ];
 
@@ -38,6 +40,9 @@ export default async function HeroSection() {
             <Link href={{ pathname: "/", hash: "proyectos" }} className="btn btn-ghost">
               {t("ctaProjects")}
             </Link>
+            <a href={`/cv/miguel-bonilla-cv-${locale}.pdf`} className="btn btn-ghost" download>
+              {t("ctaCv")}
+            </a>
           </div>
           <ul className={styles.socials}>
             {socials.map(({ href, label, Icon }) => (

@@ -12,6 +12,7 @@ const experience: Record<Locale, ExperienceItem[]> = {
   en: experienceEn as ExperienceItem[],
 };
 
+export const PHONE = "+57 319 518 0894";
 export const GITHUB_URL = "https://github.com/MiguelBonilla-sys";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/miguel-bonilla-sys";
 export const X_URL = "https://x.com/_mangel14_";
@@ -29,6 +30,16 @@ export function getExperience(locale: Locale): ExperienceItem[] {
   return experience[locale];
 }
 
-export function getSkills(): SkillCategory[] {
-  return skills as SkillCategory[];
+export interface LocalizedSkillCategory {
+  id: string;
+  label: string;
+  items: string[];
+}
+
+export function getSkills(locale: Locale): LocalizedSkillCategory[] {
+  return (skills as SkillCategory[]).map((c) => ({
+    id: c.id,
+    label: c.label[locale],
+    items: c.items.map((i) => (typeof i === "string" ? i : i[locale])),
+  }));
 }

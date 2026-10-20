@@ -15,7 +15,7 @@ export function GET() {
     "",
     "> Full Stack AI Engineer based in Bogotá, Colombia (UTC−5). Builds secure APIs, n8n and CRM automations, and LLM-powered systems. Open to remote work.",
     "",
-    "Miguel Ángel Bonilla Torres (handle: mangel14) works as a Full Stack Developer at Coordenadas.co since September 2025 and studies Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
+    "Miguel Ángel Bonilla Torres (handle: mangel14) has 2+ years of professional software experience. He has worked as a Full Stack Developer at Coordenadas.co (remote) since August 2025, was a Junior Backend Engineer at Sibartech Technology SAS (Feb 2024 – Aug 2025), and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
     "",
     `Full content in one file: ${SITE_URL}/llms-full.txt`,
     "",
@@ -24,12 +24,13 @@ export function GET() {
     `- Email: ${EMAIL}`,
     `- LinkedIn: ${LINKEDIN_URL}`,
     `- GitHub: ${GITHUB_URL}`,
+    `- Resume (English): ${absoluteUrl("en", "/cv")} · PDF: ${SITE_URL}/cv/miguel-bonilla-cv-en.pdf`,
     `- Portfolio (English): ${absoluteUrl("en", "/")}`,
     `- Portfolio (Spanish): ${absoluteUrl("es", "/")}`,
     "",
     "## Experience",
     "",
-    ...experience.map((e) => `- ${e.title}, ${e.place} (${e.date}): ${e.description}`),
+    ...experience.map((e) => `- ${e.title}, ${e.place} (${e.date}): ${[e.description, ...(e.highlights ?? [])].join(" ")}`),
     "",
     "## Projects",
     "",
@@ -40,7 +41,7 @@ export function GET() {
     "",
     "## Skills",
     "",
-    ...getSkills().map((c) => `- ${c.label.en}: ${c.items.join(", ")}`),
+    ...getSkills("en").map((c) => `- ${c.label}: ${c.items.join(", ")}`),
   ];
 
   if (posts.length > 0) {

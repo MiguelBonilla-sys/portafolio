@@ -23,7 +23,16 @@ export default async function ExperienceSection() {
                 <h3 className={styles.title}>{item.title}</h3>
                 <p className={styles.place}>{item.place}</p>
               </div>
-              <p className={styles.desc}>{item.description}</p>
+              <div className={styles.desc}>
+                <p>{item.description}</p>
+                {item.highlights && (
+                  <ul className={styles.highlights}>
+                    {item.highlights.map((h) => (
+                      <li key={h}>{h}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </li>
           ))}
         </ol>

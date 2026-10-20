@@ -20,6 +20,18 @@
   gap: 0.5rem;
 }
 
+.context {
+  flex-basis: 100%;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.row:hover .context,
+.row:focus-visible .context {
+  color: var(--on-blue);
+}
+
 .main {
   display: grid;
   gap: 0.75rem;

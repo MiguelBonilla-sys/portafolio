@@ -63,6 +63,7 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
         <div className={styles.meta}>
           <span className="chip">{project.language}</span>
           {project.featured && <span className="chip chip-accent">{t("featured")}</span>}
+          {project.context && <span className="data">{project.context}</span>}
         </div>
         <h1 className={styles.title}>{project.title}</h1>
         <p className={styles.lede}>{project.description}</p>
