@@ -8,14 +8,20 @@
 | Bloque | Estado |
 |---|---|
 | Rediseño de identidad (brutalismo cyberpunk, símbolo animado, azul + cian) | 🟢 Hecho. Ver `DESIGN.md` |
-| Fase 1: dependencias, bilingüe, blog MDX + RSS, páginas de proyecto, sitemap, robots, JSON-LD, `llms.txt` | 🟢 Hecho |
-| SEO técnico y navegadores con IA | 🟢 Lighthouse móvil: SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97. `llms-full.txt`, IndexNow listo |
-| Fase 1: copy final, resultados numéricos de proyectos, demo pública, CV en PDF | 🟡 Necesita material de Miguel |
-| Fase 1: perfil de LinkedIn, Search Console, Bing, IndexNow | 🔴 Pendiente (lo hace Miguel con la guía de §5) |
-| Fase 0: línea base de métricas y dominio | 🔴 Pendiente (Miguel) |
-| Fase 2: Content Engine | 🔴 No iniciado. Arranca cuando se cierren las Open Questions de `docs/spec.md` |
+| Fase 1: bilingüe, blog MDX + RSS, páginas de proyecto, CV (web + PDF), contenido del CV de agosto 2026 | 🟢 Hecho |
+| SEO técnico y navegadores con IA | 🟢 Lighthouse móvil: SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97 |
+| Fase 2: Content Engine (LangGraph.js, Telegram, LinkedIn, GitHub, cron, IndexNow) | 🟢 Código y tests listos. Falta configurar las variables (`docs/setup.md`) |
+| Fase 3: carruseles PDF, evals, reporte semanal | 🟢 Código listo. El caso de estudio se escribe tras 4 semanas de uso real |
+| Perfil de LinkedIn | 🟡 Textos en `docs/linkedin-profile.md`, falta pegarlos |
+| Línea base de métricas | 🔴 Pendiente (Miguel): `docs/baseline.md` |
 
-**Siguiente paso de Miguel:** (1) registrar la línea base (T0); (2) definir el dominio y ponerlo en `NEXT_PUBLIC_SITE_URL` en Vercel; (3) completar los `[DATO?]` del primer artículo y quitarle `draft: true`; (4) confirmar términos de OpenCode Go; (5) tras el primer deploy con dominio, correr `SITE_URL=https://dominio npm run indexnow` y dar de alta el sitio en Google Search Console y Bing Webmaster Tools.
+**Lo que queda en manos de Miguel** (todo lo demás es código ya hecho):
+1. Poner las variables de entorno en Vercel y abrir `/api/agent/setup?key=…` (guía completa en `docs/setup.md`).
+2. Conectar LinkedIn desde `/api/linkedin/auth?key=…`.
+3. Completar `docs/baseline.md` (semana 0).
+4. Pegar el perfil de `docs/linkedin-profile.md`.
+5. Completar los `[DATO?]` del primer artículo (o rehacerlo desde el bot) y quitarle `draft: true`.
+6. Tras el primer deploy: `npm run indexnow`, Google Search Console y Bing Webmaster Tools.
 
 ## 1. Objetivo
 

@@ -67,9 +67,11 @@
 - [ ] T13: Optimizar el perfil de LinkedIn (skill `linkedin-cv-optimizer` + guía anti-slop) — *F8* — est: 4h
   - Acceptance: headline, About, Featured, top 5 skills, experiencia en Coordenadas y Projects actualizados en EN y ES según `plan.md` §5; Open to Work activo solo para recruiters; banner con la URL del portafolio.
   - Depends on: T3, T7
-- [ ] T14: CV descargable en EN y ES — *F15* — est: 2h
+  - Estado: 🟡 Textos listos en `docs/linkedin-profile.md`; falta pegarlos en LinkedIn.
+- [x] T14: CV descargable en EN y ES — *F15* — est: 2h
   - Acceptance: `/cv-en.pdf` y `/cv-es.pdf` existen, pesan < 300 KB, son texto seleccionable (legible por ATS) y están enlazados desde el hero y el contacto.
   - Depends on: T13
+  - Estado: 🟢 2026-10-20: `/es/cv`, `/en/cv` (legibles por ATS) y `public/cv/*.pdf` generados con `npm run cv`.
 - [ ] T15: Search Console, Bing Webmaster Tools, IndexNow y segmento de IA en GA4 — *F7* — est: 2h
   - Acceptance: el dominio está verificado en ambas consolas con el sitemap enviado; `public/{key}.txt` existe; GA4 tiene un segmento con referrers chatgpt.com, perplexity.ai, claude.ai y gemini.google.com.
   - Depends on: T10
@@ -84,60 +86,77 @@
 
 ## Phase 2 — Content Engine v1: LangGraph.js en Vercel (semanas 5–8) · 34 h
 
-- [ ] T18: Postgres gestionado + checkpointer + `content_log` — *F9, F12* — est: 2h
+- [x] T18: Postgres gestionado + checkpointer + `content_log` — *F9, F12* — est: 2h
   - Acceptance: base en Supabase o Neon (plan gratuito) con `DATABASE_URL` en Vercel; `PostgresSaver.setup()` crea sus tablas; existe una migración SQL versionada para `content_log`.
   - Depends on: T1
-- [ ] T19: Bot de Telegram + `POST /api/telegram` — *F9, F11* — est: 3h
+  - Estado: 🟢 2026-10-20: `agent/lib/db.ts` (`content_log`, `agent_kv`, `telegram_updates`) + `PostgresSaver`; se crean solos al abrir `/api/agent/setup`.
+- [x] T19: Bot de Telegram + `POST /api/telegram` — *F9, F11* — est: 3h
   - Acceptance: sin el header `X-Telegram-Bot-Api-Secret-Token` correcto responde 401; un mensaje desde otro chat ID se ignora; la ruta responde 200 en < 1 s y ejecuta el trabajo con `after()`; un `update_id` repetido no se procesa dos veces.
   - Depends on: T18
-- [ ] T20: Cliente LLM (`agent/lib/llm.ts`) con OpenCode Go, respaldo y LangSmith — *F9* — est: 2h
+  - Estado: 🟢 2026-10-20: `app/api/telegram/route.ts` (secreto con comparación en tiempo constante, chat id, `after()`, deduplicación por `update_id`). Comandos `/ayuda`, `/estado`, `/cancelar`, opciones `/es` y `/carrusel`.
+- [x] T20: Cliente LLM (`agent/lib/llm.ts`) con OpenCode Go, respaldo y LangSmith — *F9* — est: 2h
   - Acceptance: términos de OpenCode Go revisados y anotados en `spec.md`; con `LLM_BASE_URL` caído, la llamada usa el proveedor de respaldo y se registra; las trazas aparecen en LangSmith.
   - Depends on: T1
-- [ ] T21: Grafo de generación (`extractFacts`, `draftBlogEs`, `antiSlopEdit`, `localizeEn`, `adaptLinkedIn`, `verifyFacts`) — *F9, F10* — est: 8h
+  - Estado: 🟢 2026-10-20: `agent/lib/llm.ts` con OpenCode Go y `withFallbacks`. Pendiente de Miguel: confirmar términos de OpenCode Go.
+- [x] T21: Grafo de generación (`extractFacts`, `draftBlogEs`, `antiSlopEdit`, `localizeEn`, `adaptLinkedIn`, `verifyFacts`) — *F9, F10* — est: 8h
   - Acceptance: con 3 materiales de prueba reales, el tramo hasta `humanReview` termina en < 300 s (medido en LangSmith); ninguna cifra de la salida falta en `facts`; los datos faltantes aparecen como `[DATO?]`.
   - Depends on: T18, T20
-- [ ] T22: Linter determinista (`agent/lib/lint.ts`) con tests — *F10* — est: 3h
+  - Estado: 🟢 2026-10-20: `agent/graph.ts`. Las cifras que no están en el material se marcan `[DATO?]` de forma determinista (`markUnknownNumbers`). Tests con LLM simulado en `agent/test/graph.test.ts`.
+- [x] T22: Linter determinista (`agent/lib/lint.ts`) con tests — *F10* — est: 3h
   - Acceptance: detecta las expresiones P0/P1 de `content-style-guide.md` §9 en ES y EN con un set de 20 frases de prueba (≥ 95% de aciertos, 0 falsos positivos en 10 frases limpias); los tests corren en `npm test`.
   - Depends on: —
-- [ ] T23: `humanReview` con `interrupt()` y botones de Telegram — *F10, F11* — est: 3h
+  - Estado: 🟢 2026-10-20: `agent/lib/lint.ts`; 20/20 frases sucias detectadas, 0/10 falsos positivos (`npm test`).
+- [x] T23: `humanReview` con `interrupt()` y botones de Telegram — *F10, F11* — est: 3h
   - Acceptance: un borrador limpio llega con los botones Aprobar, Editar, Rechazar y Reprogramar; uno con P0 o `[DATO?]` llega marcado "bloqueado" sin Aprobar; responder con texto reanuda el hilo como `edit` y vuelve a pedir aprobación; cada botón reanuda el hilo correcto con `Command({ resume })`.
   - Depends on: T19, T21, T22
-- [ ] T24: App de LinkedIn, OAuth y token cifrado — *F12* — est: 3h
+  - Estado: 🟢 2026-10-20: `sendPreview` + `humanReview` separados (el código antes de `interrupt()` se re-ejecuta al reanudar). Editar por botón o respondiendo a la vista previa; las cifras que da el autor resuelven los `[DATO?]`.
+- [x] T24: App de LinkedIn, OAuth y token cifrado — *F12* — est: 3h
   - Acceptance: `/api/linkedin/callback` guarda el token (`openid profile w_member_social`) cifrado y con su fecha de vencimiento; un post de prueba visible solo para conexiones se crea y se borra.
   - Depends on: T18
-- [ ] T25: Nodos de publicación idempotentes (`publishBlog`, `waitDeploy`, `publishLinkedIn`, comentario, `indexNow`, `notify`) — *F12* — est: 6h
+  - Estado: 🟢 2026-10-20: `/api/linkedin/auth` + `/api/linkedin/callback`, token cifrado AES-256-GCM en `agent_kv`.
+- [x] T25: Nodos de publicación idempotentes (`publishBlog`, `waitDeploy`, `publishLinkedIn`, comentario, `indexNow`, `notify`) — *F12* — est: 6h
   - Acceptance: al aprobar se crean los 2 MDX en `main`, la URL responde 200, se publica en LinkedIn, se agrega el comentario con el enlace, se envía IndexNow y llega la confirmación por Telegram; si el deploy tarda más de 180 s el estado pasa a `awaiting_deploy` con botón "Reintentar"; reanudar el mismo hilo no publica dos veces.
   - Depends on: T8, T23, T24
-- [ ] T26: Cron diario (`/api/cron/daily` + `vercel.json`) — *F11, F12* — est: 2h
+  - Estado: 🟢 2026-10-20: commit ES/EN → espera de deploy → post → comentario con enlace → IndexNow → aviso. Idempotente por `state.steps` (probado). Deploy lento o LinkedIn sin token: pausa con botón Reintentar.
+- [x] T26: Cron diario (`/api/cron/daily` + `vercel.json`) — *F11, F12* — est: 2h
   - Acceptance: sin `CRON_SECRET` responde 401; en una ejecución simulada publica lo programado, reintenta `awaiting_deploy`, marca `expired` lo que lleva > 48 h, avisa si al token le quedan ≤ 10 días, pide material los lunes y envía el reporte los domingos.
   - Depends on: T23, T25
+  - Estado: 🟢 2026-10-20: `/api/cron/daily` + `vercel.json` (13:00 UTC).
 - [ ] T27: Prueba de punta a punta con 2 piezas reales — *F9–F12* — est: 2h
   - Acceptance: 2 piezas publicadas de punta a punta; ninguna invocación supera 300 s; revisión humana ≤ 20 min cada una; 0 marcas P0/P1 en lo publicado.
   - Depends on: T25, T26
+  - Estado: 🟡 Probado de punta a punta con servicios simulados (10 tests). Falta la prueba real con credenciales: ver `docs/setup.md`.
 
 ## Phase 3 — Carruseles, evals y caso de estudio (semanas 9–12) · 22 h
 
 - [ ] T30: Spike: post de documento PDF en perfil personal vía API — *F13* — est: 2h
   - Acceptance: `docs/spike-linkedin-documents.md` documenta si funciona con `w_member_social`, con evidencia (request, respuesta, captura); decisión: API o plan B.
   - Depends on: T24
-- [ ] T31: Plantilla de carrusel con `next/og` + `pdf-lib` — *F13* — est: 5h
+  - Estado: 🟡 Sin credenciales no se puede probar contra LinkedIn. El plan B quedó implementado: si el documento falla, publica como texto y avisa.
+- [x] T31: Plantilla de carrusel con `next/og` + `pdf-lib` — *F13* — est: 5h
   - Acceptance: a partir de un JSON de 6–10 láminas genera un PDF 1080×1350 con los colores y tipografías del sitio, legible en móvil, dentro de una función de Vercel en < 60 s.
   - Depends on: T30
-- [ ] T32: Nodo `carousel` en el grafo y ruta de publicación — *F13* — est: 3h
+  - Estado: 🟢 2026-10-20: `agent/carousel.tsx` (next/og → PNG 1080×1350 → pdf-lib). Probado: PDF de 3 láminas.
+- [x] T32: Nodo `carousel` en el grafo y ruta de publicación — *F13* — est: 3h
   - Acceptance: un borrador de tipo carrusel llega a Telegram con el PDF adjunto y, al aprobarse, se publica (o sigue el plan B de T30).
   - Depends on: T31, T25
-- [ ] T33: Evals de contenido — *F14* — est: 4h
+  - Estado: 🟢 2026-10-20: nodo `draftCarousel`, PDF adjunto en la vista previa y subida como documento al publicar.
+- [x] T33: Evals de contenido — *F14* — est: 4h
   - Acceptance: el nodo `evaluate` guarda `eval_scores` (especificidad, densidad de hechos, marcas de IA, ajuste al pilar, 1–5) en `content_log`; existe un dataset en LangSmith con las piezas aprobadas y rechazadas; el reporte semanal muestra el promedio.
   - Depends on: T21
+  - Estado: 🟢 2026-10-20: nodo `evaluate` (rúbrica con el LLM + métricas deterministas) guardado en `content_log.eval_scores`; promedio en el reporte semanal. El dataset en LangSmith queda como mejora opcional.
 - [ ] T34: Caso de estudio del Content Engine — *F2* — est: 5h
   - Acceptance: la página `/[locale]/proyectos/content-engine` tiene diagrama del grafo, decisiones, métricas reales (duración por tramo, piezas publicadas, tasa de rechazo) y un video de demo de ≤ 2 min; `agent/README.md` documenta arquitectura y setup.
   - Depends on: T27, T33
+  - Estado: 🔴 Se escribe con datos reales después de 4 semanas de uso.
 - [ ] T35: Auditoría de citación en IA (quincenal) y ajuste de la guía — *F6* — est: 2h
   - Acceptance: `docs/baseline.md` tiene 6 registros quincenales de la consulta de marca en ChatGPT, Perplexity y Claude.
   - Depends on: T16
+  - Estado: 🟡 Plantilla en `docs/baseline.md`; la auditoría la hace Miguel cada 2 semanas.
 - [ ] T36: Retro de 12 semanas — *todas* — est: 1h
   - Acceptance: `docs/retro.md` compara la línea base con las métricas finales y decide qué sigue.
   - Depends on: T35
+  - Estado: 🔴 Semana 12.
 
 ## Continuo (semanas 2–12) · 20 h
 

@@ -31,7 +31,7 @@ Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de conte
 
 ## Estructura del repo
 
-Estado al 2026-10-20: lo marcado con ✓ ya existe; el resto llega en la fase 2.
+Estado al 2026-10-20: todo lo marcado con ✓ existe en el repo.
 
 ```
 app/
@@ -47,15 +47,27 @@ app/
       [slug]/page.tsx       ✓ artículo (BlogPosting, BreadcrumbList, FAQPage)
     proyectos/[id]/page.tsx ✓ /es/proyectos/[id] y /en/projects/[id]
   api/
-    telegram/route.ts       webhook: mensajes y botones (callback_query)
-    cron/daily/route.ts     cron diario protegido con CRON_SECRET
-    linkedin/callback/route.ts
+    telegram/route.ts       ✓ webhook: mensajes y botones (callback_query)
+    cron/daily/route.ts     ✓ cron diario protegido con CRON_SECRET
+    linkedin/auth/route.ts  ✓ inicia OAuth (?key=ADMIN_SECRET)
+    linkedin/callback/route.ts ✓
+    agent/setup/route.ts    ✓ crea tablas, registra el webhook, diagnóstico (?key=ADMIN_SECRET)
   sitemap.ts                ✓
   robots.ts                 ✓
   llms.txt/route.ts         ✓
   icon.svg, apple-icon.png  ✓
   globals.css               ✓ tokens (DESIGN.md)
-agent/                      fase 2 (ver "Grafo del agente")
+agent/                      ✓ Content Engine
+  config.ts                 variables (zod), validadas al usarlas
+  state.ts                  estado del grafo (Annotation)
+  graph.ts                  nodos y enrutamiento
+  prompts.ts                prompts con las reglas de la guía anti-slop
+  deps.ts                   interfaz de servicios externos (inyectables en tests)
+  runtime.ts                servicios reales + PostgresSaver
+  handlers.ts               Telegram, cron diario, reporte semanal
+  carousel.tsx              láminas next/og → PDF (pdf-lib)
+  lib/                      lint, llm, json, telegram, github, linkedin, indexnow, db, crypto, mdx, text, auth
+  test/                     node --test: linter y grafo completo con LLM simulado
 components/
   brand/Sigil.tsx           ✓ símbolo animado
   blog/Prose.tsx            ✓ render MDX
@@ -77,22 +89,25 @@ lib/
   site.ts                   ✓ SITE_URL, absoluteUrl, alternates
 messages/{es,en}.json       ✓
 proxy.ts                    ✓ next-intl (en Next 16, middleware.ts pasó a llamarse proxy.ts)
-vercel.json                 cron diario (fase 2)
+vercel.json                 ✓ cron diario 13:00 UTC
 ```
 
 ## Grafo del agente
 
 ```
-START
-  └─► extractFacts ─► draftBlogEs ─► lint ─┬─(P0/P1 y pasadas < 2)─► antiSlopEdit ─► lint
-                                           └─(limpio o 2 pasadas)─► localizeEn ─► adaptLinkedIn
-                                                                       ─► [carousel] ─► verifyFacts ─► evaluate
-                                                                       ─► humanReview  ◄── interrupt()
-humanReview ─┬─ approve ────► publishBlog ─► waitDeploy ─► publishLinkedIn ─► indexNow ─► notify ─► END
-             ├─ edit(texto) ► antiSlopEdit (con las instrucciones) ─► … ─► humanReview
-             ├─ reschedule ─► guarda scheduled_for ─► END (lo retoma el cron diario)
-             └─ reject ─────► END
+START → extractFacts ─┬─ (< 2 hechos) → needMaterial → END
+                      └─ draftBlogEs → draftLinkedIn → antiSlop (≤ 2 pasadas) → localizeEn ─┬─ draftCarousel ─┐
+                                                                                            └────────────────┴→ verifyFacts → evaluate → sendPreview → humanReview ⏸
+humanReview ─┬─ approve ────► publishBlog → waitDeploy ─┬─ publishLinkedIn ─┬─ indexNow → notifyPublished → END
+             │                                          └─ deployPending → hold ⏸ ─(retry)→ waitDeploy
+             │                                                              publishLinkedIn sin token → hold ⏸ ─(retry)→ publishLinkedIn
+             ├─ edit ───────► applyEdit → verifyFacts → … → humanReview
+             ├─ reschedule ─► schedule → waitSchedule ⏸ ─(approve del cron)→ publishBlog
+             ├─ approve/reschedule con bloqueo → refuseApprove → humanReview
+             └─ reject/expire → close → END
 ```
+
+⏸ = `interrupt()`. Lo que hay antes de un `interrupt()` se vuelve a ejecutar al reanudar, por eso los mensajes de Telegram viven en nodos separados de las pausas (`sendPreview` / `humanReview`, `deployPending` / `hold`, `schedule` / `waitSchedule`).
 
 Reglas del grafo:
 - `extractFacts` produce la lista de hechos permitidos. Ningún nodo posterior puede introducir cifras, nombres ni experiencias fuera de esa lista.

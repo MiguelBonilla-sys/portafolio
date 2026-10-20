@@ -88,6 +88,6 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 
 ## Open Questions
 
-- [ ] Dominio de producción y valor de `NEXT_PUBLIC_SITE_URL`. Owner: Miguel. Antes de T5.
+- [x] Dominio de producción: `portafolio-inky-rho.vercel.app` (por defecto en el código; cambiar `NEXT_PUBLIC_SITE_URL` si se compra un dominio propio).
 - [ ] Confirmar que los términos de OpenCode Go permiten este uso y elegir el proveedor de respaldo. Owner: Miguel. Antes de T21.
-- [ ] Confirmar el email de contacto público (el sitio muestra `miguelangelboto14@gmail.com`). Owner: Miguel. Antes de T3.
+- [x] Email de contacto: `miguelangelboto14@gmail.com` (confirmado por el CV).
