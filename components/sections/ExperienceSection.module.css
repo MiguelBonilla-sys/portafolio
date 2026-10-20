@@ -1,45 +1,57 @@
 .section {
-  position: relative;
-  padding: 7rem 4rem;
-  border-top: 1px solid var(--border);
-  overflow: hidden;
+  padding: clamp(5rem, 10vw, 9rem) 0;
+  border-bottom: var(--border);
 }
 
-/* Canvas como fondo absoluto — ocupa toda la sección sin recuadro */
-.canvasBg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+.list {
+  list-style: none;
+  border-top: var(--border);
 }
 
-/* Contenido por encima del canvas */
-.content {
-  position: relative;
-  z-index: 1;
-  max-width: 640px;
+.row {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 1rem 2.5rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem) 0;
+  border-bottom: var(--border);
 }
 
-.timeline {
-  position: relative;
-  margin-top: 1rem;
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
 }
 
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--border);
+.date {
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.title {
+  font-weight: 800;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 0.95;
+}
+
+.place {
+  margin-top: 0.5rem;
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.desc {
+  color: var(--ink-2);
 }
 
 @media (max-width: 900px) {
-  .section {
-    padding: 4rem 1.5rem;
+  .row {
+    grid-template-columns: 1fr;
   }
-  .content {
-    max-width: 100%;
+
+  .meta {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
   }
 }

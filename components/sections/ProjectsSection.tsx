@@ -2,29 +2,44 @@ import projects from "@/data/projects.json";
 import type { Project } from "@/types";
 import ProjectCard from "@/components/ui/ProjectCard";
 import SectionHeader from "@/components/ui/SectionHeader";
-import AnimatedEntry from "@/components/ui/AnimatedEntry";
-import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import { ArrowIcon, GithubIcon } from "@/components/ui/icons";
 import styles from "./ProjectsSection.module.css";
 
 export default function ProjectsSection() {
+  const all = projects as Project[];
+  const archive = all.find((p) => p.id === "more-repos");
+  const list = all.filter((p) => p.id !== "more-repos");
+
   return (
-    <section id="proyectos" className={styles.section}>
-      <AnimatedEntry>
+    <section id="proyectos" className={styles.section} aria-labelledby="proyectos-title">
+      <div className="shell">
         <SectionHeader
-          label="// 04. proyectos destacados"
-          title="Lo que he construido"
+          id="proyectos-title"
+          title="Proyectos"
+          lede="Repositorios públicos. Abre cualquiera para ver cómo está construido y qué decidí en el camino."
         />
-      </AnimatedEntry>
-      <StaggerContainer className={styles.grid} initialDelay={0.1}>
-        {(projects as Project[]).map((project) => (
-          <StaggerItem
-            key={project.id}
-            className={project.featured ? styles.featured : undefined}
-          >
-            <ProjectCard project={project} />
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+        <ul className={styles.list}>
+          {list.map((project) => (
+            <li key={project.id}>
+              <ProjectCard project={project} />
+            </li>
+          ))}
+          {archive && (
+            <li>
+              <a
+                href={archive.links.repo ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.archive}
+              >
+                <GithubIcon size={22} />
+                <span>{archive.description}</span>
+                <ArrowIcon />
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
     </section>
   );
 }
