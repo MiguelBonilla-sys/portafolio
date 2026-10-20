@@ -25,7 +25,7 @@ Por qué este ángulo (investigación de mercado, octubre 2026):
 Tus tres activos se convierten en una sola historia:
 
 1. **Backend sólido**: FastAPI, JWT, PostgreSQL, Docker, despliegue.
-2. **IA aplicada**: LLM local con Ollama, y desde ahora agentes con Langflow, RAG y evals.
+2. **IA aplicada**: LLM local con Ollama, y desde ahora agentes con LangGraph, RAG y evals.
 3. **Procesos de negocio reales**: n8n, CRMs y GoHighLevel en Coordenadas.co.
 
 Regla de honestidad: una tecnología solo aparece en el titular, las skills o el hero cuando hay un proyecto público que la use.
@@ -34,26 +34,30 @@ Regla de honestidad: una tecnología solo aparece en el titular, las skills o el
 
 El sistema que publica tu contenido es, a la vez, tu mejor proyecto de portafolio.
 
+Todo corre dentro del mismo proyecto de Vercel que el portafolio. No hay servidores aparte.
+
 ```
-Ideas (Telegram, commits de GitHub, notas)
-   │
-   ▼
-n8n (orquestador) ──► Langflow (agente redactor + editor anti-slop + traductor)
-   │
-   ▼
-Telegram: vista previa + [Aprobar] [Editar] [Rechazar] [Reprogramar]
-   │  (sin aprobación no se publica nada)
-   ▼
+Telegram ──webhook──► /api/telegram ──► grafo LangGraph.js
+                                          (hechos → redactor → editor anti-slop → inglés → LinkedIn → verificador)
+                                                │
+                                         interrupt(): vista previa en Telegram
+                                         [Aprobar] [Editar] [Rechazar] [Reprogramar]
+                                                │  (estado guardado en Postgres; sin aprobación no se publica nada)
+Botón ──webhook──► /api/telegram ──► reanuda el grafo
+                                                ▼
 GitHub commit (MDX es/en) ──► Vercel deploy ──► LinkedIn Posts API ──► IndexNow
                                                    └─ enlace al blog en el primer comentario
+Cron diario de Vercel ──► publicaciones programadas, reintentos, vencimientos, aviso del token, reporte semanal
 ```
+
+Stack: LangGraph.js + `PostgresSaver` (Supabase o Neon gratuito) + OpenCode Go como LLM (con proveedor de respaldo) + LangSmith para trazas. Detalle en [arquitectura](docs/architecture.md).
 
 Decisiones tomadas tras el devil's advocate:
 
 | Supuesto original | Problema | Decisión |
 |---|---|---|
 | La IA genera y publica todo sola | Contenido genérico, riesgo de errores técnicos publicados, inventa datos | La IA redacta solo desde material real tuyo. Aprobación por Telegram obligatoria |
-| Langflow orquesta todo | Sin cron nativo; el Human-in-the-Loop aún es reciente; OAuth y botones a medida | n8n orquesta, Langflow es el cerebro expuesto como API. El proyecto demuestra ambos |
+| Un servidor aparte para el agente (n8n + Langflow en un VPS) | Más piezas, costo mensual y mantenimiento | LangGraph.js dentro del deploy de Vercel, con estado en Postgres y aprobación con `interrupt()`. LangGraph es además el framework agéntico más pedido en vacantes |
 | Todo en la v1 | Estimación ≈150 h frente a 120 h disponibles | Todo entra, por fases. Los carruseles PDF van en la fase 3, tras un spike |
 | Publicar enlace en el post | Los posts con enlace externo pierden 50–70% de alcance | Post nativo + enlace en el primer comentario |
 
@@ -63,7 +67,7 @@ Decisiones tomadas tras el devil's advocate:
 |---|---|---|---|
 | 0. Línea base | 1 | Métricas actuales registradas, dominio confirmado | 2 |
 | 1. Cimientos | 1–4 | Sitio bilingüe, blog MDX, SEO/GEO técnico, contenido reposicionado, LinkedIn optimizado | 42 |
-| 2. Content Engine v1 | 5–8 | Pipeline texto + imagen en producción con aprobación por Telegram | 34 |
+| 2. Content Engine v1 | 5–8 | Agente LangGraph en Vercel publicando texto + imagen con aprobación por Telegram | 34 |
 | 3. Carruseles y evals | 9–12 | Carruseles PDF automáticos, evals de calidad, caso de estudio publicado | 22 |
 | Contenido continuo | 2–12 | Revisión y aprobación semanal | 20 |
 | **Total** | | | **120** |
@@ -75,10 +79,10 @@ Desde la semana 2 publicas a mano con borradores asistidos. Si el pipeline se re
 Se trabaja con el skill `linkedin-cv-optimizer` sobre tu perfil actual (tarea T13). Propuesta base:
 
 **Headline (EN, máx. ~220 caracteres):**
-> Full Stack AI Engineer · I build AI agents and automations that run in production · Python, FastAPI, Next.js, n8n, Langflow · Open to remote roles
+> Full Stack AI Engineer · I build AI agents and automations that run in production · Python, FastAPI, Next.js, LangGraph, n8n · Open to remote roles
 
 **Headline (ES, perfil secundario):**
-> Full Stack AI Engineer · Construyo agentes de IA y automatizaciones en producción · Python, FastAPI, Next.js, n8n, Langflow · Abierto a remoto
+> Full Stack AI Engineer · Construyo agentes de IA y automatizaciones en producción · Python, FastAPI, Next.js, LangGraph, n8n · Abierto a remoto
 
 **Estructura del About** (en primera persona, sin adjetivos vacíos):
 1. Qué haces, en una frase con resultado concreto.
@@ -128,8 +132,8 @@ Cada artículo sale de un proyecto o de una experiencia real tuya. Los temas sig
 | 2 | LLM local con Ollama: tiempos reales en GPU frente a CPU | IA aplicada | Mediciones (30–90 s/doc en GPU), modelos probados |
 | 3 | Un flujo n8n + CRM en producción: antes y después | Automatización | Caso de Coordenadas anonimizado, horas ahorradas |
 | 4 | Cómo preparé mi portafolio para que lo citen ChatGPT y Perplexity | Full stack | Cambios de SEO/GEO, resultados de la auditoría |
-| 5 | n8n orquesta, Langflow piensa: por qué separé las dos capas | Agentes | Diagrama, alternativas descartadas |
-| 6 | Human-in-the-loop por Telegram para un agente que publica | Agentes | Flujo de aprobación, casos de rechazo |
+| 5 | Un agente LangGraph dentro de un deploy de Vercel: límites y cómo los resolví | Agentes | Diagrama, límite de 300 s, alternativas descartadas |
+| 6 | Human-in-the-loop con `interrupt()` y Telegram | Agentes | Flujo de aprobación, casos de rechazo |
 | 7 | Un linter anti-slop para texto generado con IA | Agentes | Reglas, ejemplos antes/después propios |
 | 8 | LinkedIn Posts API: lo que la documentación no te dice | Backend | Errores reales encontrados, token de 60 días |
 | 9 | RAG sobre mi propio portafolio: chunking y fuentes | Agentes | Métricas de recuperación |

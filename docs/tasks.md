@@ -8,7 +8,7 @@
 - [ ] T0: Registrar métricas actuales — *F7, F8* — est: 1h
   - Acceptance: `docs/baseline.md` contiene seguidores, impresiones de 7 días, search appearances, visitas al perfil, sesiones del sitio (GA4, 28 días), entrevistas del último mes y el resultado de preguntar "Miguel Bonilla AI engineer" en ChatGPT, Perplexity y Claude.
   - Depends on: —
-- [ ] T1: Cerrar las Open Questions de `spec.md` (dominio, proveedor de LLM, email de contacto) — *F5, F9* — est: 1h
+- [ ] T1: Cerrar las Open Questions de `spec.md` (dominio, términos de OpenCode Go y proveedor de respaldo, email de contacto) — *F5, F9* — est: 1h
   - Acceptance: `spec.md` no tiene preguntas abiertas sin owner; `NEXT_PUBLIC_SITE_URL` está definido en Vercel.
   - Depends on: —
 
@@ -60,37 +60,37 @@
   - Acceptance: Lighthouse SEO = 100 y Accessibility ≥ 95 en `/en`, `/en/blog` y un artículo; LCP móvil < 2,5 s; la escena 3D se carga con `dynamic(..., { ssr: false })` debajo del contenido.
   - Depends on: T10, T11, T12
 
-## Phase 2 — Content Engine v1 (semanas 5–8) · 35 h
+## Phase 2 — Content Engine v1: LangGraph.js en Vercel (semanas 5–8) · 34 h
 
-- [ ] T18: VPS con Coolify: n8n, Langflow y PostgreSQL — *F9* — est: 4h
-  - Acceptance: los tres servicios corren con HTTPS; Langflow exige `x-api-key`; n8n tiene autenticación; backup diario de PostgreSQL configurado.
+- [ ] T18: Postgres gestionado + checkpointer + `content_log` — *F9, F12* — est: 2h
+  - Acceptance: base en Supabase o Neon (plan gratuito) con `DATABASE_URL` en Vercel; `PostgresSaver.setup()` crea sus tablas; existe una migración SQL versionada para `content_log`.
   - Depends on: T1
-- [ ] T19: Bot de Telegram + `wf-intake` — *F9* — est: 3h
-  - Acceptance: un mensaje desde el chat ID de Miguel crea una fila `draft` en `content_log`; un mensaje desde otro chat se ignora; el cron del lunes 8:00 envía la solicitud de material.
+- [ ] T19: Bot de Telegram + `POST /api/telegram` — *F9, F11* — est: 3h
+  - Acceptance: sin el header `X-Telegram-Bot-Api-Secret-Token` correcto responde 401; un mensaje desde otro chat ID se ignora; la ruta responde 200 en < 1 s y ejecuta el trabajo con `after()`; un `update_id` repetido no se procesa dos veces.
+  - Depends on: T18
+- [ ] T20: Cliente LLM (`agent/lib/llm.ts`) con OpenCode Go, respaldo y LangSmith — *F9* — est: 2h
+  - Acceptance: términos de OpenCode Go revisados y anotados en `spec.md`; con `LLM_BASE_URL` caído, la llamada usa el proveedor de respaldo y se registra; las trazas aparecen en LangSmith.
+  - Depends on: T1
+- [ ] T21: Grafo de generación (`extractFacts`, `draftBlogEs`, `antiSlopEdit`, `localizeEn`, `adaptLinkedIn`, `verifyFacts`) — *F9, F10* — est: 8h
+  - Acceptance: con 3 materiales de prueba reales, el tramo hasta `humanReview` termina en < 300 s (medido en LangSmith); ninguna cifra de la salida falta en `facts`; los datos faltantes aparecen como `[DATO?]`.
   - Depends on: T18, T20
-- [ ] T20: Esquema `content_log` — *F12* — est: 1h
-  - Acceptance: la tabla existe con las columnas de `architecture.md`; hay una migración SQL versionada en el repo del pipeline.
-  - Depends on: T18
-- [ ] T21: Flujo de Langflow (extractor, redactor, editor, localizador, adaptador LinkedIn, verificador) — *F9, F10* — est: 8h
-  - Acceptance: con 3 materiales de prueba reales, devuelve el JSON del contrato en ≤ 5 min; ninguna cifra de la salida falta en la lista del extractor; los textos faltantes aparecen como `[DATO?]`.
-  - Depends on: T18
-- [ ] T22: Linter determinista anti-slop (Code node de n8n) — *F10* — est: 3h
-  - Acceptance: detecta todas las expresiones de las listas P0/P1 de `content-style-guide.md` en ES y EN con un set de 20 frases de prueba (≥ 95% de aciertos, 0 falsos positivos en 10 frases limpias).
+- [ ] T22: Linter determinista (`agent/lib/lint.ts`) con tests — *F10* — est: 3h
+  - Acceptance: detecta las expresiones P0/P1 de `content-style-guide.md` §9 en ES y EN con un set de 20 frases de prueba (≥ 95% de aciertos, 0 falsos positivos en 10 frases limpias); los tests corren en `npm test`.
   - Depends on: —
-- [ ] T23: `wf-generate` + `wf-approve` — *F10, F11* — est: 3h
-  - Acceptance: un borrador limpio llega a Telegram con los 4 botones; uno con P0 o `[DATO?]` llega marcado "bloqueado" sin Aprobar; sin respuesta en 48 h pasa a `expired`.
+- [ ] T23: `humanReview` con `interrupt()` y botones de Telegram — *F10, F11* — est: 3h
+  - Acceptance: un borrador limpio llega con los botones Aprobar, Editar, Rechazar y Reprogramar; uno con P0 o `[DATO?]` llega marcado "bloqueado" sin Aprobar; responder con texto reanuda el hilo como `edit` y vuelve a pedir aprobación; cada botón reanuda el hilo correcto con `Command({ resume })`.
   - Depends on: T19, T21, T22
-- [ ] T24: App de LinkedIn y OAuth — *F12* — est: 3h
-  - Acceptance: el token con `openid profile w_member_social` está guardado como credencial de n8n; un post de prueba visible solo para conexiones se crea y se borra.
+- [ ] T24: App de LinkedIn, OAuth y token cifrado — *F12* — est: 3h
+  - Acceptance: `/api/linkedin/callback` guarda el token (`openid profile w_member_social`) cifrado y con su fecha de vencimiento; un post de prueba visible solo para conexiones se crea y se borra.
   - Depends on: T18
-- [ ] T25: `wf-publish` — *F12* — est: 6h
-  - Acceptance: al aprobar se crean los 2 MDX en `main`, la URL responde 200, se publica en LinkedIn, se agrega el comentario con el enlace, se envía IndexNow y llega la confirmación por Telegram; repetir la ejecución con el mismo `content_id` no publica dos veces.
+- [ ] T25: Nodos de publicación idempotentes (`publishBlog`, `waitDeploy`, `publishLinkedIn`, comentario, `indexNow`, `notify`) — *F12* — est: 6h
+  - Acceptance: al aprobar se crean los 2 MDX en `main`, la URL responde 200, se publica en LinkedIn, se agrega el comentario con el enlace, se envía IndexNow y llega la confirmación por Telegram; si el deploy tarda más de 180 s el estado pasa a `awaiting_deploy` con botón "Reintentar"; reanudar el mismo hilo no publica dos veces.
   - Depends on: T8, T23, T24
-- [ ] T26: `wf-token-check` + `wf-weekly-report` — *F12* — est: 2h
-  - Acceptance: con un token simulado a 9 días de vencer llega el aviso; el domingo llega el resumen semanal.
-  - Depends on: T24
+- [ ] T26: Cron diario (`/api/cron/daily` + `vercel.json`) — *F11, F12* — est: 2h
+  - Acceptance: sin `CRON_SECRET` responde 401; en una ejecución simulada publica lo programado, reintenta `awaiting_deploy`, marca `expired` lo que lleva > 48 h, avisa si al token le quedan ≤ 10 días, pide material los lunes y envía el reporte los domingos.
+  - Depends on: T23, T25
 - [ ] T27: Prueba de punta a punta con 2 piezas reales — *F9–F12* — est: 2h
-  - Acceptance: 2 piezas publicadas de punta a punta; revisión humana ≤ 20 min cada una; 0 marcas P0/P1 en lo publicado.
+  - Acceptance: 2 piezas publicadas de punta a punta; ninguna invocación supera 300 s; revisión humana ≤ 20 min cada una; 0 marcas P0/P1 en lo publicado.
   - Depends on: T25, T26
 
 ## Phase 3 — Carruseles, evals y caso de estudio (semanas 9–12) · 22 h
@@ -98,17 +98,17 @@
 - [ ] T30: Spike: post de documento PDF en perfil personal vía API — *F13* — est: 2h
   - Acceptance: `docs/spike-linkedin-documents.md` documenta si funciona con `w_member_social`, con evidencia (request, respuesta, captura); decisión: API o plan B.
   - Depends on: T24
-- [ ] T31: Plantilla de carrusel HTML + Gotenberg — *F13* — est: 5h
-  - Acceptance: a partir de un JSON de 6–10 láminas genera un PDF 1080×1350 con los colores y tipografías del sitio, legible en móvil.
+- [ ] T31: Plantilla de carrusel con `next/og` + `pdf-lib` — *F13* — est: 5h
+  - Acceptance: a partir de un JSON de 6–10 láminas genera un PDF 1080×1350 con los colores y tipografías del sitio, legible en móvil, dentro de una función de Vercel en < 60 s.
   - Depends on: T30
-- [ ] T32: Nodo de carrusel en Langflow y ruta de publicación — *F13* — est: 3h
+- [ ] T32: Nodo `carousel` en el grafo y ruta de publicación — *F13* — est: 3h
   - Acceptance: un borrador de tipo carrusel llega a Telegram con el PDF adjunto y, al aprobarse, se publica (o sigue el plan B de T30).
   - Depends on: T31, T25
 - [ ] T33: Evals de contenido — *F14* — est: 4h
-  - Acceptance: cada borrador tiene `eval_scores` (especificidad, densidad de hechos, marcas de IA, ajuste al pilar, 1–5) en `content_log`; el reporte semanal muestra el promedio.
+  - Acceptance: el nodo `evaluate` guarda `eval_scores` (especificidad, densidad de hechos, marcas de IA, ajuste al pilar, 1–5) en `content_log`; existe un dataset en LangSmith con las piezas aprobadas y rechazadas; el reporte semanal muestra el promedio.
   - Depends on: T21
 - [ ] T34: Caso de estudio del Content Engine — *F2* — est: 5h
-  - Acceptance: la página `/[locale]/proyectos/content-engine` tiene diagrama, decisiones, métricas reales del pipeline y un video de demo de ≤ 2 min; el repo del pipeline tiene un README con arquitectura y setup.
+  - Acceptance: la página `/[locale]/proyectos/content-engine` tiene diagrama del grafo, decisiones, métricas reales (duración por tramo, piezas publicadas, tasa de rechazo) y un video de demo de ≤ 2 min; `agent/README.md` documenta arquitectura y setup.
   - Depends on: T27, T33
 - [ ] T35: Auditoría de citación en IA (quincenal) y ajuste de la guía — *F6* — est: 2h
   - Acceptance: `docs/baseline.md` tiene 6 registros quincenales de la consulta de marca en ChatGPT, Perplexity y Claude.

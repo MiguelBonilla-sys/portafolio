@@ -37,7 +37,7 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 | F6 | GEO / datos estructurados | P0 | Cada página emite JSON-LD válido (Rich Results Test sin errores): Person + WebSite en el home, BlogPosting + BreadcrumbList en artículos, FAQPage cuando el artículo tiene FAQ. Existe `/llms.txt` con resumen, proyectos y artículos. Todo el texto está en el HTML del servidor. |
 | F7 | Indexación y medición | P0 | El sitio está verificado en Google Search Console y Bing Webmaster Tools. Al publicar un artículo se envía un ping a IndexNow. GA4 tiene un segmento de referrers de IA. |
 | F8 | Perfil de LinkedIn optimizado | P0 | Headline, About, Featured, Skills y experiencia actualizados según `plan.md` §5, en EN y ES. Cada skill del top 5 tiene un proyecto que la respalda. |
-| F9 | Content Engine: generación | P0 | Cuando llega una idea por Telegram o el cron semanal se dispara, el sistema produce en ≤ 5 min: artículo es, artículo en, post de LinkedIn y metadatos SEO, usando solo hechos del material de entrada. |
+| F9 | Content Engine: generación (LangGraph.js en Vercel) | P0 | Cuando llega una idea por Telegram, el grafo produce en una sola invocación de ≤ 300 s: artículo es, artículo en, post de LinkedIn y metadatos SEO, usando solo hechos del material de entrada, y se pausa con `interrupt()` esperando aprobación. |
 | F10 | Content Engine: filtro anti-slop | P0 | Cuando un borrador contiene una marca P0/P1 de `content-style-guide.md` o un marcador `[DATO?]`, el sistema lo reescribe (máx. 2 pasadas). Si persiste, lo envía a Telegram marcado como "bloqueado" y sin el botón Aprobar. |
 | F11 | Content Engine: aprobación | P0 | Cuando un borrador está listo, Telegram recibe la vista previa con los botones Aprobar, Editar, Rechazar y Reprogramar. Nada se publica sin Aprobar. Sin respuesta en 48 h, el borrador expira. |
 | F12 | Content Engine: publicación | P0 | Cuando se aprueba, el sistema hace commit de los MDX, espera a que la URL del artículo responda 200, publica en LinkedIn, comenta con el enlace al blog, envía el ping a IndexNow y confirma por Telegram con ambas URLs. Si un paso falla, avisa por Telegram con el paso y el error, y no repite publicaciones ya hechas. |
@@ -52,10 +52,11 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 |------|-------------|
 | Performance | LCP < 2,5 s y CLS < 0,1 en móvil (PageSpeed). La escena 3D se carga diferida y no bloquea el contenido. |
 | SEO | Todo el texto relevante se renderiza en el servidor (SSG). Ningún contenido indexable depende de JS del cliente. |
-| Security | Tokens (LinkedIn, GitHub, Telegram, LLM) solo en variables de entorno de n8n y Langflow, nunca en el repo. El bot de Telegram solo acepta mensajes del chat ID de Miguel. El webhook de Langflow exige `x-api-key`. |
+| Security | Tokens (LinkedIn, GitHub, Telegram, LLM) solo en variables de entorno de Vercel, nunca en el repo; el token de LinkedIn se guarda cifrado. `/api/telegram` exige el header secreto de Telegram y solo acepta el chat ID de Miguel. `/api/cron/daily` exige `CRON_SECRET`. |
 | Reliability | La publicación es idempotente: cada pieza tiene un `content_id` y cada paso registra su resultado; un reintento salta los pasos completados. |
 | Availability | Si el pipeline cae, el sitio sigue funcionando (es estático). Los borradores pendientes se conservan. |
-| Cost | Infraestructura del pipeline ≤ USD 15/mes (VPS + API de LLM). |
+| Cost | Infraestructura ≈ USD 0/mes (Vercel Hobby + Postgres gratuito + LangSmith gratuito) más la suscripción de OpenCode Go. |
+| Runtime | Cada invocación de función termina en ≤ 300 s (límite de Vercel Hobby). El sitio y el agente viven en el mismo proyecto de Vercel. |
 | Accesibilidad | Se mantienen las prácticas actuales (`aria-live`, `aria-hidden`, labels). Contraste AA en ambos temas. |
 | Contenido | 0 cifras, clientes o experiencias inventadas. Cada dato numérico tiene origen en el material de entrada o en una fuente citada. |
 
@@ -64,6 +65,7 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 - Newsletter, X/Twitter, Threads y otras redes sociales.
 - CMS con panel web (el editor es el repo + Telegram).
 - Comentarios en el blog.
+- Servidores propios (VPS), n8n o Langflow para el pipeline: todo corre en Vercel.
 - Publicación en páginas de empresa de LinkedIn (`w_organization_social`).
 - Lectura de métricas de LinkedIn por API (`r_member_social` está restringido): las métricas se registran a mano cada semana.
 - Video automático. Los videos nativos se graban y suben a mano.
@@ -80,10 +82,12 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 | Un sitio personal nuevo puede aparecer en respuestas de IA | M | Las consultas de marca ("Miguel Bonilla AI engineer") son alcanzables; las genéricas no, sin autoridad de dominio. Las metas de GEO se limitan a marca y nicho. |
 | 10 h/semana son sostenibles junto con trabajo y universidad | M | Fases independientes; la fase 3 se puede recortar sin afectar las fases 1 y 2. |
 | Las reglas anti-slop en inglés sirven para el español | M | Guía con lista propia para español (`content-style-guide.md` §3). |
+| Las condiciones de OpenCode Go permiten usar su API key fuera de OpenCode y sus límites alcanzan para ~4 piezas por semana | M | Revisar los términos antes de T21. Proveedor de respaldo por variables de entorno desde el día 1. |
+| Cada tramo del grafo cabe en 300 s | M | Medición con LangSmith en T27; si no cabe, el grafo se corta en dos tramos con estado intermedio. |
 | Publicar por API no penaliza el alcance frente a publicar nativo | L | Se usa la API oficial (contenido nativo, no enlaces). Se compara el alcance de 4 posts manuales frente a 4 por API en la fase 2. |
 
 ## Open Questions
 
 - [ ] Dominio de producción y valor de `NEXT_PUBLIC_SITE_URL`. Owner: Miguel. Antes de T5.
-- [ ] Proveedor de LLM para el redactor (API de Claude, otra API u Ollama local) y presupuesto mensual. Owner: Miguel. Antes de T20.
+- [ ] Confirmar que los términos de OpenCode Go permiten este uso y elegir el proveedor de respaldo. Owner: Miguel. Antes de T21.
 - [ ] Confirmar el email de contacto público (el sitio muestra `miguelangelboto14@gmail.com`). Owner: Miguel. Antes de T3.

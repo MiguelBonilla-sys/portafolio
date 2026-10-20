@@ -1,5 +1,7 @@
 # Architecture: Portafolio + Content Engine
 
+Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de contenido. El agente funciona por eventos (webhook de Telegram y cron diario); no hay servidores aparte.
+
 ## Tech Stack
 
 | Layer | Technology | Reason |
@@ -7,50 +9,141 @@
 | Sitio | Next.js 16 (App Router, SSG), React 19, TypeScript | Stack actual. SSG deja todo el texto en el HTML, que es lo que leen los crawlers de IA |
 | UI | Mantine v8 (`core`, `hooks`), Tailwind v4, CSS Modules, Motion, R3F | Stack actual. Se eliminan los paquetes de Mantine, TipTap, Recharts, Embla y Dayjs que no se usan |
 | i18n | `next-intl` con segmento `app/[locale]` | Soporte nativo de App Router, rutas estáticas por idioma, middleware de detección |
-| Blog | Archivos MDX en `content/blog/{locale}/` + `next-mdx-remote/rsc` + `gray-matter` + `zod` | Sin CMS: el pipeline publica con un commit. `zod` valida el frontmatter en build |
+| Blog | Archivos MDX en `content/blog/{locale}/` + `next-mdx-remote/rsc` + `gray-matter` + `zod` | Sin CMS: el agente publica con un commit. `zod` valida el frontmatter en build |
 | SEO/GEO | `sitemap.ts`, `robots.ts`, JSON-LD (schema.org), `llms.txt`, RSS, IndexNow | APIs nativas de Next.js y estándares abiertos |
-| Hosting del sitio | Vercel | Actual. Redeploy automático en cada push a `main` |
-| Orquestador | n8n (self-hosted) | Cron, Telegram con espera de respuesta, HTTP, GitHub y Code nodes nativos. Miguel ya lo domina |
-| Cerebro LLM | Langflow (self-hosted), flujo expuesto como API | Agente redactor, editor y traductor con prompts versionados. Demuestra un segundo framework agéntico |
-| LLM | Por decidir (Open Question): API de Claude o Ollama local | El flujo de Langflow abstrae el proveedor |
-| Infra del pipeline | VPS con Coolify (n8n + Langflow + PostgreSQL + Gotenberg) | Un solo servidor, despliegue por Docker Compose |
-| Registro | PostgreSQL (tabla `content_log`) | Idempotencia y métricas del pipeline |
-| PDF de carruseles | Plantilla HTML + Gotenberg (Chromium) | HTML → PDF sin dependencias del sitio |
-| Mensajería | Bot de Telegram | Aprobación desde el teléfono |
+| Hosting | Vercel (Hobby), fluid compute | Sitio y agente en el mismo deploy. Redeploy automático en cada push a `main` |
+| Agente | LangGraph.js (`@langchain/langgraph`) en Route Handlers | Grafo con estado, `interrupt()` para aprobación humana. Es el framework agéntico con más demanda en vacantes |
+| Estado del agente | `@langchain/langgraph-checkpoint-postgres` (`PostgresSaver`) sobre Postgres gestionado (Supabase o Neon, plan gratuito) | Las funciones no guardan estado entre invocaciones; el checkpointer permite pausar días |
+| LLM | OpenCode Go vía `ChatOpenAI` con `baseURL` `https://opencode.ai/zen/go/v1` | Endpoint compatible con OpenAI. Proveedor de respaldo configurable por variables de entorno |
+| Observabilidad | LangSmith (plan gratuito) | Trazas por nodo y datasets para evals |
+| PDF de carruseles | `next/og` (`ImageResponse`, ya usado en el sitio) → PNG por lámina + `pdf-lib` | Sin Chromium ni servidor de PDF |
+| Mensajería | Bot de Telegram (webhook) | Entrada de ideas y aprobación desde el teléfono |
 | Analítica | GA4 (actual), Google Search Console, Bing Webmaster Tools | Bing alimenta la búsqueda de ChatGPT |
 
-## Estructura del repo (después de la fase 1)
+## Límites de Vercel Hobby (documentación de octubre de 2026)
+
+| Límite | Valor | Cómo se respeta |
+|---|---|---|
+| Duración por invocación | 300 s (máximo en Hobby) | `export const maxDuration = 300`. Cada tramo del grafo hasta un `interrupt()` o hasta el final debe caber en ese tiempo; si no cabe, se corta en dos tramos con un estado intermedio |
+| Cron | Mínimo una vez al día, precisión de ±59 min, en UTC | Un solo cron diario hace todas las tareas programadas (ver más abajo) |
+| Memoria | 2 GB / 1 vCPU | Suficiente: el trabajo pesado lo hace el LLM externo |
+| Uso | Personal, no comercial | Si el agente se usa para clientes, pasar a Pro |
+
+## Estructura del repo (después de la fase 2)
 
 ```
 app/
   [locale]/
-    layout.tsx            # <html lang>, metadata y hreflang por idioma
-    page.tsx              # home
+    layout.tsx              # <html lang>, metadata y hreflang por idioma
+    page.tsx                # home
     blog/
-      page.tsx            # índice del blog
-      [slug]/page.tsx     # artículo (generateStaticParams)
-    proyectos/[id]/page.tsx  # caso de estudio
+      page.tsx              # índice del blog
+      [slug]/page.tsx       # artículo (generateStaticParams)
+    proyectos/[id]/page.tsx # caso de estudio
+  api/
+    telegram/route.ts       # webhook: mensajes y botones (callback_query)
+    cron/daily/route.ts     # cron diario protegido con CRON_SECRET
   sitemap.ts
   robots.ts
-  llms.txt/route.ts       # texto plano generado desde data/ y content/
-  feed.xml/route.ts       # RSS (por idioma: /feed.xml?lang=en)
+  llms.txt/route.ts
+  feed.xml/route.ts
   opengraph-image.tsx
+agent/
+  graph.ts                  # definición del StateGraph y compilación con el checkpointer
+  state.ts                  # Annotation del estado
+  nodes/
+    extract-facts.ts
+    draft-blog.ts
+    anti-slop-edit.ts
+    localize.ts
+    adapt-linkedin.ts
+    carousel.ts
+    verify-facts.ts
+    evaluate.ts
+    human-review.ts         # interrupt()
+    publish-blog.ts
+    wait-deploy.ts
+    publish-linkedin.ts
+    index-now.ts
+    notify.ts
+  lib/
+    llm.ts                  # ChatOpenAI con OpenCode Go y respaldo
+    lint.ts                 # linter determinista (reglas de content-style-guide.md §9)
+    telegram.ts
+    github.ts
+    linkedin.ts
+    db.ts                   # content_log
+  prompts/
+    style-guide.md          # copia versionada de docs/content-style-guide.md
 content/
-  blog/
-    es/{slug}.mdx
-    en/{slug}.mdx
+  blog/{es,en}/{slug}.mdx
 data/
   projects.{es,en}.json
   experience.{es,en}.json
   skills.json
 lib/
-  blog.ts                 # lectura, validación zod, orden por fecha
-  jsonld.ts               # builders: person(), website(), blogPosting(), faq(), breadcrumbs()
-messages/
-  es.json
-  en.json
-middleware.ts             # next-intl: detección de idioma
+  blog.ts
+  jsonld.ts
+messages/{es,en}.json
+middleware.ts
+vercel.json                 # cron diario
 ```
+
+## Grafo del agente
+
+```
+START
+  └─► extractFacts ─► draftBlogEs ─► lint ─┬─(P0/P1 y pasadas < 2)─► antiSlopEdit ─► lint
+                                           └─(limpio o 2 pasadas)─► localizeEn ─► adaptLinkedIn
+                                                                       ─► [carousel] ─► verifyFacts ─► evaluate
+                                                                       ─► humanReview  ◄── interrupt()
+humanReview ─┬─ approve ────► publishBlog ─► waitDeploy ─► publishLinkedIn ─► indexNow ─► notify ─► END
+             ├─ edit(texto) ► antiSlopEdit (con las instrucciones) ─► … ─► humanReview
+             ├─ reschedule ─► guarda scheduled_for ─► END (lo retoma el cron diario)
+             └─ reject ─────► END
+```
+
+Reglas del grafo:
+- `extractFacts` produce la lista de hechos permitidos. Ningún nodo posterior puede introducir cifras, nombres ni experiencias fuera de esa lista.
+- `verifyFacts` marca con `[DATO?]` toda cifra que no esté en la lista. Si queda alguno, `humanReview` muestra el borrador como "bloqueado" y sin el botón Aprobar.
+- `thread_id` = `content_id`. Reanudar el mismo hilo nunca repite pasos completados: cada nodo de publicación revisa `state.steps` antes de actuar.
+
+### Estado (`agent/state.ts`)
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| contentId | string | También es el `thread_id` |
+| source | { type, text, createdAt } | Material original de Miguel |
+| pillar | agents · automation · backend · career | |
+| format | text · carousel | |
+| linkedinLang | en · es | |
+| facts | string[] | Hechos permitidos |
+| drafts | { blogEs, blogEn, linkedin, carousel? } | Frontmatter + cuerpo MDX |
+| lint | { pass: number, p0: string[], p1: string[], p2: string[] } | |
+| missingFacts | string[] | |
+| evalScores | { specificity, factDensity, aiMarkers, pillarFit } | 1–5 |
+| review | { action, instructions?, scheduledFor? } | Respuesta de Telegram |
+| steps | { commit?, deploy?, linkedin?, comment?, indexNow? } | Resultado de cada paso de publicación |
+
+## Flujos de ejecución
+
+| Evento | Ruta | Qué hace |
+|---|---|---|
+| Mensaje de Telegram | `POST /api/telegram` | Valida el secreto y el chat ID → crea `content_id` → `graph.invoke` hasta `humanReview` → envía la vista previa con botones |
+| Botón de Telegram | `POST /api/telegram` (`callback_query`) | Valida → `graph.invoke(new Command({ resume: { action, ... } }), { thread_id })` |
+| Respuesta de texto a un borrador | `POST /api/telegram` | Se toma como `edit` con esas instrucciones |
+| Cron diario 13:00 UTC (8:00 Bogotá) | `GET /api/cron/daily` | Valida `CRON_SECRET` y luego: (1) publica los hilos con `scheduled_for` vencido; (2) reintenta los que quedaron en `awaiting_deploy`; (3) marca como `expired` los borradores con más de 48 h sin respuesta; (4) avisa si al token de LinkedIn le quedan ≤ 10 días; (5) los lunes pide material; (6) los domingos envía el reporte semanal |
+
+`vercel.json`:
+```json
+{
+  "crons": [{ "path": "/api/cron/daily", "schedule": "0 13 * * *" }]
+}
+```
+
+### Espera del deploy
+
+Al aprobar, `publishBlog` hace commit de los MDX y Vercel redespliega. `waitDeploy` consulta la URL del artículo cada 10 s durante un máximo de 180 s. Si no responde 200 a tiempo, el estado pasa a `awaiting_deploy`, la invocación termina y avisa por Telegram con un botón "Reintentar". El cron diario también reintenta. Así ninguna invocación supera los 300 s.
 
 ## Data Model
 
@@ -69,124 +162,97 @@ tags: string[]           # ≤ 5
 faq:                     # opcional, genera FAQPage
   - q: string
     a: string
-sources:                 # fuentes primarias citadas
+sources:
   - title: string
     url: string
-contentId: string        # id del pipeline; vacío si se escribió a mano
+contentId: string        # vacío si se escribió a mano
 linkedinUrn: string      # se completa después de publicar
 ```
 
-Relaciones: un `contentId` → dos artículos (es, en) + un post de LinkedIn (+ un carrusel opcional). Los artículos de ambos idiomas comparten `slug`.
+### Postgres
 
-### `content_log` (PostgreSQL)
+- Tablas del checkpointer: las crea `PostgresSaver.setup()`.
+- `content_log`: índice consultable de cada pieza (el detalle vive en el checkpoint).
 
 | Columna | Tipo | Notas |
 |---|---|---|
-| content_id | uuid PK | |
+| content_id | uuid PK | = `thread_id` |
 | created_at | timestamptz | |
 | source_type | text | telegram_note, telegram_voice, github_commits, backlog |
-| source_payload | jsonb | Material original (para auditar que no se inventó nada) |
 | pillar | text | |
-| status | text | draft, blocked, awaiting_approval, approved, rejected, expired, published, failed |
-| drafts | jsonb | blog_es, blog_en, linkedin_post, carousel_slides |
-| lint_report | jsonb | Marcas detectadas por pasada |
-| eval_scores | jsonb | Especificidad, densidad de hechos, marcas de IA, ajuste al pilar |
-| steps | jsonb | {commit: ok/sha, deploy: ok, linkedin: ok/urn, comment: ok, indexnow: ok} |
+| status | text | draft, blocked, awaiting_approval, approved, scheduled, awaiting_deploy, published, rejected, expired, failed |
 | scheduled_for | timestamptz | |
+| eval_scores | jsonb | |
 | published_urls | jsonb | blog_es, blog_en, linkedin |
+| updated_at | timestamptz | |
 
 ## API Contracts
 
-### Langflow: generación (`POST /api/v1/run/{flow_id}`)
+### `POST /api/telegram`
 
-Headers: `x-api-key`.
+- Header obligatorio: `X-Telegram-Bot-Api-Secret-Token` = `TELEGRAM_WEBHOOK_SECRET` (configurado con `setWebhook`). Sin él: 401.
+- Solo se procesan updates cuyo `chat.id` = `TELEGRAM_CHAT_ID`. Los demás reciben 200 y se ignoran.
+- Botones (`callback_data`, ≤ 64 bytes): `a:{contentId}` aprobar, `e:{contentId}` editar, `r:{contentId}` rechazar, `s:{contentId}` reprogramar, `t:{contentId}` reintentar publicación.
+- Responde 200 a Telegram de inmediato y ejecuta el grafo con `after()` de `next/server` (en Vercel usa `waitUntil`, con el mismo límite de 300 s). Así Telegram no reenvía el update por timeout. Se guarda el `update_id` procesado para ignorar duplicados.
 
-Request:
-```json
-{
-  "input_value": "<material del usuario>",
-  "tweaks": {
-    "pillar": "agents",
-    "format": "text | carousel",
-    "linkedin_lang": "en | es",
-    "style_guide_version": "1.0"
-  }
-}
+### `GET /api/cron/daily`
+
+- Header `Authorization: Bearer ${CRON_SECRET}` (Vercel lo envía solo). Sin él: 401.
+
+### LLM (`agent/lib/llm.ts`)
+
+```ts
+new ChatOpenAI({
+  model: process.env.LLM_MODEL,
+  apiKey: process.env.LLM_API_KEY,
+  configuration: { baseURL: process.env.LLM_BASE_URL }, // https://opencode.ai/zen/go/v1
+}).withFallbacks([fallbackModel]) // LLM_FALLBACK_* si está definido
 ```
-
-Response (salida del último nodo, JSON):
-```json
-{
-  "blog_es": { "frontmatter": {}, "body_mdx": "..." },
-  "blog_en": { "frontmatter": {}, "body_mdx": "..." },
-  "linkedin_post": "...",
-  "carousel_slides": [{ "title": "...", "body": "..." }],
-  "missing_facts": ["[DATO?] horas ahorradas por semana"],
-  "lint_report": { "p0": [], "p1": [], "p2": [] }
-}
-```
-
-Errores: 401 (API key), 422 (material vacío o < 50 palabras), 500 (fallo del LLM: n8n reintenta 1 vez y avisa por Telegram).
-
-### Flujo de Langflow (nodos)
-
-1. **Extractor de hechos**: lista los hechos verificables del material (cifras, herramientas, decisiones). Es la única fuente permitida para los nodos siguientes.
-2. **Redactor ES**: artículo de blog con `content-style-guide.md` como system prompt.
-3. **Editor anti-slop**: audita con la guía (P0/P1/P2) y reescribe sin agregar hechos.
-4. **Localizador EN**: adapta (no traduce literal) al inglés con las reglas en inglés de la guía.
-5. **Adaptador LinkedIn**: post nativo de 150–300 palabras en el idioma pedido, sin enlaces.
-6. **Generador de carrusel** (fase 3): 6–10 láminas.
-7. **Verificador**: compara cada cifra del texto contra la lista del paso 1; lo que no coincida se marca `[DATO?]`.
-
-### n8n: workflows
-
-| Workflow | Disparador | Pasos |
-|---|---|---|
-| `wf-intake` | Mensaje de Telegram (filtrado por chat ID) o cron lunes 8:00 (pide material) | Guarda en `content_log` (draft) → llama a `wf-generate` |
-| `wf-generate` | Llamada de `wf-intake` | Langflow → linter determinista (Code node con las regex de la guía) → si hay P0/P1 o `[DATO?]`: 1 reescritura → `wf-approve` |
-| `wf-approve` | Llamada de `wf-generate` | Telegram "Send and wait for response" con vista previa y botones; timeout 48 h → expired |
-| `wf-publish` | Aprobación o fecha de `scheduled_for` | GitHub commit de 2 MDX → poll de la URL hasta 200 (máx. 10 min) → LinkedIn post → comentario con enlace → IndexNow → Telegram confirmación |
-| `wf-token-check` | Cron diario | Si al token de LinkedIn le quedan ≤ 10 días → aviso por Telegram con enlace de reautorización |
-| `wf-weekly-report` | Cron domingo | Resumen por Telegram: publicados, rechazados, eval promedio, métricas que Miguel debe registrar a mano |
 
 ### LinkedIn
 
-- Auth: OAuth 2.0, producto "Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect". Scopes: `openid profile w_member_social`. Token de 60 días sin refresh.
+- Auth: OAuth 2.0, productos "Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect". Scopes: `openid profile w_member_social`. Token de 60 días sin refresh. Se guarda cifrado en Postgres junto con su fecha de vencimiento; la ruta de callback de OAuth está en `/api/linkedin/callback`.
 - Post: `POST https://api.linkedin.com/rest/posts`, headers `Linkedin-Version: YYYYMM`, `X-Restli-Protocol-Version: 2.0.0`. `author: urn:li:person:{id}`, `visibility: PUBLIC`, `lifecycleState: PUBLISHED`.
 - Comentario con enlace: `POST /rest/socialActions/{postUrn}/comments`.
-- Documento (fase 3, sujeto a spike): `POST /rest/documents?action=initializeUpload` → PUT del PDF → post con `content.media.id = urn:li:document:...`. Se publica de forma asíncrona: el 201 no garantiza visibilidad inmediata.
+- Documento (fase 3, sujeto a spike): `POST /rest/documents?action=initializeUpload` → PUT del PDF → post con `content.media.id = urn:li:document:...`. Se publica de forma asíncrona.
 
 ### GitHub
 
+- Token fine-grained con permiso `contents:write` solo sobre `MiguelBonilla-sys/portafolio`.
 - `PUT /repos/MiguelBonilla-sys/portafolio/contents/content/blog/{locale}/{slug}.mdx` (uno por idioma), rama `main`, mensaje `content: {slug}`.
-- Alternativa más segura: una rama `content/{slug}` + PR con auto-merge, si se quiere CI antes del deploy.
 
 ### IndexNow
 
 - `POST https://api.indexnow.org/indexnow` con `host`, `key`, `keyLocation` (`/{key}.txt` en `public/`) y `urlList`.
 
+### Variables de entorno
+
+`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`, `LLM_FALLBACK_BASE_URL`, `LLM_FALLBACK_API_KEY`, `LLM_FALLBACK_MODEL`, `DATABASE_URL`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_CHAT_ID`, `CRON_SECRET`, `GITHUB_TOKEN`, `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET`, `TOKEN_ENCRYPTION_KEY`, `INDEXNOW_KEY`, `LANGSMITH_API_KEY`, `LANGSMITH_TRACING`.
+
 ## Integration Map
 
 | Servicio | Uso | Modo de fallo | Respuesta |
 |---|---|---|---|
-| Telegram Bot API | Entrada de ideas, aprobación, alertas | Bot caído o webhook roto | n8n reintenta; el cron semanal detecta la falta de actividad |
-| Langflow | Generación | Timeout o error del LLM | 1 reintento, luego alerta. El borrador queda en `draft` |
-| LLM (proveedor) | Texto | Rate limit, costo | Límite de 4 generaciones por pieza; alerta si el gasto mensual supera el presupuesto |
+| Telegram Bot API | Entrada, aprobación, alertas | Webhook caído o mal configurado | El cron del lunes detecta que no hubo actividad y avisa; `getWebhookInfo` en el checklist de despliegue |
+| OpenCode Go | Generación | Límite de uso, cambio de condiciones, caída | `withFallbacks` al proveedor de respaldo; alerta por Telegram si se usó el respaldo |
+| Postgres (Supabase/Neon) | Checkpoints y `content_log` | Base pausada por inactividad (planes gratuitos) | El cron diario hace una consulta, lo que la mantiene activa |
 | GitHub API | Commit de MDX | 409 (sha desactualizado), 401 | Reobtener sha y reintentar; 401 → alerta de token |
-| Vercel | Deploy | Build roto por MDX inválido | El poll de la URL expira → alerta con el log; no se publica en LinkedIn |
-| LinkedIn API | Post y comentario | Token vencido (401), 429, documento asíncrono | 401 → bloquear y avisar; 429 → reintentar en 1 h; idempotencia por `content_id` |
-| IndexNow / Bing | Indexación | Error 4xx | Solo se registra; no bloquea |
-| Gotenberg | PDF | Contenedor caído | El carrusel pasa a post de texto y se avisa |
+| Vercel build | Deploy del artículo | Build roto por MDX inválido | `waitDeploy` agota el tiempo → `awaiting_deploy` → alerta; LinkedIn no se publica |
+| LinkedIn API | Post y comentario | 401 (token vencido), 429, documento asíncrono | 401 → bloquear y avisar; 429 → el cron reintenta; idempotencia por `state.steps` |
+| IndexNow / Bing | Indexación | Error 4xx | Solo se registra |
+| LangSmith | Trazas | Caída | No bloquea; el tracing es opcional |
 
 ## Technical Risks
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|-----------|
+| Las condiciones de OpenCode Go no permiten este uso o sus límites no alcanzan | M | H | Revisar los términos antes de T21; proveedor de respaldo por variables de entorno desde el día 1 |
+| Un tramo del grafo supera los 300 s | M | M | Medir con LangSmith en T27; modelos rápidos para nodos simples; cortar el grafo con un estado intermedio si hace falta |
 | La API no permite documentos PDF en perfiles personales | M | M | Spike T30 antes de construir F13; plan B: multi-imagen o subida manual |
-| El LLM inventa datos o experiencias | H | H | Extractor de hechos como única fuente + verificador + `[DATO?]` bloqueante + aprobación humana |
-| Contenido que suena a IA aunque pase el linter | M | H | Evals con rúbrica, ejemplos propios de Miguel como few-shot, revisión humana; ajustar la guía con cada rechazo |
+| El LLM inventa datos o experiencias | H | H | `extractFacts` como única fuente + `verifyFacts` + `[DATO?]` bloqueante + aprobación humana |
+| Contenido que suena a IA aunque pase el linter | M | H | Evals con rúbrica, ejemplos aprobados como few-shot, revisión humana; ajustar la guía con cada rechazo |
+| Webhook público abusado | L | H | Secreto de Telegram + filtro por chat ID + `CRON_SECRET`; las rutas del agente no hacen nada sin ellos |
+| Publicación duplicada en LinkedIn | M | H | `state.steps.linkedin` se revisa antes de publicar; `thread_id` único por pieza |
+| Precisión del cron de Hobby (±59 min) | H | L | Se publica "en la mañana", no a una hora exacta. Si hace falta precisión, un cron externo gratuito llama a `/api/cron/daily` |
 | Migrar a `app/[locale]` rompe rutas, OG o analítica | M | M | Migración en una rama con checklist de URLs; redirecciones 308 desde las anclas antiguas |
-| Publicación duplicada en LinkedIn por reintentos | M | H | `steps.linkedin` en `content_log` se revisa antes de publicar |
-| Token de LinkedIn vence sin aviso | M | M | `wf-token-check` diario |
-| Costo del VPS + LLM por encima del presupuesto | L | M | Coolify en un VPS pequeño; LLM local para borradores si hace falta |
-| El sitio nuevo no gana citas en consultas genéricas | H | L | Metas de GEO limitadas a consultas de marca y nicho; autoridad vía LinkedIn y GitHub |
+| El sitio nuevo no gana citas en consultas genéricas | H | L | Metas de GEO limitadas a consultas de marca y nicho |
