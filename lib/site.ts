@@ -1,7 +1,7 @@
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://portafolio-inky-rho.vercel.app").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mangel14.dev").replace(/\/$/, "");
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 

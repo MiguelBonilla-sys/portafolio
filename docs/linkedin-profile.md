@@ -36,7 +36,7 @@ A few things I've shipped:
 
 I also run my own infrastructure (Docker, Coolify, Traefik on Linux) and care about the boring parts: authentication, tests, error monitoring and clear handoffs with clients.
 
-Open to remote Full Stack or AI Engineer roles. Portfolio and resume: portafolio-inky-rho.vercel.app
+Open to remote Full Stack or AI Engineer roles. Portfolio and resume: mangel14.dev
 
 ### Español
 
@@ -52,7 +52,7 @@ Algunas cosas que he entregado:
 
 También manejo mi propia infraestructura (Docker, Coolify y Traefik sobre Linux) y cuido las partes poco vistosas: autenticación, pruebas, monitoreo de errores y entregas claras con los clientes.
 
-Abierto a roles remotos de Full Stack o AI Engineer. Portafolio y CV: portafolio-inky-rho.vercel.app
+Abierto a roles remotos de Full Stack o AI Engineer. Portafolio y CV: mangel14.dev
 
 ## Experiencia
 
@@ -105,7 +105,7 @@ Skills: Python · Django · FastAPI · PostgreSQL · pytest · Docker
 | Sentinel RAG | /en/projects/sentinel-rag |
 | ETL Pipeline: Dow Jones Sentiment | https://github.com/MiguelBonilla-sys/ETL_PARCIAL |
 
-Usa siempre la URL completa del portafolio (`https://portafolio-inky-rho.vercel.app/en/projects/...`): así LinkedIn manda tráfico al sitio y no solo a GitHub.
+Usa siempre la URL completa del portafolio (`https://mangel14.dev/en/projects/...`): así LinkedIn manda tráfico al sitio y no solo a GitHub.
 
 ## Top 5 skills (fijadas)
 
@@ -119,8 +119,8 @@ Las cinco tienen un proyecto o un trabajo que las respalda. Pide 10 o más recom
 
 ## Featured
 
-1. El portafolio: `https://portafolio-inky-rho.vercel.app/en`
-2. El CV en PDF: `https://portafolio-inky-rho.vercel.app/cv/miguel-bonilla-cv-en.pdf`
+1. El portafolio: `https://mangel14.dev/en`
+2. El CV en PDF: `https://mangel14.dev/cv/miguel-bonilla-cv-en.pdf`
 3. El mejor post del mes (cuando el Content Engine empiece a publicar)
 
 ## Configuración del perfil

@@ -27,7 +27,7 @@ Escribirle (formulario o LinkedIn). Secundaria: abrir un proyecto y su repositor
 - Ingeniería de Sistemas, Universidad de San Buenaventura (ene 2021 – presente), décimo semestre. Tesis: sistema multiagente para detectar phishing por homógrafos IDN, 359 pruebas automatizadas.
 - Cursos: Ethical Hacking & Cyber Risk (U. Sergio Arboleda, 2025); Desarrollo de aplicaciones móviles (U. Nacional, 2023–2024).
 - Proyectos: Bikans, API Auth Gateway, detector de phishing IDN, ETL Dow Jones (4.100+ registros, < 60 s), TaskFlow, LedgerCore, Sentinel RAG, más los proyectos académicos y personales del portafolio.
-- Dominio actual: portafolio-inky-rho.vercel.app.
+- Dominio actual: mangel14.dev.
 - No hay testimonios ni cifras de clientes publicables más allá de las del CV.
 
 ## Brand commitments
