@@ -1,21 +1,25 @@
+import { getTranslations } from "next-intl/server";
 import Sigil from "@/components/brand/Sigil";
+import { Link } from "@/i18n/navigation";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { GithubIcon, LinkedInIcon, MailIcon, XIcon } from "@/components/ui/icons";
 import styles from "./HeroSection.module.css";
 
 const socials = [
-  { href: "https://github.com/MiguelBonilla-sys", label: "GitHub", Icon: GithubIcon },
-  { href: "https://www.linkedin.com/in/miguel-bonilla-sys", label: "LinkedIn", Icon: LinkedInIcon },
-  { href: "mailto:miguelangelboto14@gmail.com", label: "Email", Icon: MailIcon },
-  { href: "https://x.com/_mangel14_", label: "X", Icon: XIcon },
+  { href: GITHUB_URL, label: "GitHub", Icon: GithubIcon },
+  { href: LINKEDIN_URL, label: "LinkedIn", Icon: LinkedInIcon },
+  { href: `mailto:${EMAIL}`, label: "Email", Icon: MailIcon },
+  { href: X_URL, label: "X", Icon: XIcon },
 ];
 
-const facts = [
-  { term: "Base", value: "Bogotá, Colombia · UTC−5" },
-  { term: "Ahora", value: "Full Stack Developer · Coordenadas.co" },
-  { term: "Busco", value: "Trabajo remoto" },
-];
+export default async function HeroSection() {
+  const t = await getTranslations("hero");
+  const facts = [
+    { term: t("factBase"), value: t("factBaseValue") },
+    { term: t("factNow"), value: t("factNowValue") },
+    { term: t("factSeek"), value: t("factSeekValue") },
+  ];
 
-export default function HeroSection() {
   return (
     <section id="home" className={styles.hero} aria-labelledby="hero-title">
       <div className={`shell ${styles.grid}`}>
@@ -25,18 +29,15 @@ export default function HeroSection() {
             <br />
             Bonilla
           </h1>
-          <p className={styles.role}>Full Stack AI Engineer</p>
-          <p className={styles.lede}>
-            Convierto procesos de negocio en software que funciona: APIs seguras, automatizaciones
-            con n8n y CRM, y sistemas que usan modelos de lenguaje.
-          </p>
+          <p className={styles.role}>{t("role")}</p>
+          <p className={styles.lede}>{t("lede")}</p>
           <div className={styles.ctas}>
-            <a href="#contacto" className="btn btn-primary">
-              Escríbeme
-            </a>
-            <a href="#proyectos" className="btn btn-ghost">
-              Ver proyectos
-            </a>
+            <Link href={{ pathname: "/", hash: "contacto" }} className="btn btn-primary">
+              {t("ctaContact")}
+            </Link>
+            <Link href={{ pathname: "/", hash: "proyectos" }} className="btn btn-ghost">
+              {t("ctaProjects")}
+            </Link>
           </div>
           <ul className={styles.socials}>
             {socials.map(({ href, label, Icon }) => (
@@ -56,7 +57,7 @@ export default function HeroSection() {
 
         <div className={styles.panel}>
           <div className={styles.sigil}>
-            <Sigil title="Símbolo de Miguel Bonilla: círculo de transmutación con una M de circuito" />
+            <Sigil title={t("sigilTitle")} />
           </div>
           <dl className={styles.facts}>
             {facts.map((f) => (

@@ -1,0 +1,85 @@
+---
+title: "Ownership-based access control in a FastAPI gateway"
+description: "How a FastAPI gateway with JWT decides which assets each user can see from an external inventory API, and where that design reaches its limits."
+summary: "A FastAPI gateway takes the user's JWT, queries the external inventory API and returns only the assets whose DUEÑO_DE_ACTIVO field matches the user's. Superusers see everything. The rule lives in the gateway, so the original API never needs to know who is asking."
+date: "2026-10-20"
+slug: "control-de-acceso-por-propiedad-fastapi"
+locale: "en"
+pillar: "backend"
+tags: ["FastAPI", "JWT", "Authorization", "Python", "API Gateway"]
+draft: true
+faq:
+  - q: "What is ownership-based access control?"
+    a: "It is an authorization rule that decides which records a user can see or change based on who owns them. In this gateway, a regular user only receives assets whose DUEÑO_DE_ACTIVO field equals their own; a superuser receives all of them."
+  - q: "Why put authorization in a gateway instead of the original API?"
+    a: "The inventory API already existed and had no users. The gateway adds JWT authentication and the ownership rule without modifying it: it sits in front, validates the token, calls the API and filters the response before returning it."
+  - q: "How long do the tokens last?"
+    a: "By default, the access token lasts 30 minutes and the refresh token 7 days. Both are signed with HS256 and carry a type field that the gateway checks, so a refresh token can't be used as an access token."
+sources:
+  - title: "OWASP API Security Top 10 (2023): API1 Broken Object Level Authorization"
+    url: "https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/"
+  - title: "FastAPI: Security"
+    url: "https://fastapi.tiangolo.com/tutorial/security/"
+  - title: "PyJWT documentation"
+    url: "https://pyjwt.readthedocs.io/"
+  - title: "API_AUTH_HACKATON repository"
+    url: "https://github.com/MiguelBonilla-sys/API_AUTH_HACKATON"
+---
+
+## The problem
+
+The university's asset inventory API answers without authentication: the gateway calls it with no credentials and gets the full list back. [DATO?: hackathon context, how many people or departments used the inventory]
+
+The goal was for each person to see only the assets they're responsible for, without rewriting the original API. That is the top risk in the 2023 OWASP API Security Top 10: broken object level authorization, an API that doesn't check whether the user may see the record they ask for.
+
+## The solution: a gateway in front of the API
+
+The gateway is a FastAPI app that sits in front of the inventory. It does three things on every request:
+
+1. Validates the JWT from the `Authorization: Bearer` header.
+2. Calls the external inventory API asynchronously with `httpx`.
+3. Filters the response by asset owner before returning it.
+
+Users are stored in PostgreSQL with SQLAlchemy 2.0, and passwords are hashed with bcrypt.
+
+## The ownership rule
+
+Each user has a `dueno_de_activo` field. Each inventory asset has a `DUEÑO_DE_ACTIVO` field. The rule compares them:
+
+```python
+if current_user.is_superuser:
+    filtered_assets = all_assets
+else:
+    if not current_user.dueno_de_activo:
+        return []
+    user_owner = current_user.dueno_de_activo.strip()
+    filtered_assets = [
+        asset for asset in all_assets
+        if asset.get("DUEÑO_DE_ACTIVO", "").strip() == user_owner
+    ]
+```
+
+A user with no owner assigned gets an empty list, not an error. Creating an asset for another owner returns `403`.
+
+## Access and refresh tokens
+
+The gateway issues two tokens signed with HS256. The access token lasts 30 minutes and the refresh token 7 days, both configurable through environment variables. Each token carries a `type` field, and verification requires it:
+
+```python
+if payload.get("type") != token_type:
+    return None
+```
+
+Without that check, a stolen refresh token would work as an API key for a week.
+
+## Known limits
+
+- To list assets, the gateway requests up to 2,000 records from the external API and filters them in memory. That works for an inventory of that size; a larger one would need filtering at the source.
+- If the external API fails, the gateway answers `503` with the `httpx` error detail.
+- The `/owners` endpoint is public and returns the list of unique owners.
+
+[DATO?: hackathon result or real usage of the gateway]
+
+## Deployment
+
+The gateway runs on Railway with PostgreSQL, uses Sentry for errors and performance, and can run locally with Docker Compose. The code is in the repository linked in the sources.

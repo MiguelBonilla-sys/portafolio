@@ -3,6 +3,12 @@
 > Status: 🔴 Not started | 🟡 In progress | 🟢 Done
 > Presupuesto: 120 h (10 h/semana × 12). Suma estimada: ~122 h.
 
+## Phase R — Rediseño de identidad (fuera del plan original) · hecho
+
+- [x] TR1: Identidad visual brutalismo cyberpunk, símbolo propio animado, paleta azul + cian — *F1* — 🟢 2026-10-20
+  - Acceptance: `DESIGN.md` y `PRODUCT.md` describen la dirección; el símbolo se dibuja al cargar y respeta `prefers-reduced-motion`; lint, typecheck y build pasan.
+  - Notas: el dueño descartó la línea de transporte, "M14", el rojo y el verde lima.
+
 ## Phase 0 — Línea base (semana 1) · 2 h
 
 - [ ] T0: Registrar métricas actuales — *F7, F8* — est: 1h
@@ -14,39 +20,50 @@
 
 ## Phase 1 — Cimientos (semanas 1–4) · 43 h
 
-- [ ] T2: Eliminar dependencias sin uso — *F16* — est: 1h
+- [x] T2: Eliminar dependencias sin uso — *F16* — est: 1h
   - Acceptance: `package.json` no contiene `@mantine/{carousel,charts,code-highlight,dates,dropzone,form,modals,notifications,nprogress,spotlight,tiptap}`, `@tiptap/*`, `recharts`, `embla-*` ni `dayjs`; `npm run build` y `npm run lint` pasan.
   - Depends on: —
+  - Estado: 🟢 2026-10-20: 19 paquetes eliminados (también three.js); Next.js 16.1.6 → 16.3.8 por una vulnerabilidad crítica. Queda un aviso moderado en `sprintf-js` (vía `gray-matter`, solo en build).
 - [ ] T3: Reposicionar el texto del sitio (hero, about, stats, skills) — *F1* — est: 3h
   - Acceptance: el hero dice "Full Stack AI Engineer"; no aparecen "100% Proyectos entregados" ni "5+ Stacks dominados"; cada tecnología del subtítulo aparece en ≥ 1 proyecto de `data/projects.json`. El texto pasa la guía anti-slop sin marcas P0/P1.
   - Depends on: T1
+  - Estado: 🟡 2026-10-20: hecho con el rediseño (titular, sin métricas de relleno, copy sin marcas P0/P1). Falta revisar el texto con Miguel.
 - [ ] T4: Reescribir y reordenar proyectos — *F1, F2* — est: 3h
   - Acceptance: los proyectos destacados van primero (API Auth Gateway, Seguimiento Bibliográfico con LLM, Content Engine como "en construcción"); Redes Sockets y Pizzería quedan al final; cada descripción incluye ≥ 1 resultado numérico real.
   - Depends on: T3
-- [ ] T5: Migrar a `app/[locale]` con `next-intl` — *F3* — est: 6h
+  - Estado: 🟡 2026-10-20: destacados primero y archivo al final. Faltan resultados numéricos en Flask API, GEO Streamlit, Pizzería y Sockets (los aporta Miguel).
+- [x] T5: Migrar a `app/[locale]` con `next-intl` — *F3* — est: 6h
   - Acceptance: `/es` y `/en` renderizan el home; `/` redirige por `Accept-Language`; `<html lang>` coincide con la ruta; las anclas antiguas (`/#proyectos`) siguen funcionando; GA4 registra page views en ambas rutas.
   - Depends on: T2
-- [ ] T6: Traducir textos y datos al inglés — *F3* — est: 3h
+  - Estado: 🟢 2026-10-20: `next-intl` 4 con `proxy.ts` (Next 16), rutas `/es` y `/en`, `/` redirige por idioma, selector de idioma en la barra.
+- [x] T6: Traducir textos y datos al inglés — *F3* — est: 3h
   - Acceptance: `messages/en.json`, `data/projects.en.json` y `data/experience.en.json` existen; no queda texto en español visible en `/en` (revisión manual de todas las secciones).
   - Depends on: T4, T5
+  - Estado: 🟢 2026-10-20: `messages/{es,en}.json`, `data/projects.{es,en}.json`, `data/experience.{es,en}.json`, etiquetas del stack bilingües.
 - [ ] T7: Páginas de caso de estudio `/[locale]/proyectos/[id]` — *F2* — est: 4h
   - Acceptance: los 3 proyectos destacados tienen página propia con secciones Problema, Solución, Stack, Resultados y Enlaces; ≥ 1 enlace a demo pública; el modal enlaza a la página.
   - Depends on: T4, T5
-- [ ] T8: Blog MDX (lectura, validación y páginas) — *F4* — est: 5h
+  - Estado: 🟡 2026-10-20: páginas `/es/proyectos/[id]` y `/en/projects/[id]` para los 7 proyectos con JSON-LD. Faltan secciones Problema/Resultados con datos reales y al menos una demo pública.
+- [x] T8: Blog MDX (lectura, validación y páginas) — *F4* — est: 5h
   - Acceptance: un MDX de ejemplo en `content/blog/es` y `content/blog/en` genera `/es/blog/{slug}` y `/en/blog/{slug}` estáticos; el índice ordena por fecha; un frontmatter sin `summary` rompe el build con un error de zod legible; los artículos enlazan a su traducción.
   - Depends on: T5
-- [ ] T9: Feed RSS por idioma — *F4* — est: 1h
+  - Estado: 🟢 2026-10-20: `lib/blog.ts` con zod (falla el build si el frontmatter es inválido), índice, artículo, borradores ocultos en producción (`SHOW_DRAFTS=true` para verlos). Primer borrador: control de acceso por propiedad (es/en), con `[DATO?]` pendientes.
+- [x] T9: Feed RSS por idioma — *F4* — est: 1h
   - Acceptance: `/feed.xml?lang=en` y `/feed.xml?lang=es` validan en validator.w3.org/feed.
   - Depends on: T8
-- [ ] T10: `sitemap.ts`, `robots.ts`, hreflang y metadata por idioma — *F5* — est: 2h
+  - Estado: 🟢 2026-10-20: `/es/feed.xml` y `/en/feed.xml`.
+- [x] T10: `sitemap.ts`, `robots.ts`, hreflang y metadata por idioma — *F5* — est: 2h
   - Acceptance: `sitemap.xml` incluye home, casos y artículos en ambos idiomas con `alternates`; `robots.txt` permite Googlebot, Bingbot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot; cada página tiene `canonical` y hreflang `es`, `en`, `x-default`.
   - Depends on: T5, T8
-- [ ] T11: JSON-LD (`lib/jsonld.ts`) — *F6* — est: 3h
+  - Estado: 🟢 2026-10-20: sitemap con alternates, robots con bots de IA, canonical + hreflang en todas las páginas. Falta `NEXT_PUBLIC_SITE_URL` en Vercel (T1).
+- [x] T11: JSON-LD (`lib/jsonld.ts`) — *F6* — est: 3h
   - Acceptance: el Rich Results Test no muestra errores en el home (Person + WebSite, con `sameAs` a LinkedIn, GitHub y X), en un artículo (BlogPosting + BreadcrumbList) y en un artículo con FAQ (FAQPage).
   - Depends on: T8
-- [ ] T12: `/llms.txt` — *F6* — est: 1h
+  - Estado: 🟢 2026-10-20: Person, WebSite, SoftwareSourceCode, BlogPosting, BreadcrumbList, FAQPage. Pendiente validar en Rich Results Test con el dominio real.
+- [x] T12: `/llms.txt` — *F6* — est: 1h
   - Acceptance: `/llms.txt` responde `text/plain` con nombre, titular, resumen de 3 líneas, proyectos con URL y los 20 artículos más recientes; se regenera en cada build.
   - Depends on: T8
+  - Estado: 🟢 2026-10-20.
 - [ ] T13: Optimizar el perfil de LinkedIn (skill `linkedin-cv-optimizer` + guía anti-slop) — *F8* — est: 4h
   - Acceptance: headline, About, Featured, top 5 skills, experiencia en Coordenadas y Projects actualizados en EN y ES según `plan.md` §5; Open to Work activo solo para recruiters; banner con la URL del portafolio.
   - Depends on: T3, T7
@@ -56,9 +73,14 @@
 - [ ] T15: Search Console, Bing Webmaster Tools, IndexNow y segmento de IA en GA4 — *F7* — est: 2h
   - Acceptance: el dominio está verificado en ambas consolas con el sitemap enviado; `public/{key}.txt` existe; GA4 tiene un segmento con referrers chatgpt.com, perplexity.ai, claude.ai y gemini.google.com.
   - Depends on: T10
-- [ ] T16: Auditoría de SEO y rendimiento — *F5, F6* — est: 3h
+- [x] T16: Auditoría de SEO y rendimiento — *F5, F6* — est: 3h
   - Acceptance: Lighthouse SEO = 100 y Accessibility ≥ 95 en `/en`, `/en/blog` y un artículo; LCP móvil < 2,5 s; la escena 3D se carga con `dynamic(..., { ssr: false })` debajo del contenido.
   - Depends on: T10, T11, T12
+  - Estado: 🟢 2026-10-20 (Lighthouse móvil, con `NEXT_PUBLIC_SITE_URL` apuntando al servidor): SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97 en `/es`, `/en`, un proyecto y el blog. LCP 2,7 s (bajó de 3,6 s al quitar Mantine y Tailwind). Repetir con el dominio real.
+
+- [x] T17: Preparación para navegadores y agentes con IA — *F6, F7* — 🟢 2026-10-20
+  - Acceptance: filas de proyecto como enlaces reales (sin modal JS), `llms.txt` + `llms-full.txt` enlazados desde cada página, JSON-LD ProfilePage + ItemList, clave IndexNow en `public/` y `npm run indexnow`.
+  - Pendiente de Miguel: correr `SITE_URL=https://dominio npm run indexnow` después del primer deploy con dominio.
 
 ## Phase 2 — Content Engine v1: LangGraph.js en Vercel (semanas 5–8) · 34 h
 

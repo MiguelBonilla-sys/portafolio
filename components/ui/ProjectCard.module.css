@@ -5,13 +5,9 @@
   align-items: start;
   width: 100%;
   padding: clamp(1.5rem, 3vw, 2.25rem) 0;
-  border: 0;
   border-bottom: var(--border);
-  background: transparent;
   color: var(--ink);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
+  text-decoration: none;
   transition:
     background-color 160ms var(--ease-out),
     color 160ms var(--ease-out),

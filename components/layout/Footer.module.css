@@ -55,8 +55,10 @@
   font-family: var(--font-data);
   font-size: 0.9375rem;
   color: var(--ink);
+  text-decoration: none;
 }
 
 .links a:hover {
   color: var(--blue);
+  text-decoration: underline;
 }

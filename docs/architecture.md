@@ -6,9 +6,9 @@ Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de conte
 
 | Layer | Technology | Reason |
 |-------|-----------|--------|
-| Sitio | Next.js 16 (App Router, SSG), React 19, TypeScript | Stack actual. SSG deja todo el texto en el HTML, que es lo que leen los crawlers de IA |
-| UI | Mantine v8 (`core`, `hooks`), Tailwind v4, CSS Modules, Motion, R3F | Stack actual. Se eliminan los paquetes de Mantine, TipTap, Recharts, Embla y Dayjs que no se usan |
-| i18n | `next-intl` con segmento `app/[locale]` | Soporte nativo de App Router, rutas estáticas por idioma, middleware de detección |
+| Sitio | Next.js 16.3 (App Router, SSG), React 19, TypeScript | Stack actual. SSG deja todo el texto en el HTML, que es lo que leen los crawlers de IA |
+| UI | CSS Modules + tokens en `app/globals.css` (ver `DESIGN.md`), tema claro/oscuro con un script propio (`lib/theme.ts`) | Mantine, Tailwind, Motion y Three.js se quitaron: el CSS bajó de 245 KB a 37 KB y el LCP móvil de 3,6 s a 2,7 s |
+| i18n | `next-intl` 4 con segmento `app/[locale]` y `proxy.ts` | Soporte nativo de App Router, rutas estáticas por idioma, detección por `Accept-Language` |
 | Blog | Archivos MDX en `content/blog/{locale}/` + `next-mdx-remote/rsc` + `gray-matter` + `zod` | Sin CMS: el agente publica con un commit. `zod` valida el frontmatter en build |
 | SEO/GEO | `sitemap.ts`, `robots.ts`, JSON-LD (schema.org), `llms.txt`, RSS, IndexNow | APIs nativas de Next.js y estándares abiertos |
 | Hosting | Vercel (Hobby), fluid compute | Sitio y agente en el mismo deploy. Redeploy automático en cada push a `main` |
@@ -29,64 +29,55 @@ Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de conte
 | Memoria | 2 GB / 1 vCPU | Suficiente: el trabajo pesado lo hace el LLM externo |
 | Uso | Personal, no comercial | Si el agente se usa para clientes, pasar a Pro |
 
-## Estructura del repo (después de la fase 2)
+## Estructura del repo
+
+Estado al 2026-10-20: lo marcado con ✓ ya existe; el resto llega en la fase 2.
 
 ```
 app/
-  [locale]/
-    layout.tsx              # <html lang>, metadata y hreflang por idioma
-    page.tsx                # home
+  [locale]/                 ✓ raíz con <html lang>, metadata, hreflang y la barra/pie compartidos
+    layout.tsx              ✓
+    page.tsx                ✓ inicio (JSON-LD Person + WebSite)
+    not-found.tsx           ✓ 404 traducido
+    [...rest]/page.tsx      ✓ rutas desconocidas → 404
+    opengraph-image.tsx     ✓ imagen OG por idioma
+    feed.xml/route.ts       ✓ RSS por idioma
     blog/
-      page.tsx              # índice del blog
-      [slug]/page.tsx       # artículo (generateStaticParams)
-    proyectos/[id]/page.tsx # caso de estudio
+      page.tsx              ✓ índice
+      [slug]/page.tsx       ✓ artículo (BlogPosting, BreadcrumbList, FAQPage)
+    proyectos/[id]/page.tsx ✓ /es/proyectos/[id] y /en/projects/[id]
   api/
-    telegram/route.ts       # webhook: mensajes y botones (callback_query)
-    cron/daily/route.ts     # cron diario protegido con CRON_SECRET
-  sitemap.ts
-  robots.ts
-  llms.txt/route.ts
-  feed.xml/route.ts
-  opengraph-image.tsx
-agent/
-  graph.ts                  # definición del StateGraph y compilación con el checkpointer
-  state.ts                  # Annotation del estado
-  nodes/
-    extract-facts.ts
-    draft-blog.ts
-    anti-slop-edit.ts
-    localize.ts
-    adapt-linkedin.ts
-    carousel.ts
-    verify-facts.ts
-    evaluate.ts
-    human-review.ts         # interrupt()
-    publish-blog.ts
-    wait-deploy.ts
-    publish-linkedin.ts
-    index-now.ts
-    notify.ts
-  lib/
-    llm.ts                  # ChatOpenAI con OpenCode Go y respaldo
-    lint.ts                 # linter determinista (reglas de content-style-guide.md §9)
-    telegram.ts
-    github.ts
-    linkedin.ts
-    db.ts                   # content_log
-  prompts/
-    style-guide.md          # copia versionada de docs/content-style-guide.md
-content/
-  blog/{es,en}/{slug}.mdx
+    telegram/route.ts       webhook: mensajes y botones (callback_query)
+    cron/daily/route.ts     cron diario protegido con CRON_SECRET
+    linkedin/callback/route.ts
+  sitemap.ts                ✓
+  robots.ts                 ✓
+  llms.txt/route.ts         ✓
+  icon.svg, apple-icon.png  ✓
+  globals.css               ✓ tokens (DESIGN.md)
+agent/                      fase 2 (ver "Grafo del agente")
+components/
+  brand/Sigil.tsx           ✓ símbolo animado
+  blog/Prose.tsx            ✓ render MDX
+  seo/JsonLd.tsx            ✓
+  layout/, sections/, ui/   ✓
+content/blog/{es,en}/*.mdx  ✓
 data/
-  projects.{es,en}.json
-  experience.{es,en}.json
-  skills.json
+  projects.{es,en}.json     ✓
+  experience.{es,en}.json   ✓
+  skills.json               ✓ etiquetas bilingües
+i18n/
+  routing.ts                ✓ locales y rutas localizadas (pathnames)
+  navigation.ts             ✓ Link, usePathname, getPathname
+  request.ts                ✓ carga de mensajes
 lib/
-  blog.ts
-  jsonld.ts
-messages/{es,en}.json
-middleware.ts
-vercel.json                 # cron diario
+  blog.ts                   ✓ lectura y validación zod
+  content.ts                ✓ datos por idioma y enlaces
+  jsonld.ts                 ✓ builders schema.org
+  site.ts                   ✓ SITE_URL, absoluteUrl, alternates
+messages/{es,en}.json       ✓
+proxy.ts                    ✓ next-intl (en Next 16, middleware.ts pasó a llamarse proxy.ts)
+vercel.json                 cron diario (fase 2)
 ```
 
 ## Grafo del agente

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import SectionHeader from "@/components/ui/SectionHeader";
 import styles from "./ContactSection.module.css";
 
@@ -9,24 +11,27 @@ type Field = "name" | "email" | "message";
 type FieldErrors = Partial<Record<Field, string>>;
 
 const contactItems = [
-  { label: "Email", href: "mailto:miguelangelboto14@gmail.com", value: "miguelangelboto14@gmail.com" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/miguel-bonilla-sys", value: "in/miguel-bonilla-sys" },
-  { label: "GitHub", href: "https://github.com/MiguelBonilla-sys", value: "MiguelBonilla-sys" },
-  { label: "X", href: "https://x.com/_mangel14_", value: "@_mangel14_" },
+  { label: "Email", href: `mailto:${EMAIL}`, value: EMAIL },
+  { label: "LinkedIn", href: LINKEDIN_URL, value: "in/miguel-bonilla-sys" },
+  { label: "GitHub", href: GITHUB_URL, value: "MiguelBonilla-sys" },
+  { label: "X", href: X_URL, value: "@_mangel14_" },
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validate(data: Record<Field, string>): FieldErrors {
+type Translate = (key: "errName" | "errEmailEmpty" | "errEmailInvalid" | "errMessage") => string;
+
+function validate(data: Record<Field, string>, t: Translate): FieldErrors {
   const errors: FieldErrors = {};
-  if (!data.name.trim()) errors.name = "Escribe tu nombre.";
-  if (!data.email.trim()) errors.email = "Escribe tu email para poder responderte.";
-  else if (!EMAIL_RE.test(data.email.trim())) errors.email = "Ese email no parece válido. Revisa que tenga @ y dominio.";
-  if (data.message.trim().length < 10) errors.message = "Cuéntame un poco más (mínimo 10 caracteres).";
+  if (!data.name.trim()) errors.name = t("errName");
+  if (!data.email.trim()) errors.email = t("errEmailEmpty");
+  else if (!EMAIL_RE.test(data.email.trim())) errors.email = t("errEmailInvalid");
+  if (data.message.trim().length < 10) errors.message = t("errMessage");
   return errors;
 }
 
 export default function ContactSection() {
+  const t = useTranslations("contact");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -41,7 +46,7 @@ export default function ContactSection() {
       message: String(formData.get("message") ?? ""),
     };
 
-    const found = validate(values);
+    const found = validate(values, t);
     setErrors(found);
     const firstInvalid = (Object.keys(found) as Field[])[0];
     if (firstInvalid) {
@@ -70,11 +75,11 @@ export default function ContactSection() {
         form.reset();
       } else {
         setStatus("error");
-        setErrorMsg(json.message ?? "No se pudo enviar. Intenta de nuevo o escríbeme por email.");
+        setErrorMsg(json.message ?? t("errorDefault"));
       }
     } catch {
       setStatus("error");
-      setErrorMsg("No hubo conexión. Revisa tu red e intenta de nuevo, o escríbeme por email.");
+      setErrorMsg(t("errorNetwork"));
     }
   };
 
@@ -93,11 +98,8 @@ export default function ContactSection() {
     <section id="contacto" className={styles.section} aria-labelledby="contacto-title">
       <div className={`shell ${styles.grid}`}>
         <div>
-          <SectionHeader id="contacto-title" title="Hablemos" />
-          <p className={styles.intro}>
-            Busco trabajo remoto como Full Stack o AI Engineer, y me interesan proyectos de
-            automatización con IA. Escríbeme por el formulario o por cualquiera de estos canales.
-          </p>
+          <SectionHeader id="contacto-title" title={t("title")} />
+          <p className={styles.intro}>{t("intro")}</p>
           <dl className={styles.channels}>
             {contactItems.map((item) => (
               <div key={item.label} className={styles.channel}>
@@ -120,7 +122,7 @@ export default function ContactSection() {
 
           <div className={styles.group}>
             <label htmlFor="contact-name" className={styles.label}>
-              Nombre
+              {t("name")}
             </label>
             <input {...fieldProps("name")} type="text" className={styles.input} autoComplete="name" required />
             {errors.name && (
@@ -132,7 +134,7 @@ export default function ContactSection() {
 
           <div className={styles.group}>
             <label htmlFor="contact-email" className={styles.label}>
-              Email
+              {t("email")}
             </label>
             <input {...fieldProps("email")} type="email" className={styles.input} autoComplete="email" required />
             {errors.email && (
@@ -144,7 +146,7 @@ export default function ContactSection() {
 
           <div className={styles.group}>
             <label htmlFor="contact-message" className={styles.label}>
-              Mensaje
+              {t("message")}
             </label>
             <textarea {...fieldProps("message")} className={styles.textarea} rows={6} required />
             {errors.message && (
@@ -155,12 +157,12 @@ export default function ContactSection() {
           </div>
 
           <div aria-live="polite" aria-atomic="true">
-            {status === "success" && <p className={styles.success}>Mensaje enviado. Te respondo pronto.</p>}
+            {status === "success" && <p className={styles.success}>{t("success")}</p>}
             {status === "error" && <p className={styles.error}>{errorMsg}</p>}
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={isLoading} aria-busy={isLoading}>
-            {isLoading ? "Enviando…" : "Enviar mensaje"}
+            {isLoading ? t("sending") : t("send")}
           </button>
         </form>
       </div>
