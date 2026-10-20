@@ -1,24 +1,11 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { loadDisplayFont } from "@/lib/og-font";
 
 export const alt = "Miguel Bonilla, Full Stack AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-
-// Satori necesita TTF/OTF: se pide a Google Fonts en el build. Si falla, usa la fuente por defecto.
-async function loadDisplayFont(): Promise<ArrayBuffer | null> {
-  try {
-    const css = await (
-      await fetch("https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@900&display=swap")
-    ).text();
-    const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
-    if (!url) return null;
-    return await (await fetch(url)).arrayBuffer();
-  } catch {
-    return null;
-  }
-}
 
 const BLUE = "#3D7BFF";
 const ACCENT = "#2EE6FF";
