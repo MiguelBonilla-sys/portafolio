@@ -17,6 +17,7 @@
 - [ ] T1: Cerrar las Open Questions de `spec.md` (dominio, términos de OpenCode Go y proveedor de respaldo, email de contacto) — *F5, F9* — est: 1h
   - Acceptance: `spec.md` no tiene preguntas abiertas sin owner; `NEXT_PUBLIC_SITE_URL` está definido en Vercel.
   - Depends on: —
+  - Estado: 🟡 2026-10-20: dominio `mangel14.dev` y email cerrados. Falta confirmar los términos de OpenCode Go y elegir el proveedor de respaldo.
 
 ## Phase 1 — Cimientos (semanas 1–4) · 43 h
 
@@ -43,7 +44,7 @@
 - [ ] T7: Páginas de caso de estudio `/[locale]/proyectos/[id]` — *F2* — est: 4h
   - Acceptance: los 3 proyectos destacados tienen página propia con secciones Problema, Solución, Stack, Resultados y Enlaces; ≥ 1 enlace a demo pública; el modal enlaza a la página.
   - Depends on: T4, T5
-  - Estado: 🟡 2026-10-20: páginas `/es/proyectos/[id]` y `/en/projects/[id]` para los 7 proyectos con JSON-LD. Faltan secciones Problema/Resultados con datos reales y al menos una demo pública.
+  - Estado: 🟡 2026-10-20: páginas `/es/proyectos/[id]` y `/en/projects/[id]` para los 12 proyectos con JSON-LD. Faltan secciones Problema/Resultados con datos reales y al menos una demo pública.
 - [x] T8: Blog MDX (lectura, validación y páginas) — *F4* — est: 5h
   - Acceptance: un MDX de ejemplo en `content/blog/es` y `content/blog/en` genera `/es/blog/{slug}` y `/en/blog/{slug}` estáticos; el índice ordena por fecha; un frontmatter sin `summary` rompe el build con un error de zod legible; los artículos enlazan a su traducción.
   - Depends on: T5
@@ -55,7 +56,7 @@
 - [x] T10: `sitemap.ts`, `robots.ts`, hreflang y metadata por idioma — *F5* — est: 2h
   - Acceptance: `sitemap.xml` incluye home, casos y artículos en ambos idiomas con `alternates`; `robots.txt` permite Googlebot, Bingbot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot; cada página tiene `canonical` y hreflang `es`, `en`, `x-default`.
   - Depends on: T5, T8
-  - Estado: 🟢 2026-10-20: sitemap con alternates, robots con bots de IA, canonical + hreflang en todas las páginas. Falta `NEXT_PUBLIC_SITE_URL` en Vercel (T1).
+  - Estado: 🟢 2026-10-20: sitemap con alternates, robots con bots de IA, canonical + hreflang en todas las páginas. Dominio `mangel14.dev` por defecto en el código, con redirecciones 301 desde `www.`, `portafolio.` y `.vercel.app`.
 - [x] T11: JSON-LD (`lib/jsonld.ts`) — *F6* — est: 3h
   - Acceptance: el Rich Results Test no muestra errores en el home (Person + WebSite, con `sameAs` a LinkedIn, GitHub y X), en un artículo (BlogPosting + BreadcrumbList) y en un artículo con FAQ (FAQPage).
   - Depends on: T8
@@ -75,6 +76,7 @@
 - [ ] T15: Search Console, Bing Webmaster Tools, IndexNow y segmento de IA en GA4 — *F7* — est: 2h
   - Acceptance: el dominio está verificado en ambas consolas con el sitemap enviado; `public/{key}.txt` existe; GA4 tiene un segmento con referrers chatgpt.com, perplexity.ai, claude.ai y gemini.google.com.
   - Depends on: T10
+  - Estado: 🟡 Clave IndexNow en `public/` y pasos en `docs/setup.md` §1 (propiedad de dominio por TXT, importación en Bing). Falta darlos de alta y crear el segmento de GA4.
 - [x] T16: Auditoría de SEO y rendimiento — *F5, F6* — est: 3h
   - Acceptance: Lighthouse SEO = 100 y Accessibility ≥ 95 en `/en`, `/en/blog` y un artículo; LCP móvil < 2,5 s; la escena 3D se carga con `dynamic(..., { ssr: false })` debajo del contenido.
   - Depends on: T10, T11, T12
@@ -82,7 +84,7 @@
 
 - [x] T17: Preparación para navegadores y agentes con IA — *F6, F7* — 🟢 2026-10-20
   - Acceptance: filas de proyecto como enlaces reales (sin modal JS), `llms.txt` + `llms-full.txt` enlazados desde cada página, JSON-LD ProfilePage + ItemList, clave IndexNow en `public/` y `npm run indexnow`.
-  - Pendiente de Miguel: correr `SITE_URL=https://dominio npm run indexnow` después del primer deploy con dominio.
+  - Pendiente de Miguel: correr `npm run indexnow` después del primer deploy (ya apunta a `mangel14.dev`).
 
 ## Phase 2 — Content Engine v1: LangGraph.js en Vercel (semanas 5–8) · 34 h
 
