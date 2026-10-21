@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import Sigil from "@/components/brand/Sigil";
+import { Link } from "@/i18n/navigation";
 import { GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import styles from "./Footer.module.css";
 
@@ -25,6 +26,9 @@ export default async function Footer() {
           </p>
         </div>
         <ul className={styles.links}>
+          <li>
+            <Link href="/tarjeta">{t("card")}</Link>
+          </li>
           {links.map((l) => (
             <li key={l.label}>
               <a href={l.href} target="_blank" rel="noopener noreferrer">

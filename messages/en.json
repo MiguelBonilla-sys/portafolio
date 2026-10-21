@@ -105,7 +105,8 @@
     "cv": "Resume"
   },
   "footer": {
-    "place": "Bogotá, Colombia · © 2026"
+    "place": "Bogotá, Colombia · © 2026",
+    "card": "Contact card"
   },
   "notFound": {
     "title": "Page not found",
@@ -127,5 +128,18 @@
     "summaryText": "Full Stack Developer and AI Engineer with 2+ years of professional software development experience building and deploying SaaS products, REST APIs, and automation workflows, plus AI-powered systems using multi-agent architectures, RAG pipelines, and LLM integrations. Proficient in Python, React, FastAPI, Django, TypeScript, PostgreSQL, LlamaStack, Ollama, ChromaDB, Docker, and Linux. Experienced in authentication, third-party API integrations, production troubleshooting, and remote collaboration with international clients.",
     "technologies": "Technologies",
     "otherLang": "Leer en español"
+  },
+  "card": {
+    "title": "Contact card",
+    "metaDescription": "Contact details for Miguel Ángel Bonilla Torres, Full Stack Developer / AI Engineer in Bogotá: email, phone and links. Save it to your phone or Wallet.",
+    "save": "Save contact",
+    "apple": "Add to Apple Wallet",
+    "google": "Add to Google Wallet",
+    "scan": "Scan the code with your phone camera to save the contact.",
+    "qrAlt": "QR code that opens Miguel Bonilla's contact",
+    "email": "Email",
+    "phone": "Phone",
+    "web": "Portfolio",
+    "portfolio": "View portfolio"
   }
 }

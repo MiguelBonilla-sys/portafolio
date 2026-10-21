@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "indexnow": "node scripts/indexnow.mjs",
+    "wallet-assets": "node scripts/build-wallet-assets.mjs",
     "cv": "node scripts/build-cv.mjs",
     "test": "node --test agent/test/*.test.ts"
   },
@@ -20,8 +21,10 @@
     "next": "16.3.8",
     "next-intl": "^4.14.9",
     "next-mdx-remote": "^6.0.0",
+    "passkit-generator": "^3.7.0",
     "pdf-lib": "^1.17.1",
     "pg": "^8.23.1",
+    "qrcode": "^1.5.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^4.6.5"
@@ -29,6 +32,7 @@
   "devDependencies": {
     "@types/node": "^22",
     "@types/pg": "8.23.1",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

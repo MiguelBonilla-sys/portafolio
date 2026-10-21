@@ -111,6 +111,60 @@ Al aprobar: commit del artículo → espera el deploy → post en LinkedIn → c
 
 Opciones al inicio del mensaje: `/es` (post en español) y `/carrusel` (además, un carrusel PDF). Comandos: `/estado`, `/cancelar`, `/ayuda`.
 
+## 10. Tarjeta de contacto y Wallet (opcional)
+
+La tarjeta ya funciona sin configurar nada:
+- `https://mangel14.dev/es/tarjeta` (o `/en/card`): tu tarjeta con QR, para mostrarla o compartir el enlace.
+- `https://mangel14.dev/contact.vcf`: el contacto con foto. El QR apunta aquí: quien lo escanee con la cámara lo guarda en un toque, en iPhone o Android.
+
+Los botones "Agregar a Apple Wallet" y "Agregar a Google Wallet" aparecen solos cuando sus variables están en Vercel y vuelves a desplegar. El pase lleva el mismo QR, así que lo muestras desde el Wallet del celular sin abrir el navegador.
+
+### Apple Wallet (requiere Apple Developer Program, 99 USD/año)
+
+1. [developer.apple.com/account](https://developer.apple.com/account) → Certificates, Identifiers & Profiles → Identifiers → **+** → **Pass Type IDs** → `pass.dev.mangel14.card`.
+2. Genera la llave y la solicitud de certificado:
+   ```bash
+   openssl req -new -newkey rsa:2048 -nodes -keyout pass.key -out pass.csr -subj "/CN=Mangel14 Pass"
+   ```
+3. En el Pass Type ID → **Create Certificate** → sube `pass.csr` → descarga `pass.cer` y conviértelo:
+   ```bash
+   openssl x509 -inform DER -in pass.cer -out pass.pem
+   ```
+4. Descarga el intermedio de Apple [WWDR G4](https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer) y conviértelo:
+   ```bash
+   openssl x509 -inform DER -in AppleWWDRCAG4.cer -out wwdr.pem
+   ```
+5. Variables (en macOS usa `base64 -i archivo`; en Linux `base64 -w0 archivo`):
+
+   | Variable | Valor |
+   |---|---|
+   | `APPLE_WALLET_PASS_TYPE_ID` | `pass.dev.mangel14.card` |
+   | `APPLE_WALLET_TEAM_ID` | Membership → Team ID (10 caracteres) |
+   | `APPLE_WALLET_SIGNER_CERT` | `base64` de `pass.pem` |
+   | `APPLE_WALLET_SIGNER_KEY` | `base64` de `pass.key` |
+   | `APPLE_WALLET_WWDR_CERT` | `base64` de `wwdr.pem` |
+
+6. Redespliega y abre `https://mangel14.dev/api/wallet/apple` en Safari del iPhone.
+
+### Google Wallet (gratis)
+
+1. [Google Pay & Wallet Console](https://pay.google.com/business/console) → Google Wallet API → crea la cuenta de emisor y copia el **Issuer ID**.
+2. [Google Cloud Console](https://console.cloud.google.com): crea un proyecto, habilita **Google Wallet API**, crea una **cuenta de servicio** y descarga su llave JSON.
+3. En Pay & Wallet Console → **Users**, invita el correo de la cuenta de servicio con rol Developer.
+4. Variables:
+
+   | Variable | Valor |
+   |---|---|
+   | `GOOGLE_WALLET_ISSUER_ID` | el Issuer ID |
+   | `GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL` | `client_email` del JSON |
+   | `GOOGLE_WALLET_PRIVATE_KEY` | `private_key` del JSON, tal cual (con los `\n`) |
+
+5. Redespliega y abre `https://mangel14.dev/api/wallet/google` en Android.
+
+Mientras la cuenta de emisor está en modo demo, solo pueden guardar el pase los correos que agregues como usuarios de prueba en la consola (el tuyo incluido). Para que cualquiera pueda guardarlo: Google Wallet API → **Request publishing access** (Google lo revisa en unos días).
+
+Si cambias la foto o el símbolo: `npm run wallet-assets` regenera las imágenes de `wallet/` y `public/wallet/`.
+
 ## Qué hace el cron diario (8:00 Bogotá)
 
 - Publica lo programado para ese día.
