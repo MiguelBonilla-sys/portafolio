@@ -160,6 +160,12 @@
   - Depends on: T35
   - Estado: 🔴 Semana 12.
 
+## Extra — Tarjeta de contacto
+
+- [x] T37: Tarjeta de contacto con vCard, QR y pases de Apple y Google Wallet
+  - Acceptance: `/es/tarjeta` y `/en/card` muestran la tarjeta con QR a `/contact.vcf`; `/api/wallet/apple` entrega un `.pkpass` firmado y `/api/wallet/google` redirige al enlace "Add to Google Wallet"; sin credenciales los botones de Wallet no aparecen.
+  - Estado: 🟡 2026-10-21: código listo y probado con certificados de prueba (manifest y firma PKCS#7 válidos, JWT RS256 válido). Falta poner las credenciales reales (docs/setup.md §10) y probar en un iPhone y un Android.
+
 ## Continuo (semanas 2–12) · 20 h
 
 - [ ] TC1: Revisar y aprobar contenido — est: 1,5 h/semana
