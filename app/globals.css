@@ -1,23 +1,55 @@
-@import "@mantine/core/styles.css";
-@import "tailwindcss";
-
-/* ── DARK THEME (default) ── */
-[data-mantine-color-scheme="dark"],
-:root {
-  --bg: #080c10;
-  --bg2: #0d1117;
-  --surface: #111820;
-  --border: #1e2d3d;
-  --accent: #00e5ff;
-  --accent2: #7fff00;
-  --accent3: #ff6b35;
-  --text: #c9d1d9;
-  --text-muted: #586069;
-  --text-bright: #f0f6fc;
+/* ── Tokens (ver DESIGN.md) ── */
+:root,
+[data-theme="dark"] {
+  --ground: #0a0b10;
+  --surface: #12141c;
+  --ink: #edeff5;
+  --ink-2: #9aa3b5;
+  --hair: #2a2e3a;
+  --blue: #3d7bff;
+  --on-blue: #0a0b10;
+  --accent: #2ee6ff;
+  --ink-on-accent: #0a0b10;
+  --shadow-hard: var(--accent);
+  --focus: var(--accent);
+  --danger: #ff8a7e;
+  color-scheme: dark;
 }
 
+[data-theme="light"] {
+  --ground: #e9eaec;
+  --surface: #f7f7f8;
+  --ink: #0b0c10;
+  --ink-2: #454b57;
+  --hair: #c4c7ce;
+  --blue: #1d4fbf;
+  --on-blue: #ffffff;
+  --accent: #22c3e6;
+  --ink-on-accent: #0b0c10;
+  --shadow-hard: var(--ink);
+  --focus: var(--blue);
+  --danger: #b42318;
+  color-scheme: light;
+}
 
-* {
+/* Las variables de next/font viven en <body>; las pilas se resuelven ahí */
+body {
+  --font-display: var(--font-shoulders), "Arial Narrow", sans-serif;
+  --font-body: var(--font-atkinson), system-ui, sans-serif;
+  --font-data: var(--font-mono), ui-monospace, monospace;
+}
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --border: 2px solid var(--ink);
+  --shadow: 6px 6px 0 var(--shadow-hard);
+  --shadow-up: 8px 8px 0 var(--shadow-hard);
+  --shadow-down: 2px 2px 0 var(--shadow-hard);
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -25,51 +57,163 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--hair) var(--ground);
+  scrollbar-width: thin;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-syne), system-ui, sans-serif;
-  overflow-x: hidden;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
   min-height: 100vh;
-  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--blue);
 }
 
-/* Noise texture overlay */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  text-transform: uppercase;
+  text-wrap: balance;
 }
 
-section {
-  position: relative;
-  z-index: 1;
+p {
+  text-wrap: pretty;
 }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+::selection {
+  background: var(--accent);
+  color: var(--ink-on-accent);
 }
 
-.anim         { opacity: 0; animation: fadeUp 0.7s ease forwards; }
-.anim-d1      { animation-delay: 0.1s; }
-.anim-d2      { animation-delay: 0.25s; }
-.anim-d3      { animation-delay: 0.4s; }
-.anim-d4      { animation-delay: 0.55s; }
-.anim-d5      { animation-delay: 0.7s; }
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
 
-/* ── REDUCED MOTION ── */
+time,
+.data {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Contenedor ── */
+.shell {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 32px;
+  }
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 200;
+  padding: 0.75rem 1rem;
+  background: var(--accent);
+  color: var(--ink-on-accent);
+  font-weight: 700;
+  text-decoration: none;
+  border: var(--border);
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+/* ── Etiqueta de datos ── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--ink-2);
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.chip-accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
+  font-weight: 700;
+}
+
+/* ── Botones ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  padding: 0.8rem 1.5rem;
+  border: var(--border);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition:
+    transform 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out);
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-up);
+}
+
+.btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--shadow-down);
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: var(--on-blue);
+}
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-down);
+}
+
+/* ── Movimiento reducido ── */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -79,12 +223,51 @@ section {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
 
-  .anim {
-    opacity: 1;
-    animation: none;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.inline-code {
+  padding: 0.05rem 0.3rem;
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  font-size: 0.9em;
+}
+
+/* ── Impresión (CV): solo el contenido, en blanco y negro ── */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  :root,
+  [data-theme] {
+    --ground: #fff;
+    --surface: #fff;
+    --ink: #000;
+    --ink-2: #333;
+    --hair: #999;
+  }
+
+  body > header,
+  body > footer,
+  .skip {
+    display: none !important;
+  }
+
+  a {
+    text-decoration: none;
   }
 }

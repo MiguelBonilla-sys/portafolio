@@ -1,0 +1,132 @@
+import type { Locale } from "@/i18n/routing";
+import type { Project } from "@/types";
+import type { Post } from "@/lib/blog";
+import { getSkills, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
+
+const PERSON_ID = `${SITE_URL}/#person`;
+
+const description: Record<Locale, string> = {
+  es: "Full Stack AI Engineer en Bogotá. Construye APIs, automatizaciones con n8n y CRM, y sistemas con LLMs.",
+  en: "Full Stack AI Engineer based in Bogotá. Builds APIs, n8n and CRM automations, and LLM-powered systems.",
+};
+
+export function personSchema(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": PERSON_ID,
+    name: "Miguel Ángel Bonilla Torres",
+    alternateName: ["Miguel Bonilla", "mangel14"],
+    jobTitle: "Full Stack AI Engineer",
+    description: description[locale],
+    url: absoluteUrl(locale, "/"),
+    image: `${SITE_URL}/avatar.png`,
+    sameAs: [GITHUB_URL, LINKEDIN_URL, X_URL],
+    worksFor: { "@type": "Organization", name: "Coordenadas.co" },
+    alumniOf: [
+      { "@type": "CollegeOrUniversity", name: "Universidad de San Buenaventura" },
+      { "@type": "CollegeOrUniversity", name: "Universidad Sergio Arboleda" },
+      { "@type": "CollegeOrUniversity", name: "Universidad Nacional de Colombia" },
+    ],
+    address: { "@type": "PostalAddress", addressLocality: "Bogotá", addressCountry: "CO" },
+    knowsAbout: getSkills(locale).flatMap((c) => c.items),
+  };
+}
+
+// Página de perfil (Google ProfilePage): la persona es la entidad principal del sitio
+export function profilePageSchema(locale: Locale) {
+  const person: Partial<ReturnType<typeof personSchema>> = personSchema(locale);
+  delete person["@context"];
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: absoluteUrl(locale, "/"),
+    inLanguage: locale,
+    dateModified: new Date().toISOString().slice(0, 10),
+    mainEntity: person,
+  };
+}
+
+export function projectListSchema(locale: Locale, projects: Project[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: locale === "es" ? "Proyectos de Miguel Bonilla" : "Miguel Bonilla's projects",
+    itemListElement: projects.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absoluteUrl(locale, { pathname: "/proyectos/[id]", params: { id: p.id } }),
+      name: p.title,
+    })),
+  };
+}
+
+export function websiteSchema(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Miguel Bonilla",
+    url: absoluteUrl(locale, "/"),
+    inLanguage: locale,
+    author: { "@id": PERSON_ID },
+  };
+}
+
+export function breadcrumbSchema(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function projectSchema(locale: Locale, project: Project) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    name: project.title,
+    description: project.description,
+    url: absoluteUrl(locale, { pathname: "/proyectos/[id]", params: { id: project.id } }),
+    codeRepository: project.links.repo ?? undefined,
+    programmingLanguage: project.language,
+    keywords: project.tags.join(", "),
+    inLanguage: locale,
+    author: { "@id": PERSON_ID },
+  };
+}
+
+export function blogPostingSchema(locale: Locale, post: Post) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    abstract: post.summary,
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    inLanguage: locale,
+    keywords: post.tags.join(", "),
+    url: absoluteUrl(locale, { pathname: "/blog/[slug]", params: { slug: post.slug } }),
+    mainEntityOfPage: absoluteUrl(locale, { pathname: "/blog/[slug]", params: { slug: post.slug } }),
+    author: { "@id": PERSON_ID, "@type": "Person", name: "Miguel Ángel Bonilla Torres" },
+    citation: post.sources.map((s) => s.url),
+  };
+}
+
+export function faqSchema(faq: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}

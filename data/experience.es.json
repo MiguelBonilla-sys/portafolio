@@ -1,0 +1,55 @@
+[
+  {
+    "id": "coordenadas",
+    "date": "Ago 2025 — Presente",
+    "title": "Full Stack Developer",
+    "place": "Coordenadas.co · Bogotá, Colombia (remoto)",
+    "description": "Plataformas web, integraciones de APIs y CRM, y automatizaciones para clientes de Colombia y EE. UU.",
+    "highlights": [
+      "Uní en Bikans dos herramientas que obligaban a digitar dos veces los datos de nómina y retención en la fuente; hoy está en producción con autenticación de dos factores.",
+      "Entregué en 4 días un agente de automatización en n8n que integra QuickBooks Online (OAuth 2.0), en 5 fases y 17 tareas, y corregí un error de autenticación en el camino sin mover la fecha de entrega.",
+      "Automaticé la distribución de contenido de 6 proyectos inmobiliarios en un solo sistema reutilizable que personaliza los datos por contacto.",
+      "Construí plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias, y despliego y mantengo la infraestructura en un servidor Linux propio con Docker, Coolify y Traefik."
+    ],
+    "type": "work"
+  },
+  {
+    "id": "sibartech",
+    "date": "Feb 2024 — Ago 2025",
+    "title": "Junior Backend Engineer",
+    "place": "Sibartech Technology SAS · Colombia",
+    "description": "Backend en producción con Python, Django, FastAPI y PostgreSQL.",
+    "highlights": [
+      "Desarrollé y mantuve soluciones backend en Python con Django y FastAPI, con PostgreSQL como base de datos principal en un entorno de producción real.",
+      "Escribí pruebas con pytest y contenedoricé servicios con Docker: mis primeros pasos en testing y DevOps."
+    ],
+    "type": "work"
+  },
+  {
+    "id": "usb",
+    "date": "Ene 2021 — Presente",
+    "title": "Ingeniería de Sistemas (en curso)",
+    "place": "Universidad de San Buenaventura · Bogotá · décimo semestre",
+    "description": "Arquitectura de software, sistemas distribuidos y redes.",
+    "highlights": [
+      "Tesis: sistema de IA multiagente para detectar dominios de phishing."
+    ],
+    "type": "education"
+  },
+  {
+    "id": "ethical-hacking",
+    "date": "2025",
+    "title": "Ethical Hacking & Cyber Risk",
+    "place": "Universidad Sergio Arboleda",
+    "description": "Curso de hacking ético y gestión de riesgo cibernético.",
+    "type": "course"
+  },
+  {
+    "id": "mobile-dev",
+    "date": "2023 — 2024",
+    "title": "Desarrollo de aplicaciones móviles",
+    "place": "Universidad Nacional de Colombia",
+    "description": "Curso de desarrollo de aplicaciones móviles.",
+    "type": "course"
+  }
+]

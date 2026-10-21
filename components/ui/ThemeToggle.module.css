@@ -1,9 +1,28 @@
 .toggle {
-  color: var(--text-muted);
-  transition: color 0.2s;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out);
 }
 
 .toggle:hover {
-  color: var(--accent);
-  background: transparent !important;
+  background: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+.sun,
+.moon {
+  display: grid;
+}
+
+:global([data-theme="dark"]) .moon,
+:global([data-theme="light"]) .sun {
+  display: none;
 }

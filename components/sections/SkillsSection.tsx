@@ -1,27 +1,32 @@
-import skills from "@/data/skills.json";
-import type { SkillCategory } from "@/types";
-import SkillCategoryCard from "@/components/ui/SkillCategory";
+import { getLocale, getTranslations } from "next-intl/server";
 import SectionHeader from "@/components/ui/SectionHeader";
-import AnimatedEntry from "@/components/ui/AnimatedEntry";
-import { StaggerContainer, StaggerItem } from "@/components/ui/StaggerContainer";
+import { getSkills } from "@/lib/content";
+import type { Locale } from "@/i18n/routing";
 import styles from "./SkillsSection.module.css";
 
-export default function SkillsSection() {
+export default async function SkillsSection() {
+  const t = await getTranslations("stack");
+  const locale = (await getLocale()) as Locale;
+
   return (
-    <section id="habilidades" className={styles.section}>
-      <AnimatedEntry>
-        <SectionHeader
-          label="// 02. stack tecnológico"
-          title="Herramientas & tecnologías"
-        />
-      </AnimatedEntry>
-      <StaggerContainer className={styles.grid} initialDelay={0.1}>
-        {(skills as SkillCategory[]).map((cat) => (
-          <StaggerItem key={cat.id}>
-            <SkillCategoryCard category={cat} />
-          </StaggerItem>
-        ))}
-      </StaggerContainer>
+    <section id="habilidades" className={styles.section} aria-labelledby="stack-title">
+      <div className="shell">
+        <SectionHeader id="stack-title" title={t("title")} lede={t("lede")} />
+        <div className={styles.grid}>
+          {getSkills(locale).map((cat) => (
+            <div key={cat.id} className={styles.block}>
+              <h3 className={styles.label}>{cat.label}</h3>
+              <ul className={styles.items}>
+                {cat.items.map((item) => (
+                  <li key={item} className="chip">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

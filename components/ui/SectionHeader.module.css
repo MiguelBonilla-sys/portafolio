@@ -1,21 +1,24 @@
 .header {
-  margin-bottom: 3rem;
-}
-
-.label {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
-  color: var(--accent);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+  align-items: end;
+  gap: 1rem 3rem;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
 }
 
 .title {
-  font-family: var(--font-syne), sans-serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  color: var(--text-bright);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.88;
+}
+
+.lede {
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+
+@media (max-width: 800px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
 }

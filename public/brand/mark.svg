@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="256" height="256" role="img" aria-label="Símbolo de Miguel Bonilla"><title>Miguel Bonilla</title>
+  <rect width="120" height="120" rx="20" fill="#0A0B10"/>
+  <circle cx="60" cy="62" r="44" fill="none" stroke="#3D7BFF" stroke-width="10"/>
+  <path d="M38 84V46l22 22 22-22v38" fill="none" stroke="#3D7BFF" stroke-width="12" stroke-linecap="square" stroke-linejoin="miter"/>
+  <rect x="52" y="10" width="16" height="16" transform="rotate(45 60 18)" fill="#2EE6FF"/>
+</svg>

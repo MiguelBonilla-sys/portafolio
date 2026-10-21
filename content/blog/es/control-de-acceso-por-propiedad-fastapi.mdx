@@ -1,0 +1,85 @@
+---
+title: "Control de acceso por propiedad en un gateway FastAPI"
+description: "Cómo un gateway en FastAPI con JWT decide qué activos ve cada usuario de una API de inventario externa, y qué límites tiene ese diseño."
+summary: "Un gateway en FastAPI recibe el token JWT del usuario, consulta la API de inventario externa y devuelve solo los activos cuyo campo DUEÑO_DE_ACTIVO coincide con el del usuario. Los superusuarios ven todo. La regla vive en el gateway, así la API original no necesita saber quién pregunta."
+date: "2026-10-20"
+slug: "control-de-acceso-por-propiedad-fastapi"
+locale: "es"
+pillar: "backend"
+tags: ["FastAPI", "JWT", "Autorización", "Python", "API Gateway"]
+draft: true
+faq:
+  - q: "¿Qué es el control de acceso por propiedad?"
+    a: "Es una regla de autorización que decide qué registros puede ver o modificar un usuario según quién es su dueño. En este gateway, un usuario normal solo recibe los activos cuyo campo DUEÑO_DE_ACTIVO es igual al suyo; un superusuario recibe todos."
+  - q: "¿Por qué poner la autorización en un gateway y no en la API original?"
+    a: "La API de inventario ya existía y no tenía usuarios. El gateway agrega autenticación con JWT y la regla de propiedad sin modificarla: se ubica delante, valida el token, consulta la API y filtra la respuesta antes de devolverla."
+  - q: "¿Cuánto duran los tokens?"
+    a: "Por defecto, el token de acceso dura 30 minutos y el de refresco 7 días. Ambos se firman con HS256 y llevan un campo type que el gateway revisa para que un token de refresco no sirva como token de acceso."
+sources:
+  - title: "OWASP API Security Top 10 (2023): API1 Broken Object Level Authorization"
+    url: "https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/"
+  - title: "FastAPI: Security"
+    url: "https://fastapi.tiangolo.com/tutorial/security/"
+  - title: "PyJWT: documentación"
+    url: "https://pyjwt.readthedocs.io/"
+  - title: "Repositorio API_AUTH_HACKATON"
+    url: "https://github.com/MiguelBonilla-sys/API_AUTH_HACKATON"
+---
+
+## El problema
+
+La API de inventario de activos de la universidad responde sin autenticación: el gateway la consulta sin credenciales y recibe la lista completa. [DATO?: contexto del hackatón, cuántas personas o dependencias usaban el inventario]
+
+La tarea era que cada persona viera solo los activos a su cargo, sin reescribir la API original. Es el riesgo número uno del OWASP API Security Top 10 de 2023: autorización rota a nivel de objeto, es decir, una API que no comprueba si el usuario puede ver el registro que pide.
+
+## La solución: un gateway delante de la API
+
+El gateway es una aplicación FastAPI que se pone delante del inventario. Hace tres cosas en cada petición:
+
+1. Valida el token JWT del encabezado `Authorization: Bearer`.
+2. Consulta la API de inventario externa con `httpx` de forma asíncrona.
+3. Filtra la respuesta según el dueño del activo antes de devolverla.
+
+Los usuarios se guardan en PostgreSQL con SQLAlchemy 2.0, y las contraseñas se almacenan con bcrypt.
+
+## La regla de propiedad
+
+Cada usuario tiene un campo `dueno_de_activo`. Cada activo del inventario trae el campo `DUEÑO_DE_ACTIVO`. La regla compara ambos:
+
+```python
+if current_user.is_superuser:
+    filtered_assets = all_assets
+else:
+    if not current_user.dueno_de_activo:
+        return []
+    user_owner = current_user.dueno_de_activo.strip()
+    filtered_assets = [
+        asset for asset in all_assets
+        if asset.get("DUEÑO_DE_ACTIVO", "").strip() == user_owner
+    ]
+```
+
+Un usuario sin dueño asignado recibe una lista vacía, no un error. Crear un activo para otro dueño devuelve `403`.
+
+## Tokens de acceso y de refresco
+
+El gateway emite dos tokens firmados con HS256. El de acceso dura 30 minutos y el de refresco 7 días, ambos configurables por variables de entorno. Cada token lleva un campo `type`, y la verificación lo exige:
+
+```python
+if payload.get("type") != token_type:
+    return None
+```
+
+Sin esa comprobación, un token de refresco robado serviría para llamar a la API durante una semana.
+
+## Límites conocidos
+
+- Para listar, el gateway pide hasta 2.000 registros a la API externa y filtra en memoria. Funciona con un inventario de ese tamaño; con uno mayor habría que filtrar en el origen.
+- Si la API externa falla, el gateway responde `503` con el detalle del error de `httpx`.
+- El endpoint `/owners` es público y devuelve la lista de dueños únicos.
+
+[DATO?: resultado del hackatón o uso real del gateway]
+
+## Despliegue
+
+El gateway corre en Railway con PostgreSQL, con Sentry para errores y rendimiento, y se puede levantar en local con Docker Compose. El código está en el repositorio enlazado en las fuentes.
