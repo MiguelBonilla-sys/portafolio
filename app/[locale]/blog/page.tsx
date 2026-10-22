@@ -28,7 +28,7 @@ export default async function BlogIndex({ params }: PageProps<"/[locale]/blog">)
   return (
     <section className={styles.section} aria-labelledby="blog-title">
       <div className="shell">
-        <SectionHeader id="blog-title" title={t("title")} lede={t("lede")} />
+        <SectionHeader as="h1" id="blog-title" title={t("title")} lede={t("lede")} />
 
         {posts.length === 0 ? (
           <div className={styles.empty}>
