@@ -9,6 +9,8 @@ import { alternatesFor } from "@/lib/site";
 import { googleWalletConfig } from "@/lib/wallet";
 import styles from "./card.module.css";
 
+const SHOW_GOOGLE_WALLET = false;
+
 export async function generateMetadata({ params }: PageProps<"/[locale]/tarjeta">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };
   const t = await getTranslations({ locale, namespace: "card" });
@@ -34,7 +36,8 @@ export default async function CardPage({ params }: PageProps<"/[locale]/tarjeta"
     color: { dark: "#0a0b10", light: "#ffffff" },
   });
   // Se decide en el build: las variables de Vercel solo cambian con un nuevo deploy
-  const google = googleWalletConfig() !== null;
+  // Botón oculto a propósito; /api/wallet/google sigue funcionando. Para mostrarlo, SHOW_GOOGLE_WALLET = true
+  const google = SHOW_GOOGLE_WALLET && googleWalletConfig() !== null;
 
   return (
     <div className={`shell ${styles.wrap}`}>
