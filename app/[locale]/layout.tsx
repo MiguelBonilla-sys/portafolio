@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Big_Shoulders, Atkinson_Hyperlegible_Next } from "next/font/google";
 import localFont from "next/font/local";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
@@ -99,7 +98,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       <body className={`${shoulders.variable} ${atkinson.variable} ${mono.variable}`}>
         <GoogleAnalytics />
         <Analytics />
-        <SpeedInsights />
         <NextIntlClientProvider messages={{ nav, contact }}>
             <a href="#contenido" className="skip">
               {t("skip")}
