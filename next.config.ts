@@ -6,6 +6,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const SECONDARY_HOSTS = ["www.mangel14.dev", "portafolio.mangel14.dev", "portafolio-inky-rho.vercel.app"];
 
 const nextConfig: NextConfig = {
+  // app/global-not-found.tsx: 404 para rutas fuera de [locale] (sin esto daban 500)
+  experimental: { globalNotFound: true },
   async redirects() {
     return SECONDARY_HOSTS.map((host) => ({
       source: "/:path*",

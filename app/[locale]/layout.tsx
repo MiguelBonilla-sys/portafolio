@@ -40,6 +40,10 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Solo es/en: un primer segmento como "foo.png" (el proxy no toca rutas con punto) da 404
+// en vez de renderizar las páginas con un idioma inválido, que fallaban con 500.
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
