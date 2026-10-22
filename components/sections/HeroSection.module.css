@@ -1,5 +1,7 @@
 .hero {
   border-bottom: var(--border);
+  /* El glitch del título desplaza el texto unos px: que no genere scroll horizontal */
+  overflow-x: clip;
 }
 
 .grid {
@@ -16,6 +18,37 @@
   font-size: clamp(4.5rem, 12vw, 11rem);
   line-height: 0.84;
   letter-spacing: -0.01em;
+  /* Glitch de entrada: el título es visible desde el primer cuadro (sin opacity ni clip-path)
+     para no retrasar el LCP. prefers-reduced-motion lo anula desde globals.css. */
+  animation: glitch 0.72s steps(1, end) both;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translateX(-0.05em) skewX(-10deg);
+    text-shadow: 0.07em 0 var(--accent), -0.07em 0 var(--blue);
+  }
+  12% {
+    transform: translateX(0.04em) skewX(7deg);
+    text-shadow: -0.06em 0.015em var(--accent), 0.06em -0.015em var(--blue);
+  }
+  24% {
+    transform: translateX(-0.025em) skewX(-4deg);
+    text-shadow: 0.04em -0.01em var(--accent), -0.04em 0.01em var(--blue);
+  }
+  36% {
+    transform: translateX(0.015em) skewX(2deg);
+    text-shadow: -0.025em 0 var(--accent), 0.025em 0 var(--blue);
+  }
+  48% {
+    transform: translateX(-0.008em);
+    text-shadow: 0.012em 0 var(--accent), -0.012em 0 var(--blue);
+  }
+  60%,
+  100% {
+    transform: none;
+    text-shadow: 0 0 transparent, 0 0 transparent;
+  }
 }
 
 .role {
