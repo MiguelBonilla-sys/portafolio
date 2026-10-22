@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { CARD } from "@/lib/card";
 import { alternatesFor } from "@/lib/site";
-import { appleWalletConfig, googleWalletConfig } from "@/lib/wallet";
+import { googleWalletConfig } from "@/lib/wallet";
 import styles from "./card.module.css";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/tarjeta">): Promise<Metadata> {
@@ -34,7 +34,6 @@ export default async function CardPage({ params }: PageProps<"/[locale]/tarjeta"
     color: { dark: "#0a0b10", light: "#ffffff" },
   });
   // Se decide en el build: las variables de Vercel solo cambian con un nuevo deploy
-  const apple = appleWalletConfig() !== null;
   const google = googleWalletConfig() !== null;
 
   return (
@@ -100,11 +99,6 @@ export default async function CardPage({ params }: PageProps<"/[locale]/tarjeta"
         <a href="/contact.vcf" className="btn btn-primary" download="miguel-bonilla.vcf">
           {t("save")}
         </a>
-        {apple && (
-          <a href={`/api/wallet/apple?locale=${locale}`} className="btn btn-ghost">
-            {t("apple")}
-          </a>
-        )}
         {google && (
           <a href={`/api/wallet/google?locale=${locale}`} className="btn btn-ghost" rel="nofollow">
             {t("google")}

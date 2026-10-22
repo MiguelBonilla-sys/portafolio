@@ -106,7 +106,8 @@
   },
   "footer": {
     "place": "Bogotá, Colombia · © 2026",
-    "card": "Contact card"
+    "card": "Contact card",
+    "privacy": "Privacy"
   },
   "notFound": {
     "title": "Page not found",
@@ -133,7 +134,6 @@
     "title": "Contact card",
     "metaDescription": "Contact details for Miguel Ángel Bonilla Torres, Full Stack Developer / AI Engineer in Bogotá: email, phone and links. Save it to your phone or Wallet.",
     "save": "Save contact",
-    "apple": "Add to Apple Wallet",
     "google": "Add to Google Wallet",
     "scan": "Scan the code with your phone camera to save the contact.",
     "qrAlt": "QR code that opens Miguel Bonilla's contact",

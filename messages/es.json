@@ -106,7 +106,8 @@
   },
   "footer": {
     "place": "Bogotá, Colombia · © 2026",
-    "card": "Tarjeta de contacto"
+    "card": "Tarjeta de contacto",
+    "privacy": "Privacidad"
   },
   "notFound": {
     "title": "Página no encontrada",
@@ -133,7 +134,6 @@
     "title": "Tarjeta de contacto",
     "metaDescription": "Contacto de Miguel Ángel Bonilla Torres, Full Stack Developer / AI Engineer en Bogotá: correo, teléfono y enlaces. Guárdalo en tu celular o en tu Wallet.",
     "save": "Guardar contacto",
-    "apple": "Agregar a Apple Wallet",
     "google": "Agregar a Google Wallet",
     "scan": "Escanea el código con la cámara del celular para guardar el contacto.",
     "qrAlt": "Código QR que abre el contacto de Miguel Bonilla",

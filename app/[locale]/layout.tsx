@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { Big_Shoulders, Atkinson_Hyperlegible_Next, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import ThemeScript from "@/components/ThemeScript";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, alternatesFor } from "@/lib/site";
-import { THEME_SCRIPT } from "@/lib/theme";
 import "../globals.css";
 
 const shoulders = Big_Shoulders({
@@ -81,10 +82,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
       <head>
         {/* Aplica el tema guardado antes de pintar, para no parpadear */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <ThemeScript />
       </head>
       <body className={`${shoulders.variable} ${atkinson.variable} ${mono.variable}`}>
         <GoogleAnalytics />
+        <Analytics />
         <NextIntlClientProvider>
             <a href="#contenido" className="skip">
               {t("skip")}

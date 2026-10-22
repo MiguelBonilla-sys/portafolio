@@ -1,7 +1,7 @@
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, X_URL } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 
-/** Datos de la tarjeta de contacto: vCard, página /tarjeta y pases de Apple y Google Wallet. */
+/** Datos de la tarjeta de contacto: vCard, página /tarjeta y pase de Google Wallet. */
 export const CARD = {
   firstName: "Miguel Ángel",
   lastName: "Bonilla Torres",

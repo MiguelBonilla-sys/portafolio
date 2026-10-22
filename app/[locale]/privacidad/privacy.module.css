@@ -1,0 +1,11 @@
+.wrap {
+  padding-top: clamp(3rem, 8vw, 6rem);
+  padding-bottom: clamp(5rem, 10vw, 8rem);
+}
+
+.title {
+  margin-bottom: 2rem;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  line-height: 0.95;
+}

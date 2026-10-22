@@ -29,6 +29,9 @@ export default async function Footer() {
           <li>
             <Link href="/tarjeta">{t("card")}</Link>
           </li>
+          <li>
+            <Link href="/privacidad">{t("privacy")}</Link>
+          </li>
           {links.map((l) => (
             <li key={l.label}>
               <a href={l.href} target="_blank" rel="noopener noreferrer">

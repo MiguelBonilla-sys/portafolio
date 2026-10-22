@@ -14,8 +14,6 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
   },
-  // Imágenes del pase de Apple Wallet, leídas con fs dentro de la función
-  outputFileTracingIncludes: { "/api/wallet/apple": ["./wallet/apple/**"] },
   images: {
     localPatterns: [
       {
