@@ -7,15 +7,16 @@ import { SITE_URL } from "@/lib/site";
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 
-function entry(href: Href, lastModified?: string): MetadataRoute.Sitemap[number] {
+/** Un <url> por idioma, cada uno con todas las versiones (formato hreflang de Google). */
+function entries(href: Href, lastModified?: string): MetadataRoute.Sitemap {
   const languages = Object.fromEntries(
     routing.locales.map((l) => [l, `${SITE_URL}${getPathname({ locale: l, href })}`])
   );
-  return {
-    url: `${SITE_URL}${getPathname({ locale: routing.defaultLocale, href })}`,
+  return routing.locales.map((l) => ({
+    url: languages[l],
     lastModified: lastModified ? new Date(lastModified) : new Date(),
     alternates: { languages },
-  };
+  }));
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -23,10 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Un artículo entra si existe publicado en el idioma por defecto
   const posts = getPosts(routing.defaultLocale).filter((p) => !p.draft);
 
+  // /tarjeta queda fuera: es noindex
   return [
-    entry("/"),
-    entry("/blog"),
-    ...projectIds.map((id) => entry({ pathname: "/proyectos/[id]", params: { id } })),
-    ...posts.map((p) => entry({ pathname: "/blog/[slug]", params: { slug: p.slug } }, p.updated ?? p.date)),
+    ...entries("/"),
+    ...entries("/blog"),
+    ...entries("/cv"),
+    ...entries("/privacidad"),
+    ...projectIds.flatMap((id) => entries({ pathname: "/proyectos/[id]", params: { id } })),
+    ...posts.flatMap((p) => entries({ pathname: "/blog/[slug]", params: { slug: p.slug } }, p.updated ?? p.date)),
   ];
 }
