@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Big_Shoulders, Atkinson_Hyperlegible_Next } from "next/font/google";
 import localFont from "next/font/local";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import ThemeScript from "@/components/ThemeScript";
 import Navbar from "@/components/layout/Navbar";
@@ -22,7 +22,8 @@ const shoulders = Big_Shoulders({
 
 const atkinson = Atkinson_Hyperlegible_Next({
   variable: "--font-atkinson",
-  subsets: ["latin", "latin-ext"],
+  // Solo latin (incluye á, é, ñ): latin-ext agregaba una precarga de 19 KB antes del título
+  subsets: ["latin"],
   weight: ["400", "700"],
   adjustFontFallback: false,
 });
@@ -85,6 +86,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "nav" });
+  // Solo lo que usan los componentes cliente (Navbar, ContactSection): el resto viajaba en el HTML sin usarse
+  const { nav, contact } = await getMessages();
 
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
@@ -95,7 +98,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       <body className={`${shoulders.variable} ${atkinson.variable} ${mono.variable}`}>
         <GoogleAnalytics />
         <Analytics />
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={{ nav, contact }}>
             <a href="#contenido" className="skip">
               {t("skip")}
             </a>
