@@ -90,6 +90,28 @@
   padding-right: 1.25rem;
 }
 
+/* Al activar la fila, la corriente recorre su regla inferior de izquierda a derecha */
+.row {
+  position: relative;
+}
+
+.row::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -2px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.row:hover::after,
+.row:focus-visible::after {
+  transform: scaleX(1);
+}
+
 .row:hover .desc,
 .row:hover .tags,
 .row:hover .tag::before,

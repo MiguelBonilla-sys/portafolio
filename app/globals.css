@@ -229,6 +229,37 @@ time,
   }
 }
 
+/* Circuito: la regla de 2 px que cierra cada sección se carga de cian mientras sube por la pantalla.
+   Animación ligada al scroll que solo mueve transform: corre en el compositor, sin JS ni layout.
+   Sin soporte o con movimiento reducido, las reglas quedan quietas como siempre. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main > section {
+      position: relative;
+    }
+
+    main > section::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 -2px;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      pointer-events: none;
+      animation: circuit-trace linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 45%;
+    }
+  }
+}
+
+@keyframes circuit-trace {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

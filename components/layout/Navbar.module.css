@@ -6,6 +6,30 @@
   border-bottom: var(--border);
 }
 
+/* Traza de lectura: el borde de la barra se llena de cian con el scroll de la página */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bar::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 -2px;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      pointer-events: none;
+      animation: read-trace linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@keyframes read-trace {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .inner {
   display: flex;
   align-items: center;
