@@ -26,6 +26,7 @@ export default async function AboutSection() {
                 height={659}
                 sizes="(max-width: 900px) 70vw, 380px"
                 className={styles.img}
+                priority
               />
             </div>
             <figcaption className={styles.caption}>
