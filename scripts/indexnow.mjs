@@ -1,5 +1,5 @@
 // Avisa a Bing (y a los buscadores de IA que usan su índice) de todas las URLs del sitemap.
-// Uso, después de cada deploy: npm run indexnow (o SITE_URL=https://otro-dominio npm run indexnow)
+// Uso, después de cada deploy: pnpm indexnow (o SITE_URL=https://otro-dominio pnpm indexnow)
 const KEY = "3a142bdab1da687057cc12b488c8e24c"; // archivo público: public/3a142bdab1da687057cc12b488c8e24c.txt
 
 const site = (process.env.SITE_URL ?? "https://mangel14.dev").replace(/\/$/, "");

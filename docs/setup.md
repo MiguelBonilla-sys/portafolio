@@ -22,7 +22,7 @@ Despliega (merge a `main`). Con eso el portafolio, el blog, el CV y el SEO queda
 
 Después del primer deploy:
 
-1. `npm run indexnow` avisa a Bing y a Yandex de todas las URLs del sitemap.
+1. `pnpm indexnow` avisa a Bing y a Yandex de todas las URLs del sitemap.
 2. [Google Search Console](https://search.google.com/search-console) → Agregar propiedad → **Dominio** → `mangel14.dev`. Te da un registro TXT: agrégalo en Vercel → Domains → `mangel14.dev` → DNS Records (tipo TXT, nombre `@`). La propiedad de dominio cubre también los subdominios. Luego Sitemaps → `https://mangel14.dev/sitemap.xml`.
 3. [Bing Webmaster Tools](https://www.bing.com/webmasters) → "Import from Google Search Console". Bing es el índice que usan ChatGPT Search y Copilot.
 4. Revisa en [Rich Results Test](https://search.google.com/test/rich-results) `https://mangel14.dev/es` y un artículo del blog.
@@ -78,21 +78,17 @@ El agente publica cada artículo con un commit a `main`, y Vercel redespliega so
 
 ## 8. Activar (2 min)
 
-Despliega con todas las variables y abre:
+Despliega con todas las variables y corre:
 
 ```
-https://mangel14.dev/api/agent/setup?key=TU_ADMIN_SECRET
+curl -H "Authorization: Bearer TU_ADMIN_SECRET" https://mangel14.dev/api/agent/setup
 ```
 
-Esa URL crea las tablas, registra el webhook de Telegram, te manda un mensaje de prueba y te dice qué falta. Si alguna variable falta o es inválida, la respuesta lo indica por nombre.
+El secreto va en el header y no en la URL, para que no quede en los logs de Vercel ni en el historial. Ese endpoint crea las tablas, registra el webhook de Telegram, te manda un mensaje de prueba y te dice qué falta. Si alguna variable falta o es inválida, la respuesta lo indica por nombre.
 
-Luego conecta LinkedIn abriendo:
+Luego conecta LinkedIn con el enlace que devuelve ese mismo comando en el campo `linkedin`. Es un enlace firmado que vence en 24 horas y no contiene `ADMIN_SECRET`; si vence, vuelve a correr el comando.
 
-```
-https://mangel14.dev/api/linkedin/auth?key=TU_ADMIN_SECRET
-```
-
-El token dura 60 días. El cron diario te avisa por Telegram 10 días antes con el mismo enlace.
+El token de LinkedIn dura 60 días. El cron diario te avisa por Telegram 10 días antes con un enlace nuevo.
 
 ## 9. Usarlo
 
@@ -117,34 +113,7 @@ La tarjeta ya funciona sin configurar nada:
 - `https://mangel14.dev/es/tarjeta` (o `/en/card`): tu tarjeta con QR, para mostrarla o compartir el enlace.
 - `https://mangel14.dev/contact.vcf`: el contacto con foto. El QR apunta aquí: quien lo escanee con la cámara lo guarda en un toque, en iPhone o Android.
 
-Los botones "Agregar a Apple Wallet" y "Agregar a Google Wallet" aparecen solos cuando sus variables están en Vercel y vuelves a desplegar. El pase lleva el mismo QR, así que lo muestras desde el Wallet del celular sin abrir el navegador.
-
-### Apple Wallet (requiere Apple Developer Program, 99 USD/año)
-
-1. [developer.apple.com/account](https://developer.apple.com/account) → Certificates, Identifiers & Profiles → Identifiers → **+** → **Pass Type IDs** → `pass.dev.mangel14.card`.
-2. Genera la llave y la solicitud de certificado:
-   ```bash
-   openssl req -new -newkey rsa:2048 -nodes -keyout pass.key -out pass.csr -subj "/CN=Mangel14 Pass"
-   ```
-3. En el Pass Type ID → **Create Certificate** → sube `pass.csr` → descarga `pass.cer` y conviértelo:
-   ```bash
-   openssl x509 -inform DER -in pass.cer -out pass.pem
-   ```
-4. Descarga el intermedio de Apple [WWDR G4](https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer) y conviértelo:
-   ```bash
-   openssl x509 -inform DER -in AppleWWDRCAG4.cer -out wwdr.pem
-   ```
-5. Variables (en macOS usa `base64 -i archivo`; en Linux `base64 -w0 archivo`):
-
-   | Variable | Valor |
-   |---|---|
-   | `APPLE_WALLET_PASS_TYPE_ID` | `pass.dev.mangel14.card` |
-   | `APPLE_WALLET_TEAM_ID` | Membership → Team ID (10 caracteres) |
-   | `APPLE_WALLET_SIGNER_CERT` | `base64` de `pass.pem` |
-   | `APPLE_WALLET_SIGNER_KEY` | `base64` de `pass.key` |
-   | `APPLE_WALLET_WWDR_CERT` | `base64` de `wwdr.pem` |
-
-6. Redespliega y abre `https://mangel14.dev/api/wallet/apple` en Safari del iPhone.
+El botón "Agregar a Google Wallet" aparece solo cuando sus variables están en Vercel y vuelves a desplegar. Apple Wallet no está soportado: firmar pases exige el Apple Developer Program (99 USD/año). En iPhone, el QR de la vCard cumple la misma función. El pase lleva el mismo QR, así que lo muestras desde el Wallet del celular sin abrir el navegador.
 
 ### Google Wallet (gratis)
 
@@ -163,7 +132,7 @@ Los botones "Agregar a Apple Wallet" y "Agregar a Google Wallet" aparecen solos 
 
 Mientras la cuenta de emisor está en modo demo, solo pueden guardar el pase los correos que agregues como usuarios de prueba en la consola (el tuyo incluido). Para que cualquiera pueda guardarlo: Google Wallet API → **Request publishing access** (Google lo revisa en unos días).
 
-Si cambias la foto o el símbolo: `npm run wallet-assets` regenera las imágenes de `wallet/` y `public/wallet/`.
+Si cambias la foto o el símbolo: `pnpm wallet-assets` regenera las imágenes de `wallet/` y `public/wallet/`.
 
 ## Qué hace el cron diario (8:00 Bogotá)
 
@@ -177,7 +146,7 @@ Si cambias la foto o el símbolo: `npm run wallet-assets` regenera las imágenes
 
 | Síntoma | Qué revisar |
 |---|---|
-| El bot no responde | Abre `/api/agent/setup?key=…`: muestra variables faltantes y el estado del webhook |
+| El bot no responde | Corre el `curl` a `/api/agent/setup` del paso 8: muestra variables faltantes y el estado del webhook |
 | "LinkedIn necesita reconectarse" | Abre el enlace del mensaje y luego toca 🔁 Reintentar |
 | "El deploy aún no responde" | Revisa el build en Vercel; el cron reintenta cada mañana |
 | El carrusel no se publica | LinkedIn puede rechazar documentos en perfiles personales: el agente publica el post como texto y te avisa |
@@ -187,7 +156,7 @@ Si cambias la foto o el símbolo: `npm run wallet-assets` regenera las imágenes
 
 ```bash
 cp .env.example .env.local   # completa lo que necesites
-npm run dev                  # muestra también los borradores del blog
-npm test                     # linter anti-slop y grafo completo con un LLM simulado
-npm run cv                   # regenera public/cv/*.pdf (con el sitio corriendo; ver scripts/build-cv.mjs)
+pnpm dev                  # muestra también los borradores del blog
+pnpm test                     # linter anti-slop y grafo completo con un LLM simulado
+pnpm cv                   # regenera public/cv/*.pdf (con el sitio corriendo; ver scripts/build-cv.mjs)
 ```

@@ -49,9 +49,9 @@ app/
   api/
     telegram/route.ts       ✓ webhook: mensajes y botones (callback_query)
     cron/daily/route.ts     ✓ cron diario protegido con CRON_SECRET
-    linkedin/auth/route.ts  ✓ inicia OAuth (?key=ADMIN_SECRET)
+    linkedin/auth/route.ts  ✓ inicia OAuth (?t=token firmado que vence en 24 h)
     linkedin/callback/route.ts ✓
-    agent/setup/route.ts    ✓ crea tablas, registra el webhook, diagnóstico (?key=ADMIN_SECRET)
+    agent/setup/route.ts    ✓ crea tablas, registra el webhook, diagnóstico (Authorization: Bearer ADMIN_SECRET)
   sitemap.ts                ✓
   robots.ts                 ✓
   llms.txt/route.ts         ✓

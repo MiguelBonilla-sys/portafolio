@@ -44,7 +44,7 @@ Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full 
 | F13 | Carruseles PDF | P1 | Cuando el post es de tipo carrusel, el sistema genera un PDF de 6–10 láminas con la plantilla de marca y lo publica como documento en LinkedIn. Depende del spike T30. |
 | F14 | Evals de contenido | P1 | Cada borrador recibe una puntuación (especificidad, densidad de hechos, marcas de IA, ajuste al pilar) guardada en `content_log`. El panel semanal muestra la tendencia. |
 | F15 | CV descargable | P1 | Existe `/cv-en.pdf` y `/cv-es.pdf`, enlazados desde el hero y el contacto. |
-| F16 | Higiene del repo | P1 | `package.json` contiene solo dependencias importadas; `npm run build` y `npm run lint` pasan. |
+| F16 | Higiene del repo | P1 | `package.json` contiene solo dependencias importadas; `pnpm build` y `pnpm lint` pasan. |
 
 ## Non-Functional Requirements
 

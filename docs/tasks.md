@@ -22,7 +22,7 @@
 ## Phase 1 — Cimientos (semanas 1–4) · 43 h
 
 - [x] T2: Eliminar dependencias sin uso — *F16* — est: 1h
-  - Acceptance: `package.json` no contiene `@mantine/{carousel,charts,code-highlight,dates,dropzone,form,modals,notifications,nprogress,spotlight,tiptap}`, `@tiptap/*`, `recharts`, `embla-*` ni `dayjs`; `npm run build` y `npm run lint` pasan.
+  - Acceptance: `package.json` no contiene `@mantine/{carousel,charts,code-highlight,dates,dropzone,form,modals,notifications,nprogress,spotlight,tiptap}`, `@tiptap/*`, `recharts`, `embla-*` ni `dayjs`; `pnpm build` y `pnpm lint` pasan.
   - Depends on: —
   - Estado: 🟢 2026-10-20: 19 paquetes eliminados (también three.js); Next.js 16.1.6 → 16.3.8 por una vulnerabilidad crítica. Queda un aviso moderado en `sprintf-js` (vía `gray-matter`, solo en build).
 - [ ] T3: Reposicionar el texto del sitio (hero, about, stats, skills) — *F1* — est: 3h
@@ -72,7 +72,7 @@
 - [x] T14: CV descargable en EN y ES — *F15* — est: 2h
   - Acceptance: `/cv-en.pdf` y `/cv-es.pdf` existen, pesan < 300 KB, son texto seleccionable (legible por ATS) y están enlazados desde el hero y el contacto.
   - Depends on: T13
-  - Estado: 🟢 2026-10-20: `/es/cv`, `/en/cv` (legibles por ATS) y `public/cv/*.pdf` generados con `npm run cv`.
+  - Estado: 🟢 2026-10-20: `/es/cv`, `/en/cv` (legibles por ATS) y `public/cv/*.pdf` generados con `pnpm cv`.
 - [ ] T15: Search Console, Bing Webmaster Tools, IndexNow y segmento de IA en GA4 — *F7* — est: 2h
   - Acceptance: el dominio está verificado en ambas consolas con el sitemap enviado; `public/{key}.txt` existe; GA4 tiene un segmento con referrers chatgpt.com, perplexity.ai, claude.ai y gemini.google.com.
   - Depends on: T10
@@ -83,8 +83,8 @@
   - Estado: 🟢 2026-10-20 (Lighthouse móvil, con `NEXT_PUBLIC_SITE_URL` apuntando al servidor): SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97 en `/es`, `/en`, un proyecto y el blog. LCP 2,7 s (bajó de 3,6 s al quitar Mantine y Tailwind). Repetir con el dominio real.
 
 - [x] T17: Preparación para navegadores y agentes con IA — *F6, F7* — 🟢 2026-10-20
-  - Acceptance: filas de proyecto como enlaces reales (sin modal JS), `llms.txt` + `llms-full.txt` enlazados desde cada página, JSON-LD ProfilePage + ItemList, clave IndexNow en `public/` y `npm run indexnow`.
-  - Pendiente de Miguel: correr `npm run indexnow` después del primer deploy (ya apunta a `mangel14.dev`).
+  - Acceptance: filas de proyecto como enlaces reales (sin modal JS), `llms.txt` + `llms-full.txt` enlazados desde cada página, JSON-LD ProfilePage + ItemList, clave IndexNow en `public/` y `pnpm indexnow`.
+  - Pendiente de Miguel: correr `pnpm indexnow` después del primer deploy (ya apunta a `mangel14.dev`).
 
 ## Phase 2 — Content Engine v1: LangGraph.js en Vercel (semanas 5–8) · 34 h
 
@@ -105,9 +105,9 @@
   - Depends on: T18, T20
   - Estado: 🟢 2026-10-20: `agent/graph.ts`. Las cifras que no están en el material se marcan `[DATO?]` de forma determinista (`markUnknownNumbers`). Tests con LLM simulado en `agent/test/graph.test.ts`.
 - [x] T22: Linter determinista (`agent/lib/lint.ts`) con tests — *F10* — est: 3h
-  - Acceptance: detecta las expresiones P0/P1 de `content-style-guide.md` §9 en ES y EN con un set de 20 frases de prueba (≥ 95% de aciertos, 0 falsos positivos en 10 frases limpias); los tests corren en `npm test`.
+  - Acceptance: detecta las expresiones P0/P1 de `content-style-guide.md` §9 en ES y EN con un set de 20 frases de prueba (≥ 95% de aciertos, 0 falsos positivos en 10 frases limpias); los tests corren en `pnpm test`.
   - Depends on: —
-  - Estado: 🟢 2026-10-20: `agent/lib/lint.ts`; 20/20 frases sucias detectadas, 0/10 falsos positivos (`npm test`).
+  - Estado: 🟢 2026-10-20: `agent/lib/lint.ts`; 20/20 frases sucias detectadas, 0/10 falsos positivos (`pnpm test`).
 - [x] T23: `humanReview` con `interrupt()` y botones de Telegram — *F10, F11* — est: 3h
   - Acceptance: un borrador limpio llega con los botones Aprobar, Editar, Rechazar y Reprogramar; uno con P0 o `[DATO?]` llega marcado "bloqueado" sin Aprobar; responder con texto reanuda el hilo como `edit` y vuelve a pedir aprobación; cada botón reanuda el hilo correcto con `Command({ resume })`.
   - Depends on: T19, T21, T22
@@ -162,9 +162,9 @@
 
 ## Extra — Tarjeta de contacto
 
-- [x] T37: Tarjeta de contacto con vCard, QR y pases de Apple y Google Wallet
-  - Acceptance: `/es/tarjeta` y `/en/card` muestran la tarjeta con QR a `/contact.vcf`; `/api/wallet/apple` entrega un `.pkpass` firmado y `/api/wallet/google` redirige al enlace "Add to Google Wallet"; sin credenciales los botones de Wallet no aparecen.
-  - Estado: 🟡 2026-10-21: código listo y probado con certificados de prueba (manifest y firma PKCS#7 válidos, JWT RS256 válido). Falta poner las credenciales reales (docs/setup.md §10) y probar en un iPhone y un Android.
+- [x] T37: Tarjeta de contacto con vCard, QR y pase de Google Wallet
+  - Acceptance: `/es/tarjeta` y `/en/card` muestran la tarjeta con QR a `/contact.vcf`; `/api/wallet/google` redirige al enlace "Add to Google Wallet"; sin credenciales el botón de Wallet no aparece.
+  - Estado: 🟡 2026-10-21: código listo y probado con certificados de prueba (JWT RS256 válido). Falta poner las credenciales reales (docs/setup.md §10) y probar en un Android. 2026-10-21: Apple Wallet descartado por el costo del Apple Developer Program.
 
 ## Continuo (semanas 2–12) · 20 h
 

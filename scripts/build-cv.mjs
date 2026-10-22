@@ -1,5 +1,5 @@
 // Genera public/cv/miguel-bonilla-cv-{es,en}.pdf desde la página /[locale]/cv.
-// Uso: npm run build && npm run start (en otra terminal) && npm run cv
+// Uso: pnpm build && pnpm start (en otra terminal) && pnpm cv
 // Variables opcionales: BASE_URL (por defecto http://localhost:3000), CHROME_PATH.
 import { chromium } from "playwright-core";
 import { mkdir } from "node:fs/promises";

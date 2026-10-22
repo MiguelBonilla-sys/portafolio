@@ -14,8 +14,8 @@ Portafolio bilingüe (español/inglés) de Miguel Bonilla, Full Stack AI Enginee
 ## Inicio rápido
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000); redirige a `/es` o `/en` según el idioma del navegador.
@@ -24,19 +24,19 @@ Abre [http://localhost:3000](http://localhost:3000); redirige a `/es` o `/en` se
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Servidor de desarrollo (muestra borradores del blog) |
-| `npm run build` | Build de producción |
-| `npm run start` | Servidor de producción |
-| `npm run lint` | ESLint |
-| `npm test` | Linter anti-slop y grafo del agente con un LLM simulado |
-| `npm run cv` | Regenera `public/cv/*.pdf` desde `/[locale]/cv` (con el sitio corriendo) |
-| `npm run indexnow` | Avisa a Bing de todas las URLs del sitemap (`SITE_URL=https://dominio`) |
+| `pnpm dev` | Servidor de desarrollo (muestra borradores del blog) |
+| `pnpm build` | Build de producción |
+| `pnpm start` | Servidor de producción |
+| `pnpm lint` | ESLint |
+| `pnpm test` | Linter anti-slop y grafo del agente con un LLM simulado |
+| `pnpm cv` | Regenera `public/cv/*.pdf` desde `/[locale]/cv` (con el sitio corriendo) |
+| `pnpm indexnow` | Avisa a Bing de todas las URLs del sitemap (`SITE_URL=https://dominio`) |
 
 ## Variables de entorno
 
 Plantilla completa en [`.env.example`](.env.example). Guía paso a paso (cuentas, secretos y activación) en [`docs/setup.md`](docs/setup.md).
 
-El sitio funciona solo con `NEXT_PUBLIC_SITE_URL` (y opcionalmente GA4 y Web3Forms). El agente se activa cuando están todas sus variables y se abre `/api/agent/setup?key=ADMIN_SECRET`.
+El sitio funciona solo con `NEXT_PUBLIC_SITE_URL` (y opcionalmente GA4 y Web3Forms). El agente se activa cuando están todas sus variables y se llama a `/api/agent/setup` con `Authorization: Bearer ADMIN_SECRET` (ver `docs/setup.md` §8).
 
 ## SEO y buscadores con IA
 
