@@ -13,7 +13,6 @@ export function googleWalletConfig() {
   const e = process.env;
   const privateKey = pem(e.GOOGLE_WALLET_PRIVATE_KEY);
   // Un espacio al final pegado en Vercel hace que Google rechace el pase con un error genérico
-
   const issuerId = e.GOOGLE_WALLET_ISSUER_ID?.trim();
   const serviceAccountEmail = e.GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL?.trim();
   if (!issuerId || !serviceAccountEmail || !privateKey) return null;
