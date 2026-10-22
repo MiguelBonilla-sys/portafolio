@@ -3,6 +3,7 @@ import { getEnv, type AgentEnv } from "./config.ts";
 import { compileGraph } from "./graph.ts";
 import { renderCarousel } from "./carousel.tsx";
 import type { AgentDeps } from "./deps.ts";
+import { signToken } from "./lib/auth.ts";
 import { decrypt } from "./lib/crypto.ts";
 import { createContentStore, type ContentStore } from "./lib/db.ts";
 import { createGitHub } from "./lib/github.ts";
@@ -12,6 +13,7 @@ import { createLlm } from "./lib/llm.ts";
 import { createTelegram, type TelegramClient } from "./lib/telegram.ts";
 
 export const LINKEDIN_TOKEN_KEY = "linkedin_token";
+export const LINKEDIN_AUTH_PURPOSE = "linkedin-auth";
 
 export interface StoredLinkedInToken {
   token: string; // cifrado
@@ -24,7 +26,7 @@ export interface Runtime {
   store: ContentStore;
   telegram: TelegramClient;
   graph: ReturnType<typeof compileGraph>;
-  linkedinAuthUrl: string;
+  linkedinAuthUrl: () => string;
 }
 
 let runtime: Promise<Runtime> | null = null;
@@ -47,7 +49,9 @@ async function build(): Promise<Runtime> {
   await checkpointer.setup();
 
   const telegram = createTelegram(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_ID);
-  const linkedinAuthUrl = `${env.SITE_URL}/api/linkedin/auth?key=${encodeURIComponent(env.ADMIN_SECRET)}`;
+  // Enlace firmado que vence en 24 h: ADMIN_SECRET no viaja en la URL ni queda en logs o en el chat
+  const linkedinAuthUrl = () =>
+    `${env.SITE_URL}/api/linkedin/auth?t=${signToken(env.ADMIN_SECRET, LINKEDIN_AUTH_PURPOSE, 24 * 3600_000)}`;
 
   const deps: AgentDeps = {
     llm: createLlm(env),

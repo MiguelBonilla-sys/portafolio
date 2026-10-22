@@ -3,13 +3,15 @@ import { getEnv } from "@/agent/config.ts";
 import { safeEqual } from "@/agent/lib/auth.ts";
 import { encrypt } from "@/agent/lib/crypto.ts";
 import { exchangeCode, fetchMemberId } from "@/agent/lib/linkedin.ts";
+import { esc } from "@/agent/lib/telegram.ts";
 import { getRuntime, LINKEDIN_TOKEN_KEY, type StoredLinkedInToken } from "@/agent/runtime.ts";
 
 export const runtime = "nodejs";
 
+// Se escapa todo: error_description llega de la query y cualquiera puede armar el enlace
 const page = (title: string, body: string, status = 200) =>
   new Response(
-    `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><body style="font-family:system-ui;padding:2rem;max-width:40rem"><h1>${title}</h1><p>${body}</p></body>`,
+    `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${esc(title)}</title><body style="font-family:system-ui;padding:2rem;max-width:40rem"><h1>${esc(title)}</h1><p>${esc(body)}</p></body>`,
     { status, headers: { "Content-Type": "text/html; charset=utf-8" } }
   );
 

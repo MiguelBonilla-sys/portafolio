@@ -184,8 +184,8 @@ export async function runDaily(now = new Date()) {
   if (daysLeft <= 10) {
     await rt.telegram.sendMessage(
       daysLeft < 0
-        ? `🔑 LinkedIn no está conectado. Conéctalo aquí: ${esc(rt.linkedinAuthUrl)}`
-        : `🔑 El token de LinkedIn vence en ${daysLeft} días. Renuévalo aquí: ${esc(rt.linkedinAuthUrl)}`
+        ? `🔑 LinkedIn no está conectado. Conéctalo aquí: ${esc(rt.linkedinAuthUrl())}`
+        : `🔑 El token de LinkedIn vence en ${daysLeft} días. Renuévalo aquí: ${esc(rt.linkedinAuthUrl())}`
     );
     report.push(`aviso de token (${daysLeft} días)`);
   }

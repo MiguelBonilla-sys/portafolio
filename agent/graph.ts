@@ -323,18 +323,30 @@ export function buildGraph(deps: AgentDeps) {
 
   // ── Publicación (cada paso revisa state.steps: reanudar nunca duplica) ──
 
+  // El slug sale del título: si otro artículo ya lo usa, se agrega -2, -3…
+  // Un archivo con este mismo contentId es de un intento anterior de esta pieza y se reescribe.
+  async function freeSlug(s: State): Promise<string> {
+    for (let n = 1; n <= 20; n++) {
+      const slug = n === 1 ? s.slug : `${s.slug}-${n}`;
+      const existing = await Promise.all((["es", "en"] as const).map((l) => deps.github.getFile(blogPath(l, slug))));
+      if (existing.every((f) => f === undefined || f.includes(`contentId: ${s.contentId}`))) return slug;
+    }
+    throw new Error(`No hay un slug libre para "${s.slug}"`);
+  }
+
   async function publishBlog(s: State): Promise<Update> {
     if (s.steps.commit) return {};
     await log(s, { status: "publishing" });
+    const slug = await freeSlug(s);
     const sources = s.sourceUrls.map((url) => ({ title: url.replace(/^https?:\/\//, ""), url }));
     let commit = "";
     for (const [locale, draft] of [["es", s.blogEs], ["en", s.blogEn]] as const) {
       if (!draft) continue;
-      const mdx = buildMdx({ draft, slug: s.slug, locale, date: s.date, pillar: s.pillar, contentId: s.contentId, sources });
-      const r = await deps.github.putFile(blogPath(locale, s.slug), mdx, `content: ${s.slug} (${locale})`);
+      const mdx = buildMdx({ draft, slug, locale, date: s.date, pillar: s.pillar, contentId: s.contentId, sources });
+      const r = await deps.github.putFile(blogPath(locale, slug), mdx, `content: ${slug} (${locale})`);
       commit = r.commitSha;
     }
-    return { steps: { ...s.steps, commit }, status: "publishing" };
+    return { slug, steps: { ...s.steps, commit }, status: "publishing" };
   }
 
   const postUrl = (s: State, locale: "es" | "en") => `${deps.siteUrl}/${locale}/blog/${s.slug}`;
@@ -387,7 +399,7 @@ export function buildGraph(deps: AgentDeps) {
       if (!(e instanceof LinkedInAuthError)) throw e;
       await log(s, { status: "failed" });
       await deps.telegram.sendMessage(
-        `🔑 LinkedIn necesita reconectarse. Abre ${esc(deps.linkedinAuthUrl)} y luego toca Reintentar.`,
+        `🔑 LinkedIn necesita reconectarse. Abre ${esc(deps.linkedinAuthUrl())} y luego toca Reintentar.`,
         { buttons: [[{ text: "🔁 Reintentar", callback_data: `t:${s.contentId}` }]] }
       );
       return { steps, retryTarget: "publishLinkedIn", status: "failed" };

@@ -1,12 +1,14 @@
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { getEnv } from "@/agent/config.ts";
-import { safeEqual } from "@/agent/lib/auth.ts";
+import { verifyToken } from "@/agent/lib/auth.ts";
 import { authorizeUrl } from "@/agent/lib/linkedin.ts";
+import { LINKEDIN_AUTH_PURPOSE } from "@/agent/runtime.ts";
 
 export const runtime = "nodejs";
 
-// Inicia el OAuth de LinkedIn. Protegido con ?key=ADMIN_SECRET (el enlace llega por Telegram).
+// Inicia el OAuth de LinkedIn. Protegido con ?t=<token firmado que vence>; el enlace llega por Telegram
+// o lo devuelve /api/agent/setup. Quien abra el enlace conecta SU cuenta, así que no debe ser reutilizable.
 export async function GET(req: Request) {
   let env;
   try {
@@ -14,7 +16,7 @@ export async function GET(req: Request) {
   } catch (e) {
     return new Response((e as Error).message, { status: 503 });
   }
-  if (!safeEqual(new URL(req.url).searchParams.get("key"), env.ADMIN_SECRET)) {
+  if (!verifyToken(new URL(req.url).searchParams.get("t"), env.ADMIN_SECRET, LINKEDIN_AUTH_PURPOSE)) {
     return new Response("Unauthorized", { status: 401 });
   }
   const state = randomBytes(16).toString("hex");

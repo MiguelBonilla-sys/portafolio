@@ -158,6 +158,9 @@ function setup(opts: Parameters<typeof fakeLlm>[0] & { deployOk?: boolean; linke
       async clearButtons() {},
     },
     github: {
+      async getFile(path) {
+        return files.get(path);
+      },
       async putFile(path, content) {
         files.set(path, content);
         return { commitSha: `sha-${files.size}` };
@@ -170,7 +173,7 @@ function setup(opts: Parameters<typeof fakeLlm>[0] & { deployOk?: boolean; linke
       }
       return linkedin;
     },
-    linkedinAuthUrl: "https://example.com/api/linkedin/auth",
+    linkedinAuthUrl: () => "https://example.com/api/linkedin/auth",
     renderCarousel: async () => new Uint8Array([37, 80, 68, 70]),
     indexNow: async () => 200,
     fetchStatus: async () => (deployOk ? 200 : 404),
@@ -220,6 +223,23 @@ test("flujo feliz: genera, pide aprobación y publica blog, LinkedIn e IndexNow"
   assert.equal(t.posts.length, 1);
   assert.match(t.comments[0], new RegExp(`https://example.com/en/blog/${s.slug}`));
   assert.equal(t.rows.get(t.contentId)?.status, "published");
+});
+
+test("si otro artículo ya usa el slug, publica con sufijo y no lo pisa", async () => {
+  const t = setup();
+  await t.start();
+  const { slug } = await t.state();
+  const other = "---\ncontentId: otra-pieza\n---\nArtículo anterior\n";
+  t.files.set(`content/blog/es/${slug}.mdx`, other);
+
+  await t.resume({ action: "approve" });
+  const s = await t.state();
+  assert.equal(s.status, "published");
+  assert.equal(s.slug, `${slug}-2`);
+  assert.equal(t.files.get(`content/blog/es/${slug}.mdx`), other);
+  assert.ok(t.files.has(`content/blog/es/${slug}-2.mdx`));
+  assert.ok(t.files.has(`content/blog/en/${slug}-2.mdx`));
+  assert.match(t.comments[0], new RegExp(`/blog/${slug}-2$`));
 });
 
 test("una cifra inventada por el modelo se marca como [DATO?] y bloquea la aprobación", async () => {

@@ -1,17 +1,20 @@
 import { envReport, getEnv } from "@/agent/config.ts";
-import { safeEqual } from "@/agent/lib/auth.ts";
+import { hasBearer } from "@/agent/lib/auth.ts";
 import { getRuntime, LINKEDIN_TOKEN_KEY, type StoredLinkedInToken } from "@/agent/runtime.ts";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-// Puesta en marcha y diagnóstico: /api/agent/setup?key=ADMIN_SECRET
+// Puesta en marcha y diagnóstico: curl -H "Authorization: Bearer $ADMIN_SECRET" https://dominio/api/agent/setup
 // Crea las tablas, registra el webhook de Telegram y muestra qué falta.
+// El secreto va en el header (no en la URL, que queda en logs) y se valida antes de mostrar nada.
 export async function GET(req: Request) {
+  const admin = process.env.ADMIN_SECRET;
+  if (!admin || admin.length < 16) return new Response("Falta ADMIN_SECRET (mínimo 16 caracteres)", { status: 503 });
+  if (!hasBearer(req, admin)) return new Response("Unauthorized", { status: 401 });
   const env = envReport();
   if (!env.ok) return Response.json({ ok: false, step: "variables de entorno", problems: env.problems }, { status: 503 });
   const cfg = getEnv();
-  if (!safeEqual(new URL(req.url).searchParams.get("key"), cfg.ADMIN_SECRET)) return new Response("Unauthorized", { status: 401 });
 
   const result: Record<string, unknown> = { ok: true };
   try {
@@ -32,7 +35,7 @@ export async function GET(req: Request) {
     result.telegramWebhook = res.ok ? webhookUrl : `error ${res.status}: ${await res.text()}`;
 
     const token = await rt.store.kvGet<StoredLinkedInToken>(LINKEDIN_TOKEN_KEY);
-    result.linkedin = token ? `conectado, vence ${token.expiresAt}` : `sin conectar: abre ${rt.linkedinAuthUrl}`;
+    result.linkedin = token ? `conectado, vence ${token.expiresAt}` : `sin conectar: abre ${rt.linkedinAuthUrl()} (vence en 24 h)`;
 
     await rt.telegram.sendMessage("🤖 Content Engine configurado. Escríbeme /ayuda para empezar.");
     result.telegramTest = "mensaje de prueba enviado";

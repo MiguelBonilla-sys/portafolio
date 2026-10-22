@@ -13,7 +13,8 @@ export interface AgentDeps {
   github: GitHubClient;
   /** Lanza LinkedInAuthError si no hay token válido */
   linkedin: () => Promise<LinkedInClient>;
-  linkedinAuthUrl: string;
+  /** Enlace nuevo para conectar LinkedIn (vence) */
+  linkedinAuthUrl: () => string;
   renderCarousel?: (slides: Slide[], title: string) => Promise<Uint8Array>;
   indexNow: (urls: string[]) => Promise<number>;
   fetchStatus: (url: string) => Promise<number>;
