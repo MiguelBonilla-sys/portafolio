@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import Sigil from "@/components/brand/Sigil";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import type messagesEs from "@/messages/es.json";
 import styles from "./Navbar.module.css";
 
 const sections = [
@@ -16,8 +17,11 @@ const sections = [
   { id: "proyectos", key: "projects" },
 ] as const;
 
-export default function Navbar() {
-  const t = useTranslations("nav");
+// Los textos llegan del servidor ya resueltos: así el cliente no carga el formateador de next-intl
+type NavMessages = (typeof messagesEs)["nav"];
+
+export default function Navbar({ messages }: { messages: NavMessages }) {
+  const t = (key: keyof NavMessages) => messages[key];
   const locale = useLocale();
   const pathname = usePathname();
   const params = useParams();

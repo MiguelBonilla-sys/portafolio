@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import SkillsSection from "@/components/sections/SkillsSection";
@@ -13,6 +13,7 @@ import type { Locale } from "@/i18n/routing";
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = (await params) as { locale: Locale };
   setRequestLocale(locale);
+  const { contact } = await getMessages();
 
   return (
     <>
@@ -22,7 +23,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
       <SkillsSection />
       <ExperienceSection />
       <ProjectsSection />
-      <ContactSection />
+      <ContactSection messages={contact} />
     </>
   );
 }

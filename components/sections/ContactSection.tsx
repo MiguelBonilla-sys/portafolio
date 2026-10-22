@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import SectionHeader from "@/components/ui/SectionHeader";
+import type messagesEs from "@/messages/es.json";
 import styles from "./ContactSection.module.css";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
@@ -30,8 +30,11 @@ function validate(data: Record<Field, string>, t: Translate): FieldErrors {
   return errors;
 }
 
-export default function ContactSection() {
-  const t = useTranslations("contact");
+// Los textos llegan del servidor ya resueltos: así el cliente no carga el formateador de next-intl
+type ContactMessages = (typeof messagesEs)["contact"];
+
+export default function ContactSection({ messages }: { messages: ContactMessages }) {
+  const t = (key: keyof ContactMessages) => messages[key];
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});

@@ -87,8 +87,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "nav" });
-  // Solo lo que usan los componentes cliente (Navbar, ContactSection): el resto viajaba en el HTML sin usarse
-  const { nav, contact } = await getMessages();
+  const { nav } = await getMessages();
 
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
@@ -99,11 +98,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       <body className={`${shoulders.variable} ${atkinson.variable} ${mono.variable}`}>
         <GoogleAnalytics />
         <Analytics />
-        <NextIntlClientProvider messages={{ nav, contact }}>
+        {/* messages={null}: los componentes cliente reciben sus textos por props; el provider solo da el idioma a Link */}
+        <NextIntlClientProvider messages={null}>
             <a href="#contenido" className="skip">
               {t("skip")}
             </a>
-            <Navbar />
+            <Navbar messages={nav} />
             <main id="contenido">{children}</main>
             <Footer />
         </NextIntlClientProvider>
