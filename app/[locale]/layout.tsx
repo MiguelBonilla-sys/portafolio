@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
-import { Big_Shoulders, Atkinson_Hyperlegible_Next, JetBrains_Mono } from "next/font/google";
+import { Big_Shoulders, Atkinson_Hyperlegible_Next } from "next/font/google";
+import localFont from "next/font/local";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
@@ -26,10 +27,13 @@ const atkinson = Atkinson_Hyperlegible_Next({
   adjustFontFallback: false,
 });
 
-const mono = JetBrains_Mono({
+// Self-hosted: on Vercel's builder, next/font/google failed to resolve JetBrains Mono's font files
+// ("next/font/google queries have exactly one entry"). The file is Google's variable latin subset.
+const mono = localFont({
+  src: "../fonts/jetbrains-mono-latin.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: "400 700",
+  display: "swap",
 });
 
 export function generateStaticParams() {
