@@ -7,7 +7,8 @@ const SECONDARY_HOSTS = ["www.mangel14.dev", "portafolio.mangel14.dev", "portafo
 
 const nextConfig: NextConfig = {
   // app/global-not-found.tsx: 404 para rutas fuera de [locale] (sin esto daban 500)
-  experimental: { globalNotFound: true },
+  // inlineCss: el CSS va en <style> dentro del HTML en vez de <link>, sin solicitudes que bloqueen el render
+  experimental: { globalNotFound: true, inlineCss: true },
   async redirects() {
     return SECONDARY_HOSTS.map((host) => ({
       source: "/:path*",
