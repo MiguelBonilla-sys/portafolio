@@ -65,6 +65,7 @@ export default async function ProjectCard({ project, variant = "featured" }: Pro
             )}
           </p>
         )}
+        {!compact && project.links.repoWithheld && <p className={styles.withheld}>{t("repoWithheld")}</p>}
       </div>
       <span className={styles.arrow} aria-hidden="true">
         <ArrowIcon size={compact ? 22 : 28} />

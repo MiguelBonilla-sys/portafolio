@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getFeaturedProjects, getProject, getProjects } from "@/lib/content";
 import { breadcrumbSchema, projectSchema } from "@/lib/jsonld";
-import { absoluteUrl, alternatesFor, openGraphFor } from "@/lib/site";
+import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./project.module.css";
 
 type Params = { locale: Locale; id: string };
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/proyecto
     description: project.description,
     alternates: alternatesFor(locale, href),
     // openGraph reemplaza el objeto del layout: hay que repetir imagen, url y tipo
-    openGraph: openGraphFor(locale, href, { title: project.title, description: project.description }),
+    ...socialFor(locale, href, { title: project.title, description: project.description }),
   };
 }
 
@@ -78,6 +78,7 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
           </p>
         )}
         {project.status === "unverified" && <p className={styles.note}>{t("unverifiedNote")}</p>}
+        {project.links.repoWithheld && <p className={styles.note}>{t("repoWithheld")}</p>}
         {(project.links.repo || project.links.demo) && (
           <div className={styles.links}>
             {project.links.repo && (
