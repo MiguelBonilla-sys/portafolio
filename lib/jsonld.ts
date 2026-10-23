@@ -1,14 +1,14 @@
 import type { Locale } from "@/i18n/routing";
 import type { Project } from "@/types";
 import type { Post } from "@/lib/blog";
-import { getSkills, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
+import { getSkills, skillNames, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 const PERSON_ID = `${SITE_URL}/#person`;
 
 const description: Record<Locale, string> = {
-  es: "Full Stack AI Engineer en Bogotá. Construye APIs, automatizaciones con n8n y CRM, y sistemas con LLMs.",
-  en: "Full Stack AI Engineer based in Bogotá. Builds APIs, n8n and CRM automations, and LLM-powered systems.",
+  es: "Full Stack Engineer en Bogotá. Construye backends en Python, frontends en React, integraciones con LLM y automatizaciones con n8n.",
+  en: "Full Stack Engineer based in Bogotá. Builds Python backends, React frontends, LLM integrations and n8n automations.",
 };
 
 export function personSchema(locale: Locale) {
@@ -18,7 +18,7 @@ export function personSchema(locale: Locale) {
     "@id": PERSON_ID,
     name: "Miguel Ángel Bonilla Torres",
     alternateName: ["Miguel Bonilla", "mangel14"],
-    jobTitle: "Full Stack AI Engineer",
+    jobTitle: "Full Stack Engineer",
     description: description[locale],
     url: absoluteUrl(locale, "/"),
     image: `${SITE_URL}/avatar.png`,
@@ -30,7 +30,7 @@ export function personSchema(locale: Locale) {
       { "@type": "CollegeOrUniversity", name: "Universidad Nacional de Colombia" },
     ],
     address: { "@type": "PostalAddress", addressLocality: "Bogotá", addressCountry: "CO" },
-    knowsAbout: getSkills(locale).flatMap((c) => c.items),
+    knowsAbout: getSkills(locale).flatMap(skillNames),
   };
 }
 
@@ -86,15 +86,18 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
+// SoftwareSourceCode solo cuando hay repositorio público; sin código, la página describe una obra (CreativeWork)
 export function projectSchema(locale: Locale, project: Project) {
+  const code = project.links.repo
+    ? { "@type": "SoftwareSourceCode", codeRepository: project.links.repo, programmingLanguage: project.language }
+    : { "@type": "CreativeWork" };
   return {
     "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
+    ...code,
     name: project.title,
     description: project.description,
     url: absoluteUrl(locale, { pathname: "/proyectos/[id]", params: { id: project.id } }),
-    codeRepository: project.links.repo ?? undefined,
-    programmingLanguage: project.language,
+    sameAs: project.links.demo ?? undefined,
     keywords: project.tags.join(", "),
     inLanguage: locale,
     author: { "@id": PERSON_ID },

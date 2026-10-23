@@ -2,20 +2,25 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills } from "@/lib/content";
-import { SITE_URL, alternatesFor } from "@/lib/site";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills, skillNames } from "@/lib/content";
+import { SITE_URL, alternatesFor, openGraphFor } from "@/lib/site";
 import styles from "./cv.module.css";
 
-// Proyectos y orden que lleva el CV (los demás quedan en el portafolio)
-const CV_PROJECTS = ["bikans", "api-auth-hackaton", "idn-phishing-detector", "etl-parcial", "taskflow", "ledgercore", "sentinel-rag"];
+// Proyectos y orden que lleva el CV (los demás quedan en el portafolio). Solo proyectos con código,
+// demo o documento verificable: taskflow, ledgercore y sentinel-rag salieron hasta tener repositorio
+// (ver docs/audit/CONTENT_VERIFICATION.md).
+const CV_PROJECTS = ["bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton", "etl-parcial"];
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/cv">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };
   const t = await getTranslations({ locale, namespace: "cv" });
+  const title = `${t("title")}: Miguel Ángel Bonilla Torres`;
+  const description = t("summaryText").slice(0, 160);
   return {
-    title: `${t("title")}: Miguel Ángel Bonilla Torres`,
-    description: t("summaryText").slice(0, 160),
+    title,
+    description,
     alternates: alternatesFor(locale, "/cv"),
+    openGraph: openGraphFor(locale, "/cv", { title, description }),
   };
 }
 
@@ -46,7 +51,7 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
       <article className={styles.sheet}>
         <header className={styles.head}>
           <h1 className={styles.name}>Miguel Ángel Bonilla Torres</h1>
-          <p className={styles.role}>Full Stack Developer / AI Engineer</p>
+          <p className={styles.role}>{t("role")}</p>
           <p className={styles.contact}>
             <span>{PHONE}</span> · <a href={`mailto:${EMAIL}`}>{EMAIL}</a> · <span>Bogotá, Colombia</span>
           </p>
@@ -66,7 +71,7 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
           <dl className={styles.skills}>
             {getSkills(locale).map((c) => (
               <div key={c.id}>
-                <dt>{c.label}:</dt> <dd>{c.items.join(", ")}</dd>
+                <dt>{c.label}:</dt> <dd>{skillNames(c).join(", ")}</dd>
               </div>
             ))}
           </dl>

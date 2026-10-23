@@ -1,8 +1,18 @@
 import { getPosts } from "@/lib/blog";
-import { getExperience, getProjects, getSkills, EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/content";
+import { getExperience, getProjects, getSkills, skillNames, EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/content";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import type { Project } from "@/types";
 
 export const dynamic = "force-static";
+
+const STATUS: Record<Project["status"], string> = {
+  commercial: "commercial production",
+  deployed: "deployed personal project",
+  academic: "academic research",
+  prototype: "prototype",
+  archived: "archived",
+  unverified: "no public code",
+};
 
 // Resumen en texto plano para agentes y buscadores de IA (https://llmstxt.org)
 export function GET() {
@@ -13,7 +23,7 @@ export function GET() {
   const lines = [
     "# Miguel Bonilla",
     "",
-    "> Full Stack AI Engineer based in Bogotá, Colombia (UTC−5). Builds secure APIs, n8n and CRM automations, and LLM-powered systems. Open to remote work.",
+    "> Full Stack Engineer (Python, React & AI systems) based in Bogotá, Colombia (UTC−5). Builds Python backends, React frontends, LLM and RAG integrations, and n8n automations. Open to remote work.",
     "",
     "Miguel Ángel Bonilla Torres (handle: mangel14) has 1+ year of professional software experience. He has worked as a Full Stack Developer at Coordenadas.co (remote) since August 2025, and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
     "",
@@ -36,12 +46,12 @@ export function GET() {
     "",
     ...projects.map(
       (p) =>
-        `- [${p.title}](${absoluteUrl("en", { pathname: "/proyectos/[id]", params: { id: p.id } })}): ${p.description} Stack: ${p.tags.join(", ")}.${p.links.repo ? ` Code: ${p.links.repo}` : ""}`
+        `- [${p.title}](${absoluteUrl("en", { pathname: "/proyectos/[id]", params: { id: p.id } })}) (${STATUS[p.status]}): ${p.description} Stack: ${p.tags.join(", ")}.${p.links.repo ? ` Code: ${p.links.repo}` : ""}`
     ),
     "",
     "## Skills",
     "",
-    ...getSkills("en").map((c) => `- ${c.label}: ${c.items.join(", ")}`),
+    ...getSkills("en").map((c) => `- ${c.label}: ${skillNames(c).join(", ")}`),
   ];
 
   if (posts.length > 0) {

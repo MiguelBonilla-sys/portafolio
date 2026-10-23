@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getPost, getPosts } from "@/lib/blog";
 import { blogPostingSchema, breadcrumbSchema, faqSchema } from "@/lib/jsonld";
-import { absoluteUrl, alternatesFor } from "@/lib/site";
+import { absoluteUrl, alternatesFor, openGraphFor } from "@/lib/site";
 import styles from "./post.module.css";
 
 type Params = { locale: Locale; slug: string };
@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
     description: post.description,
     alternates: alternatesFor(locale, href),
     robots: post.draft ? { index: false, follow: false } : undefined,
-    openGraph: {
+    openGraph: openGraphFor(locale, href, {
       type: "article",
       title: post.title,
       description: post.description,
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
       tags: post.tags,
-    },
+    }),
   };
 }
 

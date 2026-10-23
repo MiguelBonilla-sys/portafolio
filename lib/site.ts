@@ -25,3 +25,22 @@ export function alternatesFor(locale: Locale, href: Href) {
     },
   };
 }
+
+/**
+ * Open Graph de una página. Next reemplaza (no mezcla) el objeto openGraph del layout,
+ * así que cada página que lo redefine repite la imagen del idioma, la url y el sitio.
+ */
+export function openGraphFor(
+  locale: Locale,
+  href: Href,
+  og: { title: string; description: string; type?: "website" | "article" } & Record<string, unknown>
+) {
+  return {
+    type: "website" as const,
+    siteName: "Miguel Bonilla",
+    locale: locale === "es" ? "es_CO" : "en_US",
+    url: absoluteUrl(locale, href),
+    images: [{ url: `${SITE_URL}/${locale}/opengraph-image`, width: 1200, height: 630, alt: og.title }],
+    ...og,
+  };
+}
