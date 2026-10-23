@@ -158,6 +158,27 @@ Marcas: emoji de apertura, apertura de plantilla, paralelismo negativo, vocabula
 - [ ] Lo diría así en una conversación con un colega.
 - [ ] El post no tiene enlaces en el cuerpo.
 
+## 8b. Reglas añadidas en la fase 2 (2026-10-23)
+
+El linter (`agent/lib/lint.ts`) detecta patrones objetivos; no intenta adivinar si un texto lo escribió un modelo. Lo que requiere interpretación (párrafos que repiten la idea, comparaciones sin criterio, conclusiones vacías) lo juzga la revisión editorial contextual del grafo, que es una opinión y nunca bloquea por sí sola.
+
+| Severidad | Regla | Ejemplos |
+|---|---|---|
+| P1 | Marketing vacío | innovador, revolucionario, de última generación, state-of-the-art, world-class, next-gen |
+| P1 | Experiencia simulada | "en mi experiencia", "lo he visto cientos de veces", "in my experience" (si no está en el material) |
+| P1 | «Escalable» sin evidencia | la frase no trae ninguna cifra que lo respalde |
+| P1 | Encabezado vacío | una sección `##` sin contenido |
+| P2 | Conclusión genérica | sección "Conclusión" o "En resumen" |
+| P2 | Lista sin explicación | 5 o más viñetas de 1 a 3 palabras |
+| P2 | Código sin lenguaje | bloque ``` sin etiqueta: suele ser código decorativo |
+| P2 | Frase repetida | el mismo trigrama 4 veces o más en textos largos (relleno o palabra clave forzada) |
+
+Términos técnicos correctos no se penalizan: "errores estándar robustos", "robust regression", "landscape mode" y similares se excluyen antes de buscar marcas. Una palabra técnica que aparece muchas veces (token, gateway) tampoco cuenta como relleno: solo se mira la repetición de frases completas.
+
+FAQ: solo cuando el material trae preguntas reales que el artículo responde. El redactor ya no la genera por defecto.
+
+Estructura: ya no hay una plantilla única. El tipo de artículo (caso de estudio, tutorial, arquitectura, investigación, comparación, lecciones, postmortem, explicación) define las secciones posibles (`lib/taxonomy.ts`), y solo se escriben las que el material respalda.
+
 ## 9. Patrones para el linter determinista (T22, `agent/lib/lint.ts`)
 
 Expresiones regulares iniciales, sin distinguir mayúsculas. Se amplían con cada rechazo.
