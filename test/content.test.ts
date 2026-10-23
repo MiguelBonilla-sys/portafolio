@@ -1,6 +1,7 @@
 // Integridad del contenido: ES y EN describen lo mismo y ningún proyecto declara más de lo que muestra.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 import projectsEs from "../data/projects.es.json" with { type: "json" };
 import projectsEn from "../data/projects.en.json" with { type: "json" };
 import experienceEs from "../data/experience.es.json" with { type: "json" };
@@ -12,7 +13,7 @@ import messagesEn from "../messages/en.json" with { type: "json" };
 const STATUSES = ["commercial", "deployed", "academic", "prototype", "archived", "unverified"];
 const CASE_LISTS = ["decisions", "challenges", "validation", "results", "limitations"] as const;
 
-type AnyProject = (typeof projectsEs)[number] & { caseStudy?: Record<string, unknown> };
+type AnyProject = (typeof projectsEs)[number] & { caseStudy?: Record<string, unknown>; hidden?: boolean };
 
 function keys(obj: object, prefix = ""): string[] {
   return Object.entries(obj).flatMap(([k, v]) =>
@@ -49,6 +50,25 @@ test("cada proyecto tiene un estado válido y respaldado por su evidencia", () =
     }
     // "Producción" en el contexto solo con una URL que lo demuestre
     if (/producci[oó]n|production/i.test(p.context ?? "")) assert.ok(p.links.demo, `${p.id}: dice producción sin demo`);
+  }
+});
+
+test("un proyecto oculto queda sin evidencia, fuera de destacados y no lo cita ningún artículo", () => {
+  // docs/remediation/CONTENT_DECISIONS.md: se oculta mientras el autor no confirme qué existe
+  for (const es of projectsEs as AnyProject[]) {
+    const en = (projectsEn as AnyProject[]).find((p) => p.id === es.id)!;
+    assert.equal(Boolean(es.hidden), Boolean(en.hidden), `${es.id}: hidden distinto entre idiomas`);
+    if (!es.hidden) continue;
+    assert.equal(es.status, "unverified", es.id);
+    assert.equal(es.featured, false, es.id);
+  }
+  const hidden = new Set((projectsEs as AnyProject[]).filter((p) => p.hidden).map((p) => p.id));
+  const dir = new URL("../content/blog/", import.meta.url);
+  for (const locale of readdirSync(dir)) {
+    for (const f of readdirSync(new URL(`${locale}/`, dir))) {
+      const text = readFileSync(new URL(`${locale}/${f}`, dir), "utf8");
+      for (const id of hidden) assert.doesNotMatch(text, new RegExp(`\\b${id}\\b`), `${locale}/${f} cita ${id}`);
+    }
   }
 });
 

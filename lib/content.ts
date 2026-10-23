@@ -20,11 +20,11 @@ export const X_URL = "https://x.com/_mangel14_";
 export const EMAIL = "miguelangelboto14@gmail.com";
 
 export function getProjects(locale: Locale): Project[] {
-  return projects[locale];
+  return projects[locale].filter((p) => !p.hidden);
 }
 
 export function getProject(locale: Locale, id: string): Project | undefined {
-  return projects[locale].find((p) => p.id === id);
+  return getProjects(locale).find((p) => p.id === id);
 }
 
 export function getExperience(locale: Locale): ExperienceItem[] {

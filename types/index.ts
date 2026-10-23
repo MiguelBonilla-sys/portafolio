@@ -45,6 +45,8 @@ export interface Project {
   tags: string[];
   links: ProjectLink;
   featured: boolean;
+  /** Fuera de todas las superficies públicas hasta que el autor confirme qué existe */
+  hidden?: boolean;
   caseStudy?: CaseStudy;
 }
 
