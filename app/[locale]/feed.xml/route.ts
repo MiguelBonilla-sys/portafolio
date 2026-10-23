@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog";
+import { CATEGORY_LABEL } from "@/lib/taxonomy";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -30,7 +31,7 @@ export async function GET(_req: Request, { params }: RouteContext<"/[locale]/fee
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${new Date(`${p.date}T12:00:00Z`).toUTCString()}</pubDate>
       <description>${escape(p.summary)}</description>
-      <category>${escape(t(`pillars.${p.pillar}`))}</category>
+      <category>${escape(CATEGORY_LABEL[p.category][locale])}</category>
     </item>`;
     })
     .join("\n");

@@ -5,7 +5,8 @@ import { ArrowIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog";
-import { alternatesFor, openGraphFor } from "@/lib/site";
+import { CATEGORY_LABEL } from "@/lib/taxonomy";
+import { alternatesFor, socialFor } from "@/lib/site";
 import styles from "./blog.module.css";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/blog">): Promise<Metadata> {
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog">):
     title: t("title"),
     description: t("lede"),
     alternates: alternatesFor(locale, "/blog"),
-    openGraph: openGraphFor(locale, "/blog", { title: t("title"), description: t("lede") }),
+    ...socialFor(locale, "/blog", { title: t("title"), description: t("lede") }),
   };
 }
 
@@ -45,7 +46,7 @@ export default async function BlogIndex({ params }: PageProps<"/[locale]/blog">)
                 <Link href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }} className={styles.row}>
                   <span className={styles.meta}>
                     <time dateTime={post.date}>{dateFmt.format(new Date(post.date))}</time>
-                    <span className="chip">{t(`pillars.${post.pillar}`)}</span>
+                    <span className="chip">{CATEGORY_LABEL[post.category][locale]}</span>
                     {post.draft && <span className="chip chip-accent">draft</span>}
                   </span>
                   <span className={styles.main}>

@@ -18,6 +18,7 @@ const ROUTES = [
   "/es/proyectos/portafolio-content-engine",
   "/en/projects/api-auth-hackaton",
   "/es/proyectos/redes-sockets",
+  "/en/blog",
 ];
 
 let browser;
@@ -32,7 +33,7 @@ async function open(path, width = 1440) {
   return { page, res };
 }
 
-test("las rutas principales responden 200 con un h1, imagen OG y URL OG", async () => {
+test("las rutas principales responden 200 con un h1, imagen OG, URL OG y tarjeta de X propia", async () => {
   for (const path of ROUTES) {
     const { page, res } = await open(path);
     assert.equal(res.status(), 200, path);
@@ -42,6 +43,12 @@ test("las rutas principales responden 200 con un h1, imagen OG y URL OG", async 
       await page.locator('meta[property="og:url"]').getAttribute("content"),
       await page.locator('link[rel="canonical"]').getAttribute("href"),
       `${path}: og:url = canonical`
+    );
+    // Cada página declara sus propias tarjetas: antes heredaban el título de la home
+    assert.equal(
+      await page.locator('meta[name="twitter:title"]').getAttribute("content"),
+      await page.locator('meta[property="og:title"]').getAttribute("content"),
+      `${path}: twitter:title = og:title`
     );
     await page.close();
   }

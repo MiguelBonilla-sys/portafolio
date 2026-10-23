@@ -98,7 +98,8 @@
     "ctaTitle": "Interested in this kind of work?",
     "ctaBody": "I'm looking for remote work as a Full Stack Engineer. If you'd like to talk about this project or your team, get in touch.",
     "ctaContact": "Get in touch",
-    "ctaCv": "View resume"
+    "ctaCv": "View resume",
+    "repoWithheld": "Repository temporarily unlinked; the code is available on request."
   },
   "blog": {
     "title": "Blog",
@@ -113,13 +114,16 @@
     "sources": "Sources",
     "back": "Back to the blog",
     "otherLang": "Leer en español",
-    "pillars": {
-      "agents": "Agents",
-      "automation": "Automation",
-      "backend": "Backend",
-      "career": "Career"
-    },
-    "rss": "RSS"
+    "rss": "RSS",
+    "related": "Related posts",
+    "relatedProject": "Related project",
+    "ctaTitle": "Was this useful?",
+    "ctaBody": "I write about what I build. If you'd like to talk about this topic or your team, get in touch.",
+    "ctaContact": "Get in touch",
+    "ctaProjects": "See projects",
+    "author": "Author",
+    "category": "Category",
+    "categoryLede": "Posts about {category}."
   },
   "contact": {
     "title": "Let's talk",
@@ -168,7 +172,7 @@
   },
   "card": {
     "title": "Contact card",
-    "metaDescription": "Contact details for Miguel Ángel Bonilla Torres, Full Stack Developer / AI Engineer in Bogotá: email, phone and links. Save it to your phone or Wallet.",
+    "metaDescription": "Contact details for Miguel Ángel Bonilla Torres, Full Stack Engineer (Python, React & AI Systems) in Bogotá: email, phone and links. Save it to your phone or Wallet.",
     "save": "Save contact",
     "google": "Add to Google Wallet",
     "scan": "Scan the code with your phone camera to save the contact.",

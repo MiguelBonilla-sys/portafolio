@@ -5,9 +5,12 @@ import Prose from "@/components/blog/Prose";
 import JsonLd from "@/components/seo/JsonLd";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getPost, getPosts } from "@/lib/blog";
+import { ArrowIcon } from "@/components/ui/icons";
+import { CATEGORY_PAGE_MIN_POSTS, CATEGORY_LABEL, ARTICLE_TYPE_LABEL } from "@/lib/taxonomy";
+import { categoriesWithPages, getPost, getPosts, relatedPosts } from "@/lib/blog";
+import { getProject } from "@/lib/content";
 import { blogPostingSchema, breadcrumbSchema, faqSchema } from "@/lib/jsonld";
-import { absoluteUrl, alternatesFor, openGraphFor } from "@/lib/site";
+import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./post.module.css";
 
 type Params = { locale: Locale; slug: string };
@@ -28,8 +31,13 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
     description: post.description,
     alternates: alternatesFor(locale, href),
     robots: post.draft ? { index: false, follow: false } : undefined,
-    openGraph: openGraphFor(locale, href, {
+    authors: [{ name: "Miguel Ángel Bonilla Torres", url: absoluteUrl(locale, "/") }],
+    ...socialFor(locale, href, {
       type: "article",
+      image: `${absoluteUrl(locale, href)}/opengraph-image`,
+      imageAlt: `${post.title}: ${CATEGORY_LABEL[post.category][locale]}`,
+      authors: [absoluteUrl(locale, "/")],
+      section: CATEGORY_LABEL[post.category][locale],
       title: post.title,
       description: post.description,
       publishedTime: post.date,
@@ -51,6 +59,10 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
   const otherLocale = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale;
   const hasTranslation = Boolean(getPost(otherLocale, slug));
   const href = { pathname: "/blog/[slug]" as const, params: { slug } };
+  const related = relatedPosts(locale, post);
+  const projects = post.projects.map((id) => getProject(locale, id)).filter((p) => p !== undefined);
+  const categoryPage = categoriesWithPages(locale, CATEGORY_PAGE_MIN_POSTS).includes(post.category);
+  const categoryLabel = CATEGORY_LABEL[post.category][locale];
 
   const schemas: object[] = [
     blogPostingSchema(locale, post),
@@ -78,7 +90,14 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
 
       <header className={styles.header}>
         <div className={styles.meta}>
-          <span className="chip">{t(`pillars.${post.pillar}`)}</span>
+          {categoryPage ? (
+            <Link href={{ pathname: "/blog/categoria/[category]", params: { category: post.category } }} className="chip">
+              {categoryLabel}
+            </Link>
+          ) : (
+            <span className="chip">{categoryLabel}</span>
+          )}
+          {post.articleType && <span className="data">{ARTICLE_TYPE_LABEL[post.articleType][locale]}</span>}
           {post.draft && <span className="chip chip-accent">draft</span>}
           <span className="data">
             {t("published")} <time dateTime={post.date}>{dateFmt.format(new Date(post.date))}</time>
@@ -92,6 +111,12 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
         </div>
         <h1 className={styles.title}>{post.title}</h1>
         <p className={styles.summary}>{post.summary}</p>
+        <p className={`data ${styles.byline}`}>
+          {t("author")}:{" "}
+          <Link href={{ pathname: "/", hash: "sobreMi" }} rel="author">
+            Miguel Ángel Bonilla Torres
+          </Link>
+        </p>
       </header>
 
       <Prose source={post.body} />
@@ -128,6 +153,63 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
           </ol>
         </section>
       )}
+
+      {projects.length > 0 && (
+        <section className={styles.block} aria-labelledby="project-title">
+          <h2 id="project-title" className={styles.blockTitle}>
+            {t("relatedProject")}
+          </h2>
+          <ul className={styles.links}>
+            {projects.map((p) => (
+              <li key={p.id}>
+                <Link href={{ pathname: "/proyectos/[id]", params: { id: p.id } }} className={styles.linkRow}>
+                  <span>
+                    <span className={styles.linkTitle}>{p.title}</span>
+                    <span className={styles.linkDesc}>{p.description}</span>
+                  </span>
+                  <ArrowIcon />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {related.length > 0 && (
+        <section className={styles.block} aria-labelledby="related-title">
+          <h2 id="related-title" className={styles.blockTitle}>
+            {t("related")}
+          </h2>
+          <ul className={styles.links}>
+            {related.map((p) => (
+              <li key={p.slug}>
+                <Link href={{ pathname: "/blog/[slug]", params: { slug: p.slug } }} className={styles.linkRow}>
+                  <span>
+                    <span className={styles.linkTitle}>{p.title}</span>
+                    <span className={styles.linkDesc}>{p.description}</span>
+                  </span>
+                  <ArrowIcon />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section className={styles.cta} aria-labelledby="post-cta">
+        <h2 id="post-cta" className={styles.blockTitle}>
+          {t("ctaTitle")}
+        </h2>
+        <p>{t("ctaBody")}</p>
+        <div className={styles.ctaLinks}>
+          <Link href={{ pathname: "/", hash: "contacto" }} className="btn btn-primary">
+            {t("ctaContact")}
+          </Link>
+          <Link href={{ pathname: "/", hash: "proyectos" }} className="btn btn-ghost">
+            {t("ctaProjects")}
+          </Link>
+        </div>
+      </section>
     </article>
   );
 }

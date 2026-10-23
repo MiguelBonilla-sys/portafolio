@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills, skillNames } from "@/lib/content";
-import { SITE_URL, alternatesFor, openGraphFor } from "@/lib/site";
+import { SITE_URL, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./cv.module.css";
 
 // Proyectos y orden que lleva el CV (los demás quedan en el portafolio). Solo proyectos con código,
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/cv">): P
     title,
     description,
     alternates: alternatesFor(locale, "/cv"),
-    openGraph: openGraphFor(locale, "/cv", { title, description }),
+    ...socialFor(locale, "/cv", { title, description }),
   };
 }
 
