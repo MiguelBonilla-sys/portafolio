@@ -10,7 +10,7 @@
 | Rediseño de identidad (brutalismo cyberpunk, símbolo animado, azul + cian) | 🟢 Hecho. Ver `DESIGN.md` |
 | Fase 1: bilingüe, blog MDX + RSS, páginas de proyecto, CV (web + PDF), contenido del CV de agosto 2026 | 🟢 Hecho |
 | SEO técnico y navegadores con IA | 🟢 Lighthouse móvil: SEO 100, accesibilidad 100, buenas prácticas 100, rendimiento 97 |
-| Fase 2: Content Engine (LangGraph.js, Telegram, LinkedIn, GitHub, cron, IndexNow) | 🟢 Código y tests listos. Falta configurar las variables (`docs/setup.md`) |
+| Fase 2: Content Engine (LangGraph.js, Telegram, LinkedIn, GitHub, cron, IndexNow) | 🟡 Variables configuradas en producción (2026-10-23: el webhook responde 401 sin secreto, no 503). Ampliado en `docs/phase-2/`: entradas PDF/Markdown/imagen/URL, propuesta conversacional, aprobación por versión y canal, visuales por código. Aún no ha publicado contenido real |
 | Fase 3: carruseles PDF, evals, reporte semanal | 🟢 Código listo. El caso de estudio se escribe tras 4 semanas de uso real |
 | Perfil de LinkedIn | 🟡 Textos en `docs/linkedin-profile.md`, falta pegarlos |
 | Línea base de métricas | 🔴 Pendiente (Miguel): `docs/baseline.md` |
