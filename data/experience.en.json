@@ -11,6 +11,17 @@
       "Automated content distribution for 6 real estate projects into 1 reusable system, personalizing data per contact.",
       "Built custom plugins and API integrations for U.S. clients across 3 industries, and deployed and maintained project infrastructure on a self-hosted Linux server with Docker, Coolify and Traefik."
     ],
+    "stack": [
+      "React",
+      "Django",
+      "n8n",
+      "QuickBooks Online API",
+      "OAuth 2.0",
+      "Docker",
+      "Coolify",
+      "Traefik",
+      "Linux"
+    ],
     "type": "work"
   },
   {
@@ -23,6 +34,14 @@
       "Developed and maintained backend solutions in Python with Django and FastAPI, using PostgreSQL as the primary database in a real production environment.",
       "Wrote tests with pytest and containerized services with Docker, taking first steps in testing and DevOps practices."
     ],
+    "stack": [
+      "Python",
+      "Django",
+      "FastAPI",
+      "PostgreSQL",
+      "pytest",
+      "Docker"
+    ],
     "type": "work"
   },
   {
@@ -32,7 +51,14 @@
     "place": "Universidad de San Buenaventura · Bogotá · 10th semester",
     "description": "Software architecture, distributed systems and networking.",
     "highlights": [
-      "Thesis: multi-agent AI system for phishing domain detection."
+      "Thesis co-authored with Juan Sebastián Fandiño Novoa: a multi-agent AI system that detects IDN homograph phishing domains."
+    ],
+    "stack": [
+      "Python",
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "ChromaDB"
     ],
     "type": "education"
   },

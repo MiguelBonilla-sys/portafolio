@@ -16,13 +16,19 @@ export default async function SkillsSection() {
           {getSkills(locale).map((cat) => (
             <div key={cat.id} className={styles.block}>
               <h3 className={styles.label}>{cat.label}</h3>
-              <ul className={styles.items}>
-                {cat.items.map((item) => (
+              {/* Principales en chip; las secundarias en texto, para que no pesen igual */}
+              <ul className={styles.items} aria-label={t("core")}>
+                {cat.core.map((item) => (
                   <li key={item} className="chip">
                     {item}
                   </li>
                 ))}
               </ul>
+              {cat.items.length > 0 && (
+                <p className={styles.more}>
+                  <span className={styles.moreLabel}>{t("more")}</span> {cat.items.join(" · ")}
+                </p>
+              )}
             </div>
           ))}
         </div>

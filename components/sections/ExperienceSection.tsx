@@ -32,6 +32,16 @@ export default async function ExperienceSection() {
                     ))}
                   </ul>
                 )}
+                {item.stack && (
+                  <p className={styles.stack}>
+                    <span className="visually-hidden">{t("stack")}: </span>
+                    {item.stack.map((tech) => (
+                      <span key={tech} className={styles.tech}>
+                        {tech}
+                      </span>
+                    ))}
+                  </p>
+                )}
               </div>
             </li>
           ))}

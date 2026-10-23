@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Miguel Bonilla | Full Stack AI Engineer",
-    "description": "Full Stack Developer y AI Engineer en Bogotá con más de 2 años de experiencia: SaaS en producción, APIs, sistemas multiagente, RAG y automatización. Abierto a trabajo remoto.",
+    "title": "Miguel Bonilla | Full Stack Engineer · Python, React y sistemas con IA",
+    "description": "Full Stack Engineer en Bogotá con más de 2 años de experiencia profesional. Construyo backends en Python, frontends en React e integraciones con LLM. Abierto a trabajo remoto.",
     "ogLocale": "es_CO",
     "ogTag": "Bogotá · Remoto"
   },
@@ -22,8 +22,8 @@
     "cv": "CV"
   },
   "hero": {
-    "role": "Full Stack AI Engineer",
-    "lede": "Construyo productos SaaS, APIs y sistemas con IA (multiagente, RAG e integraciones con LLMs) y los llevo a producción.",
+    "role": "Full Stack Engineer · Python, React y sistemas con IA",
+    "lede": "Construyo aplicaciones web de punta a punta: APIs en FastAPI y Django, interfaces en React y Next.js, e integraciones con LLM y RAG. Hoy desarrollo SaaS e integraciones para clientes de Colombia y EE. UU. en Coordenadas.co.",
     "ctaContact": "Escríbeme",
     "ctaProjects": "Ver proyectos",
     "factBase": "Base",
@@ -35,36 +35,70 @@
     "sigilTitle": "Símbolo de Miguel Bonilla: círculo de transmutación con una M de circuito",
     "ctaCv": "Descargar CV",
     "factExp": "Experiencia",
-    "factExpValue": "2+ años en producción"
+    "factExpValue": "2+ años profesionales"
   },
   "about": {
     "title": "Sobre mí",
     "p1": "Tengo más de 2 años de experiencia profesional construyendo software. Hoy trabajo de forma remota como Full Stack Developer en Coordenadas.co, y antes fui Junior Backend Engineer en Sibartech, con Django, FastAPI y PostgreSQL en producción.",
     "p2": "En Coordenadas uní en Bikans dos herramientas de nómina y retención en la fuente, hoy en producción con doble factor de autenticación, e integré QuickBooks Online con un agente en n8n en 4 días. También construyo plugins e integraciones para clientes de EE. UU. y mantengo la infraestructura en un servidor Linux con Docker, Coolify y Traefik.",
-    "p3": "Estudio décimo semestre de Ingeniería de Sistemas en la Universidad de San Buenaventura. Mi tesis es un sistema multiagente que detecta dominios de phishing por homógrafos IDN, validado con 359 pruebas automatizadas. Ahora estoy armando un agente en LangGraph que redacta mi blog y no publica nada sin mi aprobación.",
+    "p3": "Estudio décimo semestre de Ingeniería de Sistemas en la Universidad de San Buenaventura. Mi tesis, en coautoría, es un sistema multiagente que detecta dominios de phishing por homógrafos IDN. También construí el Content Engine, un agente en LangGraph que redacta los artículos de este blog y no publica nada sin mi aprobación.",
     "portraitAlt": "Retrato en pixel art de Miguel Bonilla con gafas, camisa blanca y traje azul"
   },
   "stack": {
     "title": "Stack",
-    "lede": "Las herramientas con las que he entregado proyectos. Cada una aparece en al menos un repositorio o en mi trabajo actual."
+    "lede": "Agrupado por área. En recuadro, lo que uso en mi trabajo actual o en los proyectos destacados; debajo, lo que he usado en otros proyectos.",
+    "core": "Principales",
+    "more": "También:"
   },
   "path": {
     "title": "Trayectoria",
     "work": "Trabajo",
     "education": "Formación",
-    "course": "Curso"
+    "course": "Curso",
+    "stack": "Tecnologías"
   },
   "projects": {
     "title": "Proyectos",
-    "lede": "Repositorios públicos. Abre cualquiera para ver cómo está construido y qué decidí en el camino.",
+    "lede": "Primero los proyectos con más evidencia: cada uno tiene un caso de estudio con el problema, la arquitectura, las decisiones y sus límites.",
     "featured": "Destacado",
     "stack": "Stack",
     "viewRepo": "Ver repositorio",
     "viewDemo": "Ver demo",
-    "archive": "Explora más de 35 repositorios con proyectos en Java, Python, web y automatización.",
+    "archive": "Explora el resto de mis repositorios públicos en GitHub.",
     "back": "Volver a proyectos",
     "language": "Lenguaje",
-    "otherProjects": "Otros proyectos"
+    "otherProjects": "Otros proyectos",
+    "otherTitle": "Otros proyectos y archivo académico",
+    "otherLede": "Proyectos de curso, prototipos y trabajos sin código público. Cada uno indica su estado.",
+    "readCase": "Leer el caso de estudio",
+    "contribution": "Mi aporte",
+    "featuredProjects": "Proyectos destacados",
+    "status": {
+      "commercial": "Producción comercial",
+      "deployed": "Proyecto personal desplegado",
+      "academic": "Investigación académica",
+      "prototype": "Prototipo",
+      "archived": "Archivado",
+      "unverified": "Sin código público"
+    },
+    "unverifiedNote": "Este proyecto no tiene repositorio ni demo públicos. La descripción no incluye resultados que no se puedan revisar.",
+    "case": {
+      "overview": "Resumen",
+      "problem": "Problema",
+      "role": "Rol y responsabilidades",
+      "architecture": "Arquitectura",
+      "flow": "Flujo de datos",
+      "decisions": "Decisiones técnicas",
+      "challenges": "Retos de ingeniería",
+      "validation": "Pruebas y validación",
+      "results": "Resultados",
+      "limitations": "Limitaciones y próximos pasos",
+      "contents": "En esta página"
+    },
+    "ctaTitle": "¿Te interesa este tipo de trabajo?",
+    "ctaBody": "Busco trabajo remoto como Full Stack Engineer. Si quieres hablar de este proyecto o de tu equipo, escríbeme.",
+    "ctaContact": "Escríbeme",
+    "ctaCv": "Ver CV"
   },
   "blog": {
     "title": "Blog",
@@ -89,7 +123,7 @@
   },
   "contact": {
     "title": "Hablemos",
-    "intro": "Busco trabajo remoto como Full Stack o AI Engineer, y me interesan proyectos de automatización con IA. Escríbeme por el formulario o por cualquiera de estos canales.",
+    "intro": "Busco trabajo remoto como Full Stack Engineer, con foco en backend en Python, React e integraciones con IA. También me interesan proyectos de automatización. Escríbeme por el formulario o por cualquiera de estos canales.",
     "name": "Nombre",
     "email": "Email",
     "message": "Mensaje",
@@ -112,7 +146,8 @@
   "notFound": {
     "title": "Página no encontrada",
     "body": "Esta ruta no existe o se movió.",
-    "home": "Ir al inicio"
+    "home": "Ir al inicio",
+    "metaTitle": "Página no encontrada"
   },
   "cv": {
     "title": "Hoja de vida",
@@ -126,9 +161,10 @@
     "courses": "Cursos y certificados",
     "strengths": "Fortalezas",
     "strengthsList": "Responsabilidad técnica de punta a punta · Resolución de problemas con fecha límite · Comunicación asíncrona · Comunicación con clientes de distintas industrias · Aprendizaje autónomo · Autonomía en trabajo remoto",
-    "summaryText": "Full Stack Developer y AI Engineer con más de 2 años de experiencia profesional construyendo y desplegando productos SaaS, APIs REST y flujos de automatización, además de sistemas con IA basados en arquitecturas multiagente, pipelines RAG e integraciones con LLMs. Domino Python, React, FastAPI, Django, TypeScript, PostgreSQL, LlamaStack, Ollama, ChromaDB, Docker y Linux. Tengo experiencia en autenticación, integraciones con APIs de terceros, resolución de incidentes en producción y colaboración remota con clientes internacionales.",
+    "summaryText": "Full Stack Engineer con más de 2 años de experiencia profesional en desarrollo de software. Construyo y despliego productos SaaS, APIs REST y automatizaciones, e integro LLM, RAG y agentes en aplicaciones. Trabajo con Python, FastAPI, Django, React, TypeScript, PostgreSQL, Docker y Linux. Experiencia en autenticación, integraciones con APIs de terceros, resolución de problemas en producción y colaboración remota con clientes internacionales.",
     "technologies": "Tecnologías",
-    "otherLang": "Read in English"
+    "otherLang": "Read in English",
+    "role": "Full Stack Engineer · Python, React y sistemas con IA"
   },
   "card": {
     "title": "Tarjeta de contacto",

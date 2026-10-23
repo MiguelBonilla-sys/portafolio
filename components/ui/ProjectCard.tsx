@@ -6,40 +6,69 @@ import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
   project: Project;
+  /** compact: fila corta para el archivo de proyectos secundarios */
+  variant?: "featured" | "compact";
 }
 
-const VISIBLE_TAGS = 5;
+// Cuatro tecnologías bastan para explicar un proyecto; el resto está en su página
+const VISIBLE_TAGS = 4;
 
-// Fila enlazada a la página del proyecto: una URL real que buscadores y agentes de IA pueden seguir
-export default async function ProjectCard({ project }: ProjectCardProps) {
+// El título enlaza a la página del proyecto y su área cubre toda la fila; repo y demo quedan
+// encima como enlaces propios (sin anidar <a>). La URL real la siguen buscadores y agentes de IA.
+export default async function ProjectCard({ project, variant = "featured" }: ProjectCardProps) {
   const t = await getTranslations("projects");
-  const extra = project.tags.length - VISIBLE_TAGS;
+  const compact = variant === "compact";
+  const tags = project.tags.slice(0, VISIBLE_TAGS);
+  const hasLinks = !compact && (project.links.repo || project.links.demo);
+  // En el archivo, los proyectos cuelgan del h3 "Otros proyectos"
+  const Heading = compact ? "h4" : "h3";
 
   return (
-    <Link
-      href={{ pathname: "/proyectos/[id]", params: { id: project.id } }}
-      className={`${styles.row} ${project.featured ? styles.featured : ""}`}
-    >
+    <article className={`${styles.row} ${compact ? styles.compact : styles.featured}`}>
       <div className={styles.meta}>
-        <span className="chip">{project.language}</span>
-        {project.featured && <span className="chip chip-accent">{t("featured")}</span>}
+        <span className={project.status === "unverified" ? "chip chip-muted" : "chip"}>
+          {t(`status.${project.status}`)}
+        </span>
         {project.context && <span className={styles.context}>{project.context}</span>}
       </div>
       <div className={styles.main}>
-        <h3 className={styles.title}>{project.title}</h3>
-        <span className={styles.desc}>{project.description}</span>
-        <span className={styles.tags}>
-          {project.tags.slice(0, VISIBLE_TAGS).map((tag) => (
+        <Heading className={styles.title}>
+          <Link href={{ pathname: "/proyectos/[id]", params: { id: project.id } }} className={styles.stretch}>
+            {project.title}
+          </Link>
+        </Heading>
+        <p className={styles.desc}>{project.description}</p>
+        {!compact && project.contribution && (
+          <p className={styles.contribution}>
+            <span className={styles.contributionLabel}>{t("contribution")}:</span> {project.contribution}
+          </p>
+        )}
+        <p className={styles.tags}>
+          <span className="visually-hidden">{t("stack")}: </span>
+          {tags.map((tag) => (
             <span key={tag} className={styles.tag}>
               {tag}
             </span>
           ))}
-          {extra > 0 && <span className={styles.tag}>+{extra}</span>}
-        </span>
+        </p>
+        {hasLinks && (
+          <p className={styles.links}>
+            {project.links.repo && (
+              <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className={styles.ext}>
+                {t("viewRepo")}
+              </a>
+            )}
+            {project.links.demo && (
+              <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className={styles.ext}>
+                {t("viewDemo")}
+              </a>
+            )}
+          </p>
+        )}
       </div>
       <span className={styles.arrow} aria-hidden="true">
-        <ArrowIcon size={28} />
+        <ArrowIcon size={compact ? 22 : 28} />
       </span>
-    </Link>
+    </article>
   );
 }

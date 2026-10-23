@@ -6,7 +6,8 @@ import experienceEs from "@/data/experience.es.json";
 import experienceEn from "@/data/experience.en.json";
 import skills from "@/data/skills.json";
 
-const projects: Record<Locale, Project[]> = { es: projectsEs, en: projectsEn };
+// El JSON no conserva los tipos literales (status); el test de contenido valida los valores
+const projects: Record<Locale, Project[]> = { es: projectsEs as Project[], en: projectsEn as Project[] };
 const experience: Record<Locale, ExperienceItem[]> = {
   es: experienceEs as ExperienceItem[],
   en: experienceEn as ExperienceItem[],
@@ -30,16 +31,30 @@ export function getExperience(locale: Locale): ExperienceItem[] {
   return experience[locale];
 }
 
+export function getFeaturedProjects(locale: Locale): Project[] {
+  return projects[locale].filter((p) => p.featured);
+}
+
 export interface LocalizedSkillCategory {
   id: string;
   label: string;
+  /** Principales: las respaldan los proyectos destacados o el trabajo actual */
+  core: string[];
+  /** Secundarias: usadas en proyectos o trabajos anteriores */
   items: string[];
 }
 
 export function getSkills(locale: Locale): LocalizedSkillCategory[] {
+  const text = (i: SkillCategory["items"][number]) => (typeof i === "string" ? i : i[locale]);
   return (skills as SkillCategory[]).map((c) => ({
     id: c.id,
     label: c.label[locale],
-    items: c.items.map((i) => (typeof i === "string" ? i : i[locale])),
+    core: c.core.map(text),
+    items: c.items.map(text),
   }));
+}
+
+/** Todas las tecnologías de una categoría, principales primero (CV, llms.txt, JSON-LD) */
+export function skillNames(c: LocalizedSkillCategory): string[] {
+  return [...c.core, ...c.items];
 }

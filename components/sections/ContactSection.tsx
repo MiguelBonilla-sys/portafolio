@@ -127,7 +127,7 @@ export default function ContactSection({ messages }: { messages: ContactMessages
             <label htmlFor="contact-name" className={styles.label}>
               {t("name")}
             </label>
-            <input {...fieldProps("name")} type="text" className={styles.input} autoComplete="name" required />
+            <input {...fieldProps("name")} type="text" className={styles.input} autoComplete="name" maxLength={120} required />
             {errors.name && (
               <p id="contact-name-error" className={styles.fieldError}>
                 {errors.name}
@@ -139,7 +139,7 @@ export default function ContactSection({ messages }: { messages: ContactMessages
             <label htmlFor="contact-email" className={styles.label}>
               {t("email")}
             </label>
-            <input {...fieldProps("email")} type="email" className={styles.input} autoComplete="email" required />
+            <input {...fieldProps("email")} type="email" className={styles.input} autoComplete="email" maxLength={254} required />
             {errors.email && (
               <p id="contact-email-error" className={styles.fieldError}>
                 {errors.email}
@@ -151,7 +151,7 @@ export default function ContactSection({ messages }: { messages: ContactMessages
             <label htmlFor="contact-message" className={styles.label}>
               {t("message")}
             </label>
-            <textarea {...fieldProps("message")} className={styles.textarea} rows={6} required />
+            <textarea {...fieldProps("message")} className={styles.textarea} rows={6} maxLength={5000} required />
             {errors.message && (
               <p id="contact-message-error" className={styles.fieldError}>
                 {errors.message}
