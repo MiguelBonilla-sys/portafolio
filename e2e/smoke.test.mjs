@@ -1,5 +1,6 @@
 // Recorrido E2E del sitio compilado. Uso: pnpm build && pnpm start (en otra terminal) && pnpm test:e2e
-// Variables opcionales: BASE_URL (por defecto http://localhost:3000), CHROME_PATH (Chromium ya instalado).
+// Variables opcionales: BASE_URL (por defecto http://localhost:3000), CHROME_PATH (otro Chromium).
+// Sin CHROME_PATH usa el Chromium de playwright-core: `pnpm exec playwright-core install chromium`.
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { chromium } from "playwright-core";
@@ -23,7 +24,7 @@ const ROUTES = [
 
 let browser;
 before(async () => {
-  browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : { channel: "chrome" });
+  browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 });
 after(() => browser?.close());
 
@@ -113,6 +114,10 @@ test("el 404 responde 404 y no se indexa, también después de hidratar", async 
   assert.ok(robots.length > 0 && robots.every((r) => r.includes("noindex")), robots.join(" | "));
   assert.equal(await page.locator('link[rel="canonical"]').count(), 0);
   await page.close();
+  // Proyecto oculto mientras no haya evidencia (docs/remediation/CONTENT_DECISIONS.md)
+  const hidden = await open("/es/proyectos/ledgercore");
+  assert.equal(hidden.res.status(), 404);
+  await hidden.page.close();
 });
 
 test("el formulario de contacto valida antes de enviar", async () => {
