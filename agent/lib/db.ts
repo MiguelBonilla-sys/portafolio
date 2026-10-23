@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { LEGACY_STATUS, type EditorialStatus } from "../editorial.ts";
 
 // Un pool por instancia de función. Supabase/Neon aceptan la URL con sslmode en la cadena.
 let pool: Pool | null = null;
@@ -8,6 +9,7 @@ export function getPool(databaseUrl: string): Pool {
   return pool;
 }
 
+// Migración aditiva e idempotente: se puede ejecutar en cada arranque
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS content_log (
   content_id uuid PRIMARY KEY,
@@ -23,7 +25,26 @@ CREATE TABLE IF NOT EXISTS content_log (
   eval_scores jsonb,
   published_urls jsonb
 );
+ALTER TABLE content_log ADD COLUMN IF NOT EXISTS version integer NOT NULL DEFAULT 0;
+ALTER TABLE content_log ADD COLUMN IF NOT EXISTS content_hash text;
+ALTER TABLE content_log ADD COLUMN IF NOT EXISTS progress_message_id bigint;
+ALTER TABLE content_log ADD COLUMN IF NOT EXISTS category text;
+ALTER TABLE content_log ADD COLUMN IF NOT EXISTS published_channels jsonb;
 CREATE INDEX IF NOT EXISTS content_log_status_idx ON content_log (status, scheduled_for);
+${Object.entries(LEGACY_STATUS)
+  .map(([from, to]) => `UPDATE content_log SET status = '${to}' WHERE status = '${from}';`)
+  .join("\n")}
+
+CREATE TABLE IF NOT EXISTS content_events (
+  id bigserial PRIMARY KEY,
+  content_id uuid NOT NULL,
+  at timestamptz NOT NULL DEFAULT now(),
+  from_status text,
+  to_status text NOT NULL,
+  version integer,
+  detail text
+);
+CREATE INDEX IF NOT EXISTS content_events_content_idx ON content_events (content_id, at);
 
 CREATE TABLE IF NOT EXISTS agent_kv (
   key text PRIMARY KEY,
@@ -35,45 +56,67 @@ CREATE TABLE IF NOT EXISTS telegram_updates (
   update_id bigint PRIMARY KEY,
   received_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS rate_events (
+  key text NOT NULL,
+  at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS rate_events_idx ON rate_events (key, at);
 `;
 
-export type ContentStatus =
-  | "generating"
-  | "blocked"
-  | "awaiting_approval"
-  | "scheduled"
-  | "publishing"
-  | "awaiting_deploy"
-  | "published"
-  | "rejected"
-  | "expired"
-  | "failed";
+/** @deprecated nombre anterior; los estados viven en editorial.ts */
+export type ContentStatus = EditorialStatus;
 
 export interface ContentRow {
   content_id: string;
-  status: ContentStatus;
+  status: EditorialStatus;
   title: string | null;
   scheduled_for: string | null;
   preview_message_id: number | null;
+  progress_message_id?: number | null;
+  version?: number;
+  content_hash?: string | null;
+  category?: string | null;
   updated_at: string;
   eval_scores: Record<string, number | string> | null;
   published_urls: Record<string, string> | null;
+  published_channels?: string[] | null;
+}
+
+export interface ContentEvent {
+  from: EditorialStatus | null;
+  to: EditorialStatus;
+  version?: number;
+  detail?: string;
 }
 
 /** Registro consultable de cada pieza (el estado completo vive en el checkpoint de LangGraph). */
 export interface ContentStore {
   ensureSchema(): Promise<void>;
-  upsert(contentId: string, fields: Partial<Omit<ContentRow, "content_id">> & { source_type?: string; pillar?: string; format?: string }): Promise<void>;
+  upsert(
+    contentId: string,
+    fields: Partial<Omit<ContentRow, "content_id">> & { source_type?: string; pillar?: string; format?: string }
+  ): Promise<void>;
   get(contentId: string): Promise<ContentRow | null>;
-  byStatus(status: ContentStatus): Promise<ContentRow[]>;
+  byStatus(status: EditorialStatus): Promise<ContentRow[]>;
+  /** Últimas piezas, para /drafts */
+  recent(limit: number): Promise<ContentRow[]>;
+  /** Pieza cuyo id empieza por el prefijo (los 8 caracteres que ve el autor) */
+  findByPrefix(prefix: string): Promise<ContentRow | null>;
   dueScheduled(now: Date): Promise<ContentRow[]>;
   staleAwaiting(olderThan: Date): Promise<ContentRow[]>;
   since(date: Date): Promise<(ContentRow & { created_at: string })[]>;
+  /** Historial de transiciones (trazabilidad) */
+  event(contentId: string, event: ContentEvent): Promise<void>;
   kvGet<T>(key: string): Promise<T | null>;
   kvSet(key: string, value: unknown): Promise<void>;
   kvDelete(key: string): Promise<void>;
   /** true si el update de Telegram es nuevo (deduplicación de reintentos) */
   claimUpdate(updateId: number): Promise<boolean>;
+  /** Registra un uso y dice si sigue dentro del límite (max por ventana) */
+  rateHit(key: string, windowMs: number, max: number): Promise<boolean>;
+  /** Toma un candado atómico que vence solo; false si otro proceso lo tiene */
+  tryLock(key: string, ttlMs: number): Promise<boolean>;
 }
 
 export function createContentStore(databaseUrl: string): ContentStore {
@@ -89,9 +132,11 @@ export function createContentStore(databaseUrl: string): ContentStore {
 
     async upsert(contentId, fields) {
       const toDb = (v: unknown) => (v !== null && typeof v === "object" ? JSON.stringify(v) : v);
-      const insert: Record<string, unknown> = { source_type: "telegram_note", status: "generating", ...fields };
+      const insert: Record<string, unknown> = { source_type: "telegram", status: "received", ...fields };
       const insertCols = Object.keys(insert);
       const updateCols = Object.keys(fields);
+      // Los nombres de columna vienen del código, nunca del usuario; se validan igual
+      for (const c of insertCols) if (!/^[a-z_]+$/.test(c)) throw new Error(`columna inválida: ${c}`);
       const params = [contentId, ...insertCols.map((c) => toDb(insert[c]))];
       const setClause = [...updateCols.map((c) => `${c} = EXCLUDED.${c}`), "updated_at = now()"].join(", ");
       await db().query(
@@ -112,6 +157,19 @@ export function createContentStore(databaseUrl: string): ContentStore {
       return rows as ContentRow[];
     },
 
+    async recent(limit) {
+      const { rows } = await db().query("SELECT * FROM content_log ORDER BY updated_at DESC LIMIT $1", [limit]);
+      return rows as ContentRow[];
+    },
+
+    async findByPrefix(prefix) {
+      if (!/^[0-9a-f-]{4,36}$/i.test(prefix)) return null;
+      const { rows } = await db().query("SELECT * FROM content_log WHERE content_id::text LIKE $1 ORDER BY updated_at DESC LIMIT 2", [
+        `${prefix.toLowerCase()}%`,
+      ]);
+      return rows.length === 1 ? (rows[0] as ContentRow) : null;
+    },
+
     async dueScheduled(now) {
       const { rows } = await db().query(
         "SELECT * FROM content_log WHERE status = 'scheduled' AND scheduled_for <= $1 ORDER BY scheduled_for",
@@ -122,7 +180,7 @@ export function createContentStore(databaseUrl: string): ContentStore {
 
     async staleAwaiting(olderThan) {
       const { rows } = await db().query(
-        "SELECT * FROM content_log WHERE status IN ('awaiting_approval', 'blocked') AND updated_at < $1",
+        "SELECT * FROM content_log WHERE status IN ('awaiting_review', 'blocked', 'awaiting_input') AND updated_at < $1",
         [olderThan.toISOString()]
       );
       return rows as ContentRow[];
@@ -131,6 +189,16 @@ export function createContentStore(databaseUrl: string): ContentStore {
     async since(date) {
       const { rows } = await db().query("SELECT * FROM content_log WHERE created_at >= $1 ORDER BY created_at", [date.toISOString()]);
       return rows as (ContentRow & { created_at: string })[];
+    },
+
+    async event(contentId, e) {
+      await db().query("INSERT INTO content_events (content_id, from_status, to_status, version, detail) VALUES ($1, $2, $3, $4, $5)", [
+        contentId,
+        e.from,
+        e.to,
+        e.version ?? null,
+        e.detail?.slice(0, 500) ?? null,
+      ]);
     },
 
     async kvGet<T>(key: string) {
@@ -151,11 +219,27 @@ export function createContentStore(databaseUrl: string): ContentStore {
     },
 
     async claimUpdate(updateId) {
+      const { rowCount } = await db().query("INSERT INTO telegram_updates (update_id) VALUES ($1) ON CONFLICT DO NOTHING", [updateId]);
+      return rowCount === 1;
+    },
+
+    async tryLock(key, ttlMs) {
       const { rowCount } = await db().query(
-        "INSERT INTO telegram_updates (update_id) VALUES ($1) ON CONFLICT DO NOTHING",
-        [updateId]
+        `INSERT INTO agent_kv (key, value) VALUES ($1, '{"lock":true}')
+         ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()
+         WHERE agent_kv.updated_at < now() - ($2::text || ' milliseconds')::interval`,
+        [key, String(ttlMs)]
       );
       return rowCount === 1;
+    },
+
+    async rateHit(key, windowMs, max) {
+      const since = new Date(Date.now() - windowMs).toISOString();
+      await db().query("DELETE FROM rate_events WHERE at < now() - interval '1 day'");
+      const { rows } = await db().query("SELECT count(*)::int AS n FROM rate_events WHERE key = $1 AND at >= $2", [key, since]);
+      if ((rows[0]?.n ?? 0) >= max) return false;
+      await db().query("INSERT INTO rate_events (key) VALUES ($1)", [key]);
+      return true;
     },
   };
 }

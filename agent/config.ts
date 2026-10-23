@@ -11,6 +11,8 @@ const envSchema = z.object({
   LLM_FALLBACK_BASE_URL: z.url().optional(),
   LLM_FALLBACK_API_KEY: z.string().optional(),
   LLM_FALLBACK_MODEL: z.string().optional(),
+  /** Opcional: modelo con visión (mismo proveedor) para describir imágenes enviadas por Telegram */
+  LLM_VISION_MODEL: z.string().optional(),
 
   DATABASE_URL: z.string().min(1),
 

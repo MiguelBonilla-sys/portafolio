@@ -160,3 +160,7 @@ pnpm dev                  # muestra también los borradores del blog
 pnpm test                     # linter anti-slop y grafo completo con un LLM simulado
 pnpm cv                   # regenera public/cv/*.pdf (con el sitio corriendo; ver scripts/build-cv.mjs)
 ```
+
+## Opcional: imágenes en Telegram
+
+`LLM_VISION_MODEL` (mismo proveedor y llave que `LLM_*`) permite describir imágenes que envíes al bot. Sin esa variable, el bot recibe la imagen, avisa que no puede leerla y te pide describirla: nunca inventa su contenido.

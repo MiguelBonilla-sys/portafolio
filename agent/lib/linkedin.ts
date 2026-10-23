@@ -1,6 +1,10 @@
 // LinkedIn: OAuth 2.0 ("Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect")
 // y Posts API. Docs: https://learn.microsoft.com/linkedin/marketing/community-management/shares/posts-api
 
+import { redact } from "./redact.ts";
+
+// openid + profile: identificar al miembro; w_member_social: publicar, comentar y subir imágenes o documentos
+// en su nombre. La app no pide permisos de lectura de publicaciones (r_member_social es restringido).
 export const LINKEDIN_SCOPES = "openid profile w_member_social";
 
 export function authorizeUrl(clientId: string, redirectUri: string, state: string): string {
@@ -31,7 +35,7 @@ export async function exchangeCode(
       redirect_uri: redirectUri,
     }),
   });
-  if (!res.ok) throw new Error(`LinkedIn accessToken: ${res.status} ${await res.text()}`);
+  if (!res.ok) throw new Error(`LinkedIn accessToken: ${res.status} ${redact((await res.text()).slice(0, 300))}`);
   const json = (await res.json()) as { access_token: string; expires_in: number };
   return {
     accessToken: json.access_token,
@@ -43,16 +47,18 @@ export async function fetchMemberId(accessToken: string): Promise<string> {
   const res = await fetch("https://api.linkedin.com/v2/userinfo", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  if (!res.ok) throw new Error(`LinkedIn userinfo: ${res.status} ${await res.text()}`);
+  if (!res.ok) throw new Error(`LinkedIn userinfo: ${res.status}`);
   return ((await res.json()) as { sub: string }).sub;
 }
 
 export class LinkedInAuthError extends Error {}
 
 export interface LinkedInClient {
-  createPost(text: string, opts?: { documentUrn?: string; documentTitle?: string }): Promise<string>;
+  /** media: urn de un documento (carrusel) o de una imagen ya subidos */
+  createPost(text: string, opts?: { documentUrn?: string; documentTitle?: string; imageUrn?: string; altText?: string }): Promise<string>;
   comment(postUrn: string, text: string): Promise<void>;
   uploadDocument(pdf: Uint8Array, title: string): Promise<string>;
+  uploadImage(png: Uint8Array): Promise<string>;
 }
 
 export function createLinkedIn(accessToken: string, memberId: string, version: string): LinkedInClient {
@@ -66,7 +72,7 @@ export function createLinkedIn(accessToken: string, memberId: string, version: s
 
   async function check(res: Response, what: string) {
     if (res.status === 401) throw new LinkedInAuthError(`LinkedIn ${what}: token vencido o revocado`);
-    if (!res.ok) throw new Error(`LinkedIn ${what}: ${res.status} ${await res.text()}`);
+    if (!res.ok) throw new Error(`LinkedIn ${what}: ${res.status} ${redact((await res.text()).slice(0, 300))}`);
   }
 
   return {
@@ -79,7 +85,11 @@ export function createLinkedIn(accessToken: string, memberId: string, version: s
           commentary: text,
           visibility: "PUBLIC",
           distribution: { feedDistribution: "MAIN_FEED", targetEntities: [], thirdPartyDistributionChannels: [] },
-          ...(opts.documentUrn ? { content: { media: { title: opts.documentTitle ?? "Carrusel", id: opts.documentUrn } } } : {}),
+          ...(opts.documentUrn
+            ? { content: { media: { title: opts.documentTitle ?? "Carrusel", id: opts.documentUrn } } }
+            : opts.imageUrn
+              ? { content: { media: { id: opts.imageUrn, altText: (opts.altText ?? "").slice(0, 4086) } } }
+              : {}),
           lifecycleState: "PUBLISHED",
           isReshareDisabledByAuthor: false,
         }),
@@ -114,6 +124,24 @@ export function createLinkedIn(accessToken: string, memberId: string, version: s
       });
       await check(put, "uploadDocument PUT");
       return value.document;
+    },
+
+    // Images API: initializeUpload → PUT del binario → urn:li:image:… para usar en createPost
+    async uploadImage(png) {
+      const init = await fetch("https://api.linkedin.com/rest/images?action=initializeUpload", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ initializeUploadRequest: { owner: author } }),
+      });
+      await check(init, "uploadImage");
+      const { value } = (await init.json()) as { value: { uploadUrl: string; image: string } };
+      const put = await fetch(value.uploadUrl, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: new Blob([new Uint8Array(png)], { type: "image/png" }),
+      });
+      await check(put, "uploadImage PUT");
+      return value.image;
     },
   };
 }
