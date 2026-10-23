@@ -6,7 +6,8 @@ export const CARD = {
   firstName: "Miguel Ángel",
   lastName: "Bonilla Torres",
   fullName: "Miguel Ángel Bonilla Torres",
-  title: "Full Stack Developer / AI Engineer",
+  // Mismo titular que el sitio (test/consistency.test.ts)
+  title: "Full Stack Engineer · Python, React & AI Systems",
   place: "Bogotá, Colombia",
   email: EMAIL,
   phone: PHONE,

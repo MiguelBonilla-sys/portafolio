@@ -9,7 +9,7 @@ import ThemeScript from "@/components/ThemeScript";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { routing } from "@/i18n/routing";
-import { SITE_URL, alternatesFor } from "@/lib/site";
+import { SITE_URL, alternatesFor, socialFor } from "@/lib/site";
 import "../globals.css";
 
 // Las tres fuentes son los variables "latin" de Google recortados con fontTools: eje wght limitado
@@ -59,19 +59,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Pr
     authors: [{ name: "Miguel Bonilla", url: "https://github.com/MiguelBonilla-sys" }],
     creator: "Miguel Bonilla",
     robots: { index: true, follow: true },
-    openGraph: {
-      type: "website",
-      locale: t("ogLocale"),
-      siteName: "Miguel Bonilla",
-      title: t("title"),
-      description: t("description"),
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: t("title"),
-      description: t("description"),
-      creator: "@_mangel14_",
-    },
+    ...socialFor(locale, "/", { title: t("title"), description: t("description") }),
   };
 }
 

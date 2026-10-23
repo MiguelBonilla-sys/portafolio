@@ -6,7 +6,7 @@
 /* Tabla de bordes compartidos: sin huecos entre bloques */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: var(--border);
   border-left: var(--border);
 }
@@ -24,7 +24,9 @@
 
 .label {
   font-weight: 800;
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  hyphens: auto;
+  overflow-wrap: break-word;
   line-height: 1;
   margin-bottom: 1.25rem;
 }
@@ -36,8 +38,32 @@
   list-style: none;
 }
 
+/* A 320 px, "Pruebas unitarias e integración" no cabe en una línea */
+.items :global(.chip) {
+  white-space: normal;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.more {
+  margin-top: 1rem;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.moreLabel {
+  color: var(--ink);
+  font-weight: 700;
 }

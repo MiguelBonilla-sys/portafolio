@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import Prose from "@/components/blog/Prose";
 import type { Locale } from "@/i18n/routing";
 import { EMAIL } from "@/lib/content";
-import { alternatesFor } from "@/lib/site";
+import { alternatesFor, socialFor } from "@/lib/site";
 import styles from "./privacy.module.css";
 
 // LinkedIn exige esta URL al crear la app del Content Engine. Describe solo lo que el sitio hace hoy:
@@ -91,6 +91,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/privacid
     title: TEXT[locale].title,
     description: TEXT[locale].description,
     alternates: alternatesFor(locale, "/privacidad"),
+    ...socialFor(locale, "/privacidad", { title: TEXT[locale].title, description: TEXT[locale].description }),
   };
 }
 

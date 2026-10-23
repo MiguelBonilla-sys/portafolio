@@ -68,6 +68,21 @@
   background: var(--blue);
 }
 
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-top: 1rem;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.tech::before {
+  content: "/ ";
+  color: var(--blue);
+}
+
 @media (max-width: 900px) {
   .row {
     grid-template-columns: 1fr;

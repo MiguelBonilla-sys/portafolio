@@ -1,3 +1,5 @@
+> Actualización 2026-10-23: el grafo, los estados editoriales y la conversación de Telegram cambiaron en la fase 2. La referencia vigente es [`docs/phase-2/CONTENT_ENGINE.md`](phase-2/CONTENT_ENGINE.md); este documento describe el diseño original.
+
 # Architecture: Portafolio + Content Engine
 
 Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de contenido. El agente funciona por eventos (webhook de Telegram y cron diario); no hay servidores aparte.

@@ -3,11 +3,14 @@
     "id": "bikans",
     "title": "Bikans: SaaS de nómina y retención",
     "language": "React · Django",
-    "context": "Producción · app.bikans.com",
-    "description": "SaaS colombiano de nómina y retención en la fuente, en producción con usuarios reales. Construí el frontend, el panel de administración y el doble factor de autenticación para ambos dominios.",
-    "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción con usuarios reales.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) para los dos dominios, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
+    "status": "commercial",
+    "context": "Coordenadas.co · app.bikans.com",
+    "description": "SaaS colombiano de nómina y retención en la fuente para contadores. Unificó dos herramientas que obligaban a digitar los mismos datos dos veces.",
+    "contribution": "Construí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
+    "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
     "tags": [
       "React",
+      "TypeScript",
       "Django",
       "PostgreSQL",
       "TOTP 2FA"
@@ -16,57 +19,144 @@
       "repo": null,
       "demo": "https://app.bikans.com"
     },
-    "featured": true
+    "featured": true,
+    "caseStudy": {
+      "problem": "Los contadores llevaban la nómina en una herramienta y la retención en la fuente en otra, y tenían que digitar los mismos datos de la empresa y de los empleados en las dos.",
+      "role": "Lo desarrollé como Full Stack Developer en Coordenadas.co, para un cliente. Mi parte: el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
+      "architecture": {
+        "summary": "Aplicación de una sola página que consume una API REST en Django. Los módulos de nómina y de retenciones trabajan sobre los mismos datos.",
+        "flow": [
+          "Frontend en React y TypeScript: módulos de nómina, retenciones y administración",
+          "Inicio de sesión con segundo factor TOTP",
+          "API REST en Django",
+          "PostgreSQL como base de datos única para las dos herramientas"
+        ]
+      },
+      "limitations": [
+        "Es un producto privado de un cliente: el código no es público y no publico datos de uso ni de clientes."
+      ]
+    }
   },
   {
     "id": "idn-phishing-detector",
     "title": "Detector de phishing por homógrafos IDN",
     "language": "Python",
-    "context": "Tesis · USB Bogotá",
-    "description": "Sistema de IA multiagente que detecta sitios falsos que imitan dominios conocidos sustituyendo caracteres por otros parecidos. Validado con 359 pruebas automatizadas.",
-    "longDescription": "Mi tesis de Ingeniería de Sistemas en la Universidad de San Buenaventura: un sistema multiagente que detecta dominios de phishing que imitan a dominios conocidos con caracteres visualmente parecidos (homógrafos IDN).\n\nEl backend está en FastAPI, con agentes sobre LlamaStack, sesiones con JWT y fuentes externas de inteligencia de amenazas para calcular el riesgo de URLs y correos. Usa PostgreSQL, Redis y ChromaDB, incluye procesamiento de conocimiento para RAG y está validado con 359 pruebas automatizadas.",
+    "status": "academic",
+    "context": "Tesis en coautoría · USB Bogotá · 2026",
+    "description": "API que recibe una URL, un correo o un archivo .eml y devuelve un veredicto de phishing con su puntaje de riesgo y las razones. Se centra en dominios que imitan a otros con caracteres Unicode casi idénticos.",
+    "contribution": "Backend en FastAPI que combina cinco señales: análisis IDN, threat intelligence, un LLM con RAG, un clasificador de URL y el sondeo de la página.",
+    "longDescription": "Proyecto de grado de Ingeniería de Sistemas en la Universidad de San Buenaventura, en coautoría con Juan Sebastián Fandiño Novoa: un sistema que detecta dominios de phishing que imitan a dominios conocidos con caracteres visualmente parecidos (homógrafos IDN).\n\nEl backend está en FastAPI con PostgreSQL, Redis y ChromaDB. Combina cinco señales en un puntaje de riesgo y explica cada veredicto. Lo consumen una extensión de navegador, un complemento de Outlook y un dashboard de administración.",
     "tags": [
+      "Python",
       "FastAPI",
-      "LlamaStack",
-      "Agentes de IA",
-      "RAG",
       "PostgreSQL",
       "Redis",
-      "ChromaDB"
+      "ChromaDB",
+      "RAG",
+      "LLM"
     ],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/backendTesis",
       "demo": null
     },
-    "featured": true
+    "featured": true,
+    "caseStudy": {
+      "problem": "Un dominio homógrafo cambia letras por caracteres Unicode casi idénticos, como una «а» cirílica en lugar de una «a» latina. La URL se ve legítima a simple vista. El sistema tenía que detectarlos en URLs y en correos, y explicar por qué marcaba algo como phishing.",
+      "role": "Proyecto de grado en equipo de dos personas, con Juan Sebastián Fandiño Novoa. Este repositorio es el backend: la API que usan la extensión de navegador, el complemento de Outlook y el dashboard.",
+      "architecture": {
+        "summary": "`services/orchestrator.py` reúne cinco señales y `agents/fusion_agent.py` calcula el riesgo final. Se despliega con Docker Compose en Coolify: backend, PostgreSQL, Redis, ChromaDB y Ollama para los embeddings.",
+        "flow": [
+          "Entrada: una URL, un correo o un archivo .eml (`/api/v1/analyze`, `/analyze_email`, `/analyze_eml`)",
+          "Agente IDN: normaliza a NFC y Punycode, busca confundibles del catálogo Unicode TR#39 y mide la similitud con los dominios más visitados usando un BK-tree",
+          "Threat intelligence: VirusTotal, URLScan.io, Google Safe Browsing y WhoisXML en paralelo, con caché de una hora en Redis",
+          "Agente LLM: analiza el contenido por un gateway compatible con OpenAI, quita los datos personales antes de enviar y agrega como contexto casos parecidos recuperados de ChromaDB (RAG)",
+          "Clasificador de URL (modelo ONNX de Hugging Face) y sondeo de la página con un cliente protegido contra SSRF, más SPF y DKIM del correo",
+          "Fusión: PHISHING si el riesgo llega a θ = 0,30; el incidente y sus razones se guardan en PostgreSQL"
+        ]
+      },
+      "decisions": [
+        "El umbral θ = 0,30 queda por encima del piso de degradación (0,25): si los servicios externos fallan y sus señales caen al valor neutral, el sistema no marca todo como phishing. Un umbral más bajo daba más recall en la evaluación, pero dejaba abierta esa falla (`docs/EVAL-T4-T7.md`, `core/constants.py`).",
+        "El backend dejó de depender de un modelo local (Ollama y LlamaStack) y llama a un proveedor remoto por un gateway compatible con OpenAI, con reintentos y un modelo de respaldo (`core/llm_gateway.py`).",
+        "La IP de origen, el Message-ID y los encabezados se cifran con AES-256-GCM, y el cuerpo del correo no se guarda por defecto (`STORE_EMAIL_CONTENT=false`, Ley 1581 de 2012)."
+      ],
+      "challenges": [
+        "Una revisión integral del 25 de septiembre de 2026 encontró 17 problemas: sesiones, caché de threat intelligence, réplicas de ChromaDB y PostgreSQL, y la metodología de evaluación. Cada corrección quedó con su prueba de regresión (`docs/correcciones-revision-integral-2026-09-26.md`).",
+        "Rotación de tokens de refresco atómica en Redis: con cinco renovaciones simultáneas del mismo token, solo una se acepta."
+      ],
+      "validation": [
+        "pytest con marcadores unit, integration, system, regression, smoke, sanity y acceptance; `verify.sh` exige 90 % de cobertura.",
+        "Las pruebas de integración levantan PostgreSQL y ChromaDB efímeros en lugar de usar mocks.",
+        "Suite adversaria para los agentes y el RAG (`tests/security/`): inyección de prompts, fuga de información, envenenamiento del RAG y salidas maliciosas, según las categorías LLM01, LLM02, LLM04 y LLM05 del OWASP Top 10 para aplicaciones con LLM.",
+        "Última corrida documentada en el repositorio (26 de septiembre de 2026): 972 pruebas aprobadas y 28 omitidas, con 92,6 % de cobertura."
+      ],
+      "limitations": [
+        "La comparación contra un clasificador monolítico se está repitiendo: la revisión encontró URLs duplicadas y casos compartidos entre calibración y evaluación, así que no publico esas métricas hasta tener la corrida nueva.",
+        "Los datasets públicos revisados no traían homógrafos IDN reales; el corpus de homógrafos de la evaluación es sintético.",
+        "Sin llaves de API, las señales de threat intelligence quedan en cero."
+      ]
+    }
   },
   {
-    "id": "sentinel-rag",
-    "title": "Sentinel RAG: asistente con fuentes",
-    "language": "Python",
-    "context": "Producción",
-    "description": "Pipeline RAG que ingiere documentos, genera embeddings, recupera el contexto relevante y responde citando las fuentes. Evaluado con un set de pruebas de precisión de recuperación.",
-    "longDescription": "Un pipeline de generación aumentada por recuperación (RAG): ingiere documentos, genera embeddings, recupera el contexto relevante y devuelve respuestas respaldadas con citas.\n\nEstá construido en Python con FastAPI, ChromaDB como base vectorial y modelos locales en Ollama. La calidad de la recuperación se mide con un set de pruebas dedicado a la precisión.",
+    "id": "portafolio-content-engine",
+    "title": "mangel14.dev y Content Engine",
+    "language": "TypeScript",
+    "status": "deployed",
+    "context": "Este sitio · mangel14.dev",
+    "description": "Este portafolio bilingüe y un agente en LangGraph.js que convierte notas, documentos y enlaces enviados por Telegram en artículos del blog y posts de LinkedIn, sin publicar nada sin mi confirmación.",
+    "contribution": "Diseño, código y despliegue: sitio estático en Next.js con SEO para buscadores y asistentes de IA, y el grafo editorial del agente con verificación de fuentes, linter de texto y visuales generados por código.",
+    "longDescription": "El sitio que estás leyendo: Next.js 16 con generación estática, en español e inglés, con datos estructurados, `llms.txt` y sitemap con alternativas por idioma.\n\nEn el mismo deploy de Vercel vive el Content Engine, un grafo en LangGraph.js que toma una nota mía enviada por Telegram, redacta el artículo y el post, revisa el texto y espera mi aprobación antes de publicar.",
     "tags": [
-      "Python",
-      "FastAPI",
-      "ChromaDB",
-      "Ollama",
-      "Embeddings",
-      "RAG"
+      "TypeScript",
+      "Next.js",
+      "React",
+      "LangGraph.js",
+      "PostgreSQL"
     ],
     "links": {
-      "repo": null,
-      "demo": null
+      "repo": "https://github.com/MiguelBonilla-sys/portafolio",
+      "demo": "https://mangel14.dev"
     },
-    "featured": true
+    "featured": true,
+    "caseStudy": {
+      "problem": "Quería un portafolio que los buscadores y los asistentes de IA pudieran leer y citar, y una forma de publicar con constancia sin que un modelo inventara datos en mi nombre.",
+      "role": "Proyecto personal: diseño, código, contenido y despliegue.",
+      "architecture": {
+        "summary": "El sitio es estático (SSG) con Next.js 16 y next-intl. El agente corre en las rutas API del mismo deploy de Vercel, con el estado en Postgres; no hay servidores aparte.",
+        "flow": [
+          "Telegram → webhook `/api/telegram`: verifica el secreto, acepta solo el chat privado del autor y descarta updates repetidos",
+          "Extracción: notas, Markdown, PDF (unpdf), imágenes y enlaces; cada fuente se marca como del autor o externa, y las URLs pasan por un fetch que bloquea redes privadas",
+          "Investigación: afirmaciones con la fuente que las respalda; una cifra externa sin respaldo queda marcada",
+          "Propuesta en Telegram: temas, tipo de artículo, datos que faltan y qué hacer con las cifras sin fuente; el autor responde en lenguaje natural",
+          "Redacción, edición contra el linter, versión en inglés, portada y diagramas en SVG; cada borrador recibe una versión y un hash",
+          "Publicación confirmada para esa versión exacta: commit del MDX en GitHub → deploy en Vercel → revisión de la página publicada → LinkedIn Posts API → IndexNow"
+        ]
+      },
+      "decisions": [
+        "Sin confirmación del autor no se publica nada, y la confirmación vale para una versión exacta: un botón de una versión anterior no publica la editada.",
+        "Blog y LinkedIn se aprueban por separado; si uno falla, la pieza queda «publicada en parte» y el bot dice qué falta, en lugar de anunciar un éxito que no ocurrió.",
+        "Todo documento, página o mensaje reenviado se trata como dato citado, nunca como instrucción para el agente.",
+        "Las imágenes se generan con código (SVG y next/og) con la identidad del sitio; si un texto no cabe, el agente lo dice en vez de recortarlo.",
+        "El agente vive dentro del deploy de Vercel con estado en Postgres, en lugar de un servidor aparte con n8n: menos piezas y sin costo fijo."
+      ],
+      "validation": [
+        "`pnpm test`: pruebas de `node:test` del grafo completo con un LLM simulado, de la conversación en Telegram, de seguridad (SSRF, MDX, archivos, secretos), de los visuales y de la integridad del contenido en los dos idiomas.",
+        "`pnpm test:e2e`: Playwright recorre las rutas principales en siete anchos de pantalla y revisa el desbordamiento horizontal, el menú móvil, el cambio de idioma y el 404."
+      ],
+      "limitations": [
+        "Las variables del agente están configuradas en producción (el webhook rechaza peticiones sin secreto en vez de responder «sin configurar»), pero todavía no ha publicado contenido real.",
+        "El primer artículo del blog sigue en borrador.",
+        "La publicación en LinkedIn está implementada con la Posts API pero no se ha probado contra la cuenta real; LinkedIn no tiene clave de idempotencia, así que un intento cortado a la mitad pide confirmación antes de repetirse."
+      ]
+    }
   },
   {
     "id": "api-auth-hackaton",
     "title": "API Auth Gateway",
     "language": "Python",
-    "context": "Producción · Railway + Sentry",
-    "description": "API Gateway con FastAPI que proporciona acceso autenticado a una API de inventario externa mediante control de propiedad basado en JWT.",
+    "status": "prototype",
+    "context": "Hackatón · 2025",
+    "description": "Gateway en FastAPI que agrega autenticación y control de acceso por propietario delante de una API de inventario universitaria que no tenía usuarios.",
+    "contribution": "Autenticación con tokens de acceso y de refresco, filtro de activos por propietario y despliegue en Railway con Sentry.",
     "longDescription": "API Gateway construido con FastAPI que actúa como proxy seguro frente a una API externa de inventario de activos universitarios. El sistema implementa autenticación completa con tokens JWT de acceso y refresh, registro de usuarios con bcrypt, y un control de acceso basado en propiedad: cada usuario solo puede consultar los activos que le pertenecen según el campo `dueno_de_activo`, mientras que los superusuarios ven el conjunto completo.\n\nEl gateway fue desplegado en Railway con PostgreSQL como base de datos, usa httpx como cliente HTTP asíncrono para el proxy, e integra Sentry para monitoreo de errores y rendimiento. La arquitectura es completamente asíncrona (async/await) con separación en capas: routers, servicios, modelos SQLAlchemy 2.0 con anotaciones tipadas, y esquemas Pydantic para validación. Incluye Docker, docker-compose y scripts de utilidad para carga masiva de usuarios.",
     "tags": [
       "Python",
@@ -74,62 +164,47 @@
       "JWT",
       "PostgreSQL",
       "SQLAlchemy",
-      "Railway",
-      "Docker"
-    ],
-    "links": {
-      "repo": "https://github.com/MiguelBonilla-sys/API_AUTH_HACKATON",
-      "demo": null
-    },
-    "featured": true
-  },
-  {
-    "id": "ledgercore",
-    "title": "LedgerCore: auth y facturación multi-tenant",
-    "language": "Python",
-    "context": "Producción",
-    "description": "Servicio backend reutilizable con autenticación JWT multi-tenant, control de acceso por roles, lógica de suscripciones, rate limiting y pruebas automatizadas.",
-    "longDescription": "Un servicio backend pensado para no reconstruir autenticación y permisos en cada producto SaaS nuevo. Tiene autenticación JWT multi-tenant, control de acceso basado en roles (RBAC), lógica de facturación por suscripción, rate limiting y pruebas automatizadas.\n\nEstá construido con FastAPI, PostgreSQL y Redis, y recorta el tiempo de arranque de autenticación y permisos en productos nuevos.",
-    "tags": [
-      "FastAPI",
-      "PostgreSQL",
-      "Redis",
-      "JWT",
-      "RBAC"
+      "Docker",
+      "Railway"
     ],
     "links": {
       "repo": null,
-      "demo": null
+      "demo": null,
+      "repoWithheld": true
     },
-    "featured": false
-  },
-  {
-    "id": "taskflow",
-    "title": "TaskFlow: dashboard de productividad",
-    "language": "TypeScript · Python",
-    "context": "Producción",
-    "description": "Dashboard full stack que une un tablero kanban, el estado de los deploys de CI/CD en vivo vía webhooks y las notificaciones del equipo en una sola interfaz autenticada.",
-    "longDescription": "Equipos de desarrollo pequeños suelen repartir su trabajo entre tres o más herramientas sueltas. TaskFlow las junta en una interfaz autenticada: un tablero kanban, el estado de los deploys de CI/CD en tiempo real recibido por webhooks y las notificaciones del equipo.\n\nEl frontend está en React con TypeScript y el backend en FastAPI con PostgreSQL; las actualizaciones en vivo llegan por WebSockets.",
-    "tags": [
-      "React",
-      "TypeScript",
-      "FastAPI",
-      "PostgreSQL",
-      "WebSockets"
-    ],
-    "links": {
-      "repo": null,
-      "demo": null
-    },
-    "featured": false
+    "featured": true,
+    "caseStudy": {
+      "problem": "La API de inventario de activos de la universidad ya existía y le devolvía todo a quien preguntara. Había que limitar qué ve cada usuario sin poder modificarla.",
+      "architecture": {
+        "summary": "El gateway se ubica delante de la API original: autentica, consulta y filtra. Capas separadas en routers, modelos SQLAlchemy 2.0 asíncronos y esquemas Pydantic.",
+        "flow": [
+          "`POST /auth/login`: valida al usuario en PostgreSQL (contraseñas con bcrypt) y emite un token de acceso y uno de refresco",
+          "`GET /inventario` con el token: el gateway valida el JWT y carga al usuario",
+          "Consulta la API externa con httpx asíncrono",
+          "Filtra la respuesta por el campo `dueno_de_activo`; los superusuarios reciben todo",
+          "Errores y trazas a Sentry"
+        ]
+      },
+      "decisions": [
+        "La autorización vive en el gateway porque la API original no se podía tocar.",
+        "Cada token lleva un campo `type` y el gateway lo revisa, así un token de refresco no sirve como token de acceso.",
+        "Todo es asíncrono (FastAPI, SQLAlchemy async, httpx) para no bloquear el proceso mientras espera a la API externa."
+      ],
+      "limitations": [
+        "El filtro se aplica después de traer hasta 2.000 activos de la API externa en cada consulta; con más datos habría que filtrar en el origen o cachear.",
+        "Es un proyecto de hackatón: no tiene pruebas automatizadas, solo scripts de verificación manual."
+      ]
+    }
   },
   {
     "id": "etl-parcial",
-    "title": "ETL Pipeline — Dow Jones Sentiment",
+    "title": "ETL Pipeline: Dow Jones Sentiment",
     "language": "Python",
-    "context": "Open source",
+    "status": "prototype",
+    "context": "Repositorio público · 2025",
     "description": "Pipeline ETL completo con PySpark para análisis de sentimiento de noticias del Dow Jones, con visualizaciones y almacenamiento multi-formato.",
-    "longDescription": "Pipeline ETL de producción que procesa 4.101 registros de noticias del Dow Jones (2008–2016) usando PySpark con Adaptive Query Execution. La etapa de extracción valida el schema del CSV y ejecuta quality checks automáticos. La transformación aplica feature engineering: limpieza de nulos, conversión de fechas, indicadores de sentimiento, estadísticas de texto, agregación de titulares y features temporales.\n\nLa carga multi-formato escribe en Parquet (compresión Snappy), CSV, SQLite con índices optimizados y JSON. Las visualizaciones incluyen distribución de clases, evolución temporal del sentimiento, nubes de palabras, top unigramas/bigramas y un dashboard interactivo con Plotly. El pipeline completo corre en menos de 60 segundos con menos de 4 GB de RAM, incluye suite de tests unitarios e integración con pytest, y se dockeriza para reproducibilidad.",
+    "contribution": "Extracción con validación de esquema, feature engineering en PySpark y carga en Parquet, CSV, SQLite y JSON, con pruebas en pytest.",
+    "longDescription": "Pipeline ETL que procesa 4.101 registros de noticias del Dow Jones (2008–2016) con PySpark y Adaptive Query Execution. La extracción valida el schema del CSV y aplica chequeos de calidad automáticos. La transformación hace feature engineering: limpieza de nulos, conversión de fechas, indicadores de sentimiento, estadísticas de texto, agregación de titulares y features temporales.\n\nLa carga multi-formato escribe en Parquet (compresión Snappy), CSV, SQLite con índices y JSON. Las visualizaciones incluyen distribución de clases, sentimiento en el tiempo, nubes de palabras, top de unigramas y bigramas y un dashboard interactivo en Plotly. El pipeline completo corre en menos de 60 segundos con menos de 4 GB de RAM, incluye una suite de tests unitarios y de integración con pytest, y está dockerizado para reproducibilidad.",
     "tags": [
       "Python",
       "PySpark",
@@ -147,10 +222,13 @@
   },
   {
     "id": "seguimiento-bibliografico-ollama",
-    "title": "Seguimiento Bibliográfico con LLM",
+    "title": "Seguimiento bibliográfico con LLM",
     "language": "Python",
-    "description": "Genera documentos .docx de seguimiento bibliográfico a partir de referencias académicas usando un LLM local vía Ollama.",
-    "longDescription": "Sistema en Python que automatiza la generación de documentos .docx de seguimiento bibliográfico a partir de un JSON con referencias académicas (DOI, arXiv, GitHub, web, PDF). Extrae metadatos reales de CrossRef, OpenAlex y arXiv, y los combina con un análisis profundo generado por un LLM local corriendo en Ollama con detección automática de GPU (NVIDIA/CUDA, AMD/ROCm) o CPU.\n\nEl sistema cubre cuatro modos de operación: solo metadatos (sin LLM), análisis en CPU, análisis en GPU y configuración inicial. Cada documento generado incluye datos generales, referencia IEEE, abstract, análisis de contenido (metodología, resultados, aportes, limitaciones) y relación con el proyecto del investigador. Soporta modelos como Mistral, Phi-3 Mini y LLaMA 3, con tiempos de 30–90 segundos por documento en GPU.",
+    "status": "prototype",
+    "context": "Herramienta personal",
+    "description": "Genera documentos .docx de seguimiento bibliográfico a partir de referencias académicas, usando un LLM local con Ollama.",
+    "contribution": "Metadatos reales de CrossRef, OpenAlex y arXiv combinados con un análisis del LLM local, con detección automática de GPU o CPU.",
+    "longDescription": "Sistema en Python que automatiza la generación de documentos .docx de seguimiento bibliográfico a partir de un JSON de referencias académicas (DOI, arXiv, GitHub, web, PDF). Extrae metadatos reales desde CrossRef, OpenAlex y arXiv, y los combina con un análisis generado por un LLM local corriendo en Ollama, con detección automática de GPU (NVIDIA/CUDA, AMD/ROCm) o CPU.\n\nEl sistema tiene cuatro modos de operación: solo metadatos (sin LLM), análisis con CPU, análisis con GPU y configuración inicial. Cada documento generado incluye datos generales, referencia IEEE, resumen, análisis del contenido (metodología, resultados, aportes, limitaciones) y relación con el proyecto del investigador. Soporta modelos como Mistral, Phi-3 Mini y LLaMA 3, con tiempos de 30–90 segundos por documento en GPU.",
     "tags": [
       "Python",
       "Ollama",
@@ -167,10 +245,12 @@
   },
   {
     "id": "flask-api",
-    "title": "Flask API — Gestión de Videojuegos",
+    "title": "Flask API: catálogo de videojuegos",
     "language": "Python",
-    "description": "API REST en Flask para gestión de videojuegos con CRUD completo, Swagger/OpenAPI, PostgreSQL y despliegue en Railway.",
-    "longDescription": "API REST robusta construida con Flask 3 y SQLAlchemy 2 para gestionar un catálogo de videojuegos. Expone endpoints CRUD completos con filtros por categoría, precio y valoración, paginación y endpoints de estadísticas. La documentación es automática gracias a Flasgger, que genera una UI Swagger interactiva en `/apidocs/` donde se pueden probar todos los endpoints directamente.\n\nEl proyecto sigue una arquitectura modular estricta con capas separadas: Controllers, Services, Models, Routes y Schemas. Incluye manejo centralizado de errores, logging estructurado, CORS configurado para consumo desde frontend, Dockerfile para contenedorización y configuración de Procfile + railway.json para despliegue directo en Railway con PostgreSQL como base de datos en producción.",
+    "status": "prototype",
+    "description": "API REST con Flask para gestionar un catálogo de videojuegos, con CRUD completo, Swagger/OpenAPI y PostgreSQL.",
+    "contribution": "Arquitectura en capas (controladores, servicios, modelos, rutas y esquemas) con documentación interactiva generada por Flasgger.",
+    "longDescription": "API REST construida con Flask 3 y SQLAlchemy 2 para gestionar un catálogo de videojuegos. Expone endpoints CRUD completos con filtros por categoría, precio y rating, paginación y endpoints de estadísticas. La documentación se genera automáticamente con Flasgger, que sirve una interfaz Swagger UI interactiva en `/apidocs/` donde cada endpoint se puede probar directamente.\n\nEl proyecto sigue una arquitectura modular estricta con capas separadas: Controllers, Services, Models, Routes y Schemas. Incluye manejo centralizado de errores, logging estructurado, CORS configurado para consumo desde un frontend, un Dockerfile para contenerización y configuración con Procfile y railway.json para desplegar en Railway con PostgreSQL como base de datos de producción.",
     "tags": [
       "Python",
       "Flask",
@@ -190,14 +270,16 @@
     "id": "geo-streamlit",
     "title": "GEO Streamlit",
     "language": "Python",
-    "description": "Dashboard geoespacial interactivo construido con Streamlit para visualización y análisis de datos geográficos.",
-    "longDescription": "Aplicación web de análisis geoespacial desarrollada con Streamlit que permite explorar y visualizar datos geográficos de forma interactiva sin necesidad de un backend separado. La app carga datasets georreferenciados, aplica filtros dinámicos por región o categoría y renderiza mapas interactivos directamente en el navegador.\n\nEl proyecto demuestra el uso de Streamlit como herramienta de prototipado rápido para dashboards de datos: sin JavaScript, sin configuración de servidor, solo Python. Los datos se procesan con pandas y las visualizaciones geoespaciales se construyen con bibliotecas como Folium o PyDeck integradas en el flujo reactivo de Streamlit.",
+    "status": "prototype",
+    "description": "Dashboard geoespacial interactivo construido con Streamlit para visualizar y analizar datos geográficos.",
+    "contribution": "Mapas con Folium (agrupación de marcadores y mapa de calor) y gráficos en Plotly sobre un dataset de países.",
+    "longDescription": "Aplicación web de análisis geoespacial construida con Streamlit que permite explorar y visualizar datos geográficos de forma interactiva, sin un backend separado. Carga un dataset de países, aplica filtros dinámicos y renderiza mapas interactivos en el navegador.\n\nLos mapas usan Folium (agrupación de marcadores, mapa de calor y herramientas de dibujo) integrado con streamlit-folium, y los gráficos se construyen con Plotly. Los datos se procesan con pandas.",
     "tags": [
       "Python",
       "Streamlit",
-      "Geoespacial",
+      "Folium",
       "Pandas",
-      "Data Viz"
+      "Plotly"
     ],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/GEO_STREAMLIT",
@@ -209,8 +291,10 @@
     "id": "pizzeria-casa",
     "title": "Pizzería de la Casa App",
     "language": "Java",
-    "description": "App móvil Android para gestión de pedidos, menú e inventario de una pizzería, con seguimiento de estado en tiempo real.",
-    "longDescription": "Aplicación móvil Android desarrollada en Java con Android Studio que digitaliza la operación completa de una pizzería. Los clientes pueden explorar el menú con imágenes y descripciones, personalizar pizzas por ingredientes, tamaño y masa, gestionar un carrito de compras y hacer seguimiento en tiempo real del estado de su pedido (preparación → en camino → entregado). También guarda historial de pedidos para repetición rápida.\n\nEl panel de administración permite al personal gestionar pedidos entrantes, actualizar su estado, controlar el inventario de ingredientes y consultar reportes de ventas. La arquitectura sigue el patrón MVC/MVVM con persistencia local en SQLite/Room, adaptadores para listas dinámicas y recursos XML para la UI. El proyecto se construye con Gradle (Kotlin DSL).",
+    "status": "archived",
+    "description": "App Android para gestionar pedidos, menú e inventario de una pizzería, con seguimiento del estado de cada pedido.",
+    "contribution": "Flujo de cliente (menú, carrito, pedido y seguimiento) y panel del personal (pedidos, inventario y reportes).",
+    "longDescription": "Aplicación Android desarrollada en Java con Android Studio que digitaliza toda la operación de una pizzería. Los clientes pueden explorar el menú con imágenes y descripciones, personalizar pizzas por ingredientes, tamaño y masa, gestionar un carrito de compras y seguir el estado de su pedido en tiempo real (en preparación → en camino → entregado). También guarda el historial de pedidos para repetir compras rápidamente.\n\nEl panel de administración permite al personal gestionar los pedidos entrantes, actualizar su estado, controlar el inventario de ingredientes y consultar reportes de ventas. La arquitectura sigue el patrón MVC/MVVM con persistencia local en SQLite/Room, adaptadores para listas dinámicas y recursos XML para la UI. El proyecto se compila con Gradle (Kotlin DSL).",
     "tags": [
       "Java",
       "Android",
@@ -227,20 +311,85 @@
   },
   {
     "id": "redes-sockets",
-    "title": "Redes Sockets TCP/UDP",
+    "title": "Sockets TCP/UDP",
     "language": "Java",
-    "description": "Implementaciones de servidores TCP y UDP en Java con interfaces gráficas de cliente para comunicación en red.",
-    "longDescription": "Proyecto de la asignatura Redes de Computadores que implementa servidores concurrentes TCP y UDP en Java puro. El servidor TCP escucha en el puerto 5004 y viene acompañado de un cliente con interfaz gráfica que permite conectarse ingresando IP y nombre, enviar y recibir mensajes en tiempo real, y controlar la conexión con botones de desconectar/reconectar. Muestra información detallada de cada cliente conectado.\n\nEl servidor UDP escucha en el puerto 9107, recibe datagramas de múltiples clientes sin mantener estado de conexión, muestra la IP y puerto de origen de cada mensaje, y se detiene tras recibir un máximo configurable de mensajes. El proyecto está construido con Maven y demuestra las diferencias fundamentales entre los modelos de comunicación orientado a conexión (TCP) y sin conexión (UDP).",
+    "status": "academic",
+    "context": "Curso de Redes",
+    "description": "Servidores TCP y UDP en Java con interfaces gráficas de cliente para comunicación en red.",
+    "contribution": "Servidor TCP con cliente gráfico y servidor UDP sin estado de conexión, para comparar los dos modelos.",
+    "longDescription": "Proyecto de la asignatura de Redes de Computadores que implementa servidores TCP y UDP concurrentes en Java puro. El servidor TCP escucha en el puerto 5004 y viene acompañado de un cliente con interfaz gráfica que se conecta ingresando una IP y un nombre, envía y recibe mensajes en tiempo real, y controla la conexión con botones de desconexión y reconexión. Muestra los detalles de cada cliente conectado.\n\nEl servidor UDP escucha en el puerto 9107, recibe datagramas de múltiples clientes sin mantener estado de conexión, muestra la IP y el puerto de origen de cada mensaje y se detiene tras un número máximo configurable de mensajes. El proyecto se construye con Maven y muestra las diferencias fundamentales entre comunicación orientada a conexión (TCP) y sin conexión (UDP).",
     "tags": [
       "Java",
       "TCP",
       "UDP",
       "Sockets",
       "Maven",
-      "Redes"
+      "Networking"
     ],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/Redes_Sockets",
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "sentinel-rag",
+    "title": "Sentinel RAG: asistente con fuentes",
+    "language": "Python",
+    "status": "unverified",
+    "description": "Pipeline RAG que ingiere documentos, genera embeddings, recupera el contexto relevante y responde citando las fuentes.",
+    "longDescription": "Un pipeline de generación aumentada por recuperación (RAG): ingiere documentos, genera embeddings, recupera el contexto relevante y devuelve respuestas respaldadas con citas.\n\nEstá construido en Python con FastAPI, ChromaDB como base vectorial y modelos locales en Ollama.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "ChromaDB",
+      "Ollama",
+      "Embeddings",
+      "RAG"
+    ],
+    "links": {
+      "repo": null,
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "ledgercore",
+    "hidden": true,
+    "title": "LedgerCore: auth y facturación multi-tenant",
+    "language": "Python",
+    "status": "unverified",
+    "description": "Servicio backend reutilizable con autenticación JWT multi-tenant, control de acceso por roles, lógica de suscripciones y rate limiting.",
+    "longDescription": "Un servicio backend pensado para no reconstruir autenticación y permisos en cada producto SaaS nuevo: autenticación JWT multi-tenant, control de acceso basado en roles (RBAC), lógica de facturación por suscripción y rate limiting.\n\nEstá construido con FastAPI, PostgreSQL y Redis.",
+    "tags": [
+      "FastAPI",
+      "PostgreSQL",
+      "Redis",
+      "JWT",
+      "RBAC"
+    ],
+    "links": {
+      "repo": null,
+      "demo": null
+    },
+    "featured": false
+  },
+  {
+    "id": "taskflow",
+    "title": "TaskFlow: dashboard de productividad",
+    "language": "TypeScript · Python",
+    "status": "unverified",
+    "description": "Dashboard full stack que une un tablero kanban, el estado de los deploys de CI/CD vía webhooks y las notificaciones del equipo en una sola interfaz autenticada.",
+    "longDescription": "Equipos de desarrollo pequeños suelen repartir su trabajo entre tres o más herramientas sueltas. TaskFlow las junta en una interfaz autenticada: un tablero kanban, el estado de los deploys de CI/CD recibido por webhooks y las notificaciones del equipo.\n\nEl frontend está en React con TypeScript y el backend en FastAPI con PostgreSQL; las actualizaciones en vivo llegan por WebSockets.",
+    "tags": [
+      "React",
+      "TypeScript",
+      "FastAPI",
+      "PostgreSQL",
+      "WebSockets"
+    ],
+    "links": {
+      "repo": null,
       "demo": null
     },
     "featured": false

@@ -1,14 +1,16 @@
 import type { Locale } from "@/i18n/routing";
 import type { Project } from "@/types";
 import type { Post } from "@/lib/blog";
-import { getSkills, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
+import { getSkills, skillNames, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import { CATEGORY_LABEL } from "@/lib/taxonomy";
+import { PROFILE_UPDATED, toDateTime } from "@/lib/dates";
 
 const PERSON_ID = `${SITE_URL}/#person`;
 
 const description: Record<Locale, string> = {
-  es: "Full Stack AI Engineer en Bogotá. Construye APIs, automatizaciones con n8n y CRM, y sistemas con LLMs.",
-  en: "Full Stack AI Engineer based in Bogotá. Builds APIs, n8n and CRM automations, and LLM-powered systems.",
+  es: "Full Stack Engineer en Bogotá. Construye backends en Python, frontends en React, integraciones con LLM y automatizaciones con n8n.",
+  en: "Full Stack Engineer based in Bogotá. Builds Python backends, React frontends, LLM integrations and n8n automations.",
 };
 
 export function personSchema(locale: Locale) {
@@ -18,7 +20,7 @@ export function personSchema(locale: Locale) {
     "@id": PERSON_ID,
     name: "Miguel Ángel Bonilla Torres",
     alternateName: ["Miguel Bonilla", "mangel14"],
-    jobTitle: "Full Stack AI Engineer",
+    jobTitle: "Full Stack Engineer",
     description: description[locale],
     url: absoluteUrl(locale, "/"),
     image: `${SITE_URL}/avatar.png`,
@@ -30,7 +32,7 @@ export function personSchema(locale: Locale) {
       { "@type": "CollegeOrUniversity", name: "Universidad Nacional de Colombia" },
     ],
     address: { "@type": "PostalAddress", addressLocality: "Bogotá", addressCountry: "CO" },
-    knowsAbout: getSkills(locale).flatMap((c) => c.items),
+    knowsAbout: getSkills(locale).flatMap(skillNames),
   };
 }
 
@@ -43,7 +45,7 @@ export function profilePageSchema(locale: Locale) {
     "@type": "ProfilePage",
     url: absoluteUrl(locale, "/"),
     inLanguage: locale,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: toDateTime(PROFILE_UPDATED),
     mainEntity: person,
   };
 }
@@ -86,15 +88,18 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
+// SoftwareSourceCode solo cuando hay repositorio público; sin código, la página describe una obra (CreativeWork)
 export function projectSchema(locale: Locale, project: Project) {
+  const code = project.links.repo
+    ? { "@type": "SoftwareSourceCode", codeRepository: project.links.repo, programmingLanguage: project.language }
+    : { "@type": "CreativeWork" };
   return {
     "@context": "https://schema.org",
-    "@type": "SoftwareSourceCode",
+    ...code,
     name: project.title,
     description: project.description,
     url: absoluteUrl(locale, { pathname: "/proyectos/[id]", params: { id: project.id } }),
-    codeRepository: project.links.repo ?? undefined,
-    programmingLanguage: project.language,
+    sameAs: project.links.demo ?? undefined,
     keywords: project.tags.join(", "),
     inLanguage: locale,
     author: { "@id": PERSON_ID },
@@ -102,20 +107,26 @@ export function projectSchema(locale: Locale, project: Project) {
 }
 
 export function blogPostingSchema(locale: Locale, post: Post) {
+  const url = absoluteUrl(locale, { pathname: "/blog/[slug]", params: { slug: post.slug } });
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     abstract: post.summary,
-    datePublished: post.date,
-    dateModified: post.updated ?? post.date,
+    datePublished: toDateTime(post.date),
+    dateModified: toDateTime(post.updated ?? post.date),
     inLanguage: locale,
     keywords: post.tags.join(", "),
-    url: absoluteUrl(locale, { pathname: "/blog/[slug]", params: { slug: post.slug } }),
-    mainEntityOfPage: absoluteUrl(locale, { pathname: "/blog/[slug]", params: { slug: post.slug } }),
-    author: { "@id": PERSON_ID, "@type": "Person", name: "Miguel Ángel Bonilla Torres" },
+    url,
+    mainEntityOfPage: url,
+    image: `${url}/opengraph-image`,
+    articleSection: CATEGORY_LABEL[post.category][locale],
+    wordCount: post.body.split(/\s+/).filter(Boolean).length,
+    author: { "@id": PERSON_ID, "@type": "Person", name: "Miguel Ángel Bonilla Torres", url: absoluteUrl(locale, "/") },
     citation: post.sources.map((s) => s.url),
+    // Proyectos del portafolio de los que trata el artículo
+    about: post.projects.map((id) => ({ "@type": "CreativeWork", url: absoluteUrl(locale, { pathname: "/proyectos/[id]", params: { id } }) })),
   };
 }
 

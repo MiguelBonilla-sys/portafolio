@@ -1,0 +1,27 @@
+# Secret scanning for CI (gitleaks 8.28). Each allowlist entry below is a
+# reviewed false positive in this repository's history (docs/remediation/FINAL_REPORT.md).
+title = "mangel14.dev"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "IndexNow key: public by protocol, served at /<key>.txt"
+regexTarget = "secret"
+regexes = ['''^3a142bdab1da687057cc12b488c8e24c$''']
+
+[[allowlists]]
+description = "Documentation placeholder"
+regexTarget = "secret"
+regexes = ['''^TU_ADMIN_SECRET$''']
+
+[[allowlists]]
+description = "Fixed key used only by the token unit tests"
+paths = ['''^agent/test/auth\.test\.ts$''']
+regexTarget = "secret"
+regexes = ['''^0123456789abcdef[0-9a-f]*$''']
+
+[[allowlists]]
+description = "TypeScript type names such as LinkedInRuntime, not client ids"
+regexTarget = "secret"
+regexes = ['''^LinkedIn[A-Z][A-Za-z]+$''']
