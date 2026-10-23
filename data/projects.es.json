@@ -6,8 +6,8 @@
     "status": "commercial",
     "context": "Coordenadas.co · app.bikans.com",
     "description": "SaaS colombiano de nómina y retención en la fuente para contadores. Unificó dos herramientas que obligaban a digitar los mismos datos dos veces.",
-    "contribution": "Construí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) para los dos dominios.",
-    "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción con usuarios reales.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) para los dos dominios, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
+    "contribution": "Construí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
+    "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
     "tags": [
       "React",
       "TypeScript",
@@ -22,14 +22,14 @@
     "featured": true,
     "caseStudy": {
       "problem": "Los contadores llevaban la nómina en una herramienta y la retención en la fuente en otra, y tenían que digitar los mismos datos de la empresa y de los empleados en las dos.",
-      "role": "Lo desarrollé como Full Stack Developer en Coordenadas.co, para un cliente. Mi parte: el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) para los dos dominios.",
+      "role": "Lo desarrollé como Full Stack Developer en Coordenadas.co, para un cliente. Mi parte: el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
       "architecture": {
         "summary": "Aplicación de una sola página que consume una API REST en Django. Los módulos de nómina y de retenciones trabajan sobre los mismos datos.",
         "flow": [
           "Frontend en React y TypeScript: módulos de nómina, retenciones y administración",
           "Inicio de sesión con segundo factor TOTP",
           "API REST en Django",
-          "PostgreSQL como base de datos única para los dos dominios"
+          "PostgreSQL como base de datos única para las dos herramientas"
         ]
       },
       "limitations": [
@@ -355,6 +355,7 @@
   },
   {
     "id": "ledgercore",
+    "hidden": true,
     "title": "LedgerCore: auth y facturación multi-tenant",
     "language": "Python",
     "status": "unverified",
