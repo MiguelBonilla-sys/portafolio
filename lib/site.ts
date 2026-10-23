@@ -27,20 +27,32 @@ export function alternatesFor(locale: Locale, href: Href) {
 }
 
 /**
- * Open Graph de una página. Next reemplaza (no mezcla) el objeto openGraph del layout,
- * así que cada página que lo redefine repite la imagen del idioma, la url y el sitio.
+ * Open Graph y Twitter/X de una página. Next reemplaza (no mezcla) los objetos openGraph y twitter del
+ * layout, así que cada página que los redefine repite imagen, url, sitio y autor. Sin esto, twitter:title
+ * quedaba con el título de la home en todas las páginas.
  */
-export function openGraphFor(
+export function socialFor(
   locale: Locale,
   href: Href,
-  og: { title: string; description: string; type?: "website" | "article" } & Record<string, unknown>
+  og: { title: string; description: string; type?: "website" | "article"; image?: string; imageAlt?: string } & Record<string, unknown>
 ) {
+  const { image, imageAlt, ...rest } = og;
+  const img = image ?? `${SITE_URL}/${locale}/opengraph-image`;
   return {
-    type: "website" as const,
-    siteName: "Miguel Bonilla",
-    locale: locale === "es" ? "es_CO" : "en_US",
-    url: absoluteUrl(locale, href),
-    images: [{ url: `${SITE_URL}/${locale}/opengraph-image`, width: 1200, height: 630, alt: og.title }],
-    ...og,
+    openGraph: {
+      type: "website" as const,
+      siteName: "Miguel Bonilla",
+      locale: locale === "es" ? "es_CO" : "en_US",
+      url: absoluteUrl(locale, href),
+      images: [{ url: img, width: 1200, height: 630, alt: imageAlt ?? og.title }],
+      ...rest,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: og.title,
+      description: og.description,
+      creator: "@_mangel14_",
+      images: [img],
+    },
   };
 }
