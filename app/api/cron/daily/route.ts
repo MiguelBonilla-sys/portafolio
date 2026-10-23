@@ -10,8 +10,9 @@ export async function GET(req: Request) {
   let env;
   try {
     env = getEnv();
-  } catch (e) {
-    return Response.json({ ok: false, error: (e as Error).message }, { status: 503 });
+  } catch {
+    // Sin detalle: la lista de variables faltantes solo la ve quien tiene ADMIN_SECRET (/api/agent/setup)
+    return Response.json({ ok: false, error: "Content Engine sin configurar" }, { status: 503 });
   }
   if (!hasBearer(req, env.CRON_SECRET)) {
     return new Response("Unauthorized", { status: 401 });
