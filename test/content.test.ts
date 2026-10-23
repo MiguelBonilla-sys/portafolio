@@ -44,11 +44,18 @@ test("cada proyecto tiene un estado válido y respaldado por su evidencia", () =
       assert.equal(p.links.demo, null, p.id);
       assert.equal(p.featured, false, `${p.id}: sin evidencia no puede ser destacado`);
     } else {
-      assert.ok(p.links.repo || p.links.demo, `${p.id}: sin repo ni demo debe ser "unverified"`);
+      const withheld = (p.links as { repoWithheld?: boolean }).repoWithheld === true;
+      assert.ok(p.links.repo || p.links.demo || withheld, `${p.id}: sin repo ni demo debe ser "unverified"`);
     }
     // "Producción" en el contexto solo con una URL que lo demuestre
     if (/producci[oó]n|production/i.test(p.context ?? "")) assert.ok(p.links.demo, `${p.id}: dice producción sin demo`);
   }
+});
+
+test("el repositorio con credenciales expuestas no se enlaza mientras siga sin limpiar", () => {
+  // docs/phase-2/SECURITY_REMEDIATION.md: se vuelve a enlazar cuando el historial esté purgado y las cuentas rotadas
+  const all = JSON.stringify([projectsEs, projectsEn]);
+  assert.doesNotMatch(all, /API_AUTH_HACKATON/i);
 });
 
 test("los destacados tienen aporte y caso de estudio, con las mismas secciones en ambos idiomas", () => {

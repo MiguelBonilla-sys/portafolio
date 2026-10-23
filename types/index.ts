@@ -1,6 +1,8 @@
 export interface ProjectLink {
   repo: string | null;
   demo: string | null;
+  /** El repositorio existe pero no se enlaza mientras se resuelve un problema de seguridad (docs/phase-2/SECURITY_REMEDIATION.md) */
+  repoWithheld?: boolean;
 }
 
 /**

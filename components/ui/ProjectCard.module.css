@@ -123,6 +123,12 @@
   color: var(--blue);
 }
 
+.withheld {
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
 .arrow {
   display: grid;
   place-items: center;
@@ -165,8 +171,8 @@
   transform: scaleX(1);
 }
 
-.row:hover :is(.desc, .tags, .tag::before, .context, .ext),
-.row:has(.stretch:focus-visible) :is(.desc, .tags, .tag::before, .context, .ext) {
+.row:hover :is(.desc, .tags, .tag::before, .context, .ext, .withheld),
+.row:has(.stretch:focus-visible) :is(.desc, .tags, .tag::before, .context, .ext, .withheld) {
   color: var(--on-blue);
 }
 
