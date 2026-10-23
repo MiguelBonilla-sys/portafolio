@@ -21,9 +21,8 @@ Que Miguel lleva procesos reales a código: APIs seguras, automatizaciones en pr
 Escribirle (formulario o LinkedIn). Secundaria: abrir un proyecto y su repositorio.
 
 ## Product truth (fuente: CV de agosto de 2026; no inventar más allá de esto)
-- Más de 2 años de experiencia profesional en desarrollo de software.
+- Más de 1 año de experiencia profesional en desarrollo de software.
 - Full Stack Developer en Coordenadas.co, Bogotá (remoto), desde agosto de 2025: Bikans (nómina + retención, en producción con 2FA), agente n8n para QuickBooks Online en 4 días (5 fases, 17 tareas), distribución de contenido de 6 proyectos inmobiliarios en 1 sistema, plugins e integraciones para clientes de EE. UU. en 3 industrias, infraestructura propia con Docker, Coolify y Traefik.
-- Junior Backend Engineer en Sibartech Technology SAS (feb 2024 – ago 2025): Python, Django, FastAPI, PostgreSQL, pytest, Docker.
 - Ingeniería de Sistemas, Universidad de San Buenaventura (ene 2021 – presente), décimo semestre. Tesis: sistema multiagente para detectar phishing por homógrafos IDN, 359 pruebas automatizadas.
 - Cursos: Ethical Hacking & Cyber Risk (U. Sergio Arboleda, 2025); Desarrollo de aplicaciones móviles (U. Nacional, 2023–2024).
 - Proyectos: Bikans, API Auth Gateway, detector de phishing IDN, ETL Dow Jones (4.100+ registros, < 60 s), TaskFlow, LedgerCore, Sentinel RAG, más los proyectos académicos y personales del portafolio.

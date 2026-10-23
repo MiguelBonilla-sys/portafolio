@@ -26,7 +26,7 @@ Elige una. Recomendada: **C**.
 
 I build software that runs in production: SaaS products, REST APIs, automation workflows and AI systems with multi-agent architectures and RAG.
 
-I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I spent a year and a half as a Junior Backend Engineer at Sibartech, running Django, FastAPI and PostgreSQL in production.
+I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S.
 
 A few things I've shipped:
 - Bikans, a payroll and tax withholding SaaS that replaced two tools with duplicate data entry. It's in production with real users and two-factor authentication.
@@ -42,7 +42,7 @@ Open to remote Full Stack or AI Engineer roles. Portfolio and resume: mangel14.d
 
 Construyo software que corre en producción: productos SaaS, APIs REST, automatizaciones y sistemas con IA basados en arquitecturas multiagente y RAG.
 
-Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes estuve un año y medio como Junior Backend Engineer en Sibartech, con Django, FastAPI y PostgreSQL en producción.
+Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU.
 
 Algunas cosas que he entregado:
 - Bikans, un SaaS de nómina y retención en la fuente que reemplazó dos herramientas que obligaban a digitar los datos dos veces. Está en producción con usuarios reales y doble factor de autenticación.
@@ -71,18 +71,6 @@ Skills: React · Django · PostgreSQL · n8n · OAuth 2.0 · Docker · Coolify �
 - Entregué en 4 días un agente de automatización en n8n que integra QuickBooks Online (OAuth 2.0), en 5 fases y 17 tareas, y corregí un error de autenticación sin mover la fecha de entrega.
 - Automaticé la distribución de contenido de 6 proyectos inmobiliarios en 1 sistema reutilizable que personaliza los datos por contacto.
 - Construí plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias; despliego y mantengo la infraestructura en un servidor Linux propio con Docker, Coolify y Traefik.
-
-### Sibartech Technology SAS · Junior Backend Engineer · Feb 2024 – Aug 2025 · Colombia
-
-**EN**
-- Developed and maintained production backend services in Python with Django and FastAPI, with PostgreSQL as the primary database.
-- Wrote tests with pytest and containerized services with Docker.
-
-Skills: Python · Django · FastAPI · PostgreSQL · pytest · Docker
-
-**ES**
-- Desarrollé y mantuve servicios backend en producción con Python, Django y FastAPI, sobre PostgreSQL.
-- Escribí pruebas con pytest y contenedoricé servicios con Docker.
 
 ### Universidad de San Buenaventura · Systems Engineering · 2021 – Present
 
@@ -129,5 +117,5 @@ Las cinco tienen un proyecto o un trabajo que las respalda. Pide 10 o más recom
 - [ ] Open to Work visible **solo para recruiters**, con "Full Stack Engineer", "AI Engineer" y "Backend Engineer", modalidad remota.
 - [ ] Banner 1584×396 con el símbolo del sitio, el titular y la URL del portafolio (puedes partir de `public/brand/symbol-dark.svg`).
 - [ ] Creator mode activado cuando empieces a publicar (agrega el botón Seguir).
-- [ ] 2 o 3 recomendaciones de compañeros de Coordenadas o Sibartech.
+- [ ] 2 o 3 recomendaciones de compañeros de Coordenadas.
 - [ ] 2 o 3 comentarios técnicos por semana en publicaciones de tu área.

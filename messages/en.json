@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Miguel Bonilla | Full Stack AI Engineer",
-    "description": "Full Stack Developer and AI Engineer in Bogotá with 2+ years of experience: production SaaS, APIs, multi-agent systems, RAG and automation. Open to remote work.",
+    "description": "Full Stack Developer and AI Engineer in Bogotá with 1+ year of experience: production SaaS, APIs, multi-agent systems, RAG and automation. Open to remote work.",
     "ogLocale": "en_US",
     "ogTag": "Bogotá · Remote"
   },
@@ -35,11 +35,11 @@
     "sigilTitle": "Miguel Bonilla's symbol: a transmutation circle with a circuit-trace M",
     "ctaCv": "Download resume",
     "factExp": "Experience",
-    "factExpValue": "2+ years in production"
+    "factExpValue": "1+ year in production"
   },
   "about": {
     "title": "About",
-    "p1": "I have 2+ years of professional experience building software. I currently work remotely as a Full Stack Developer at Coordenadas.co, and before that I was a Junior Backend Engineer at Sibartech, running Django, FastAPI and PostgreSQL in production.",
+    "p1": "I have 1+ year of professional experience building software. I currently work remotely as a Full Stack Developer at Coordenadas.co.",
     "p2": "At Coordenadas I merged two payroll and tax withholding tools into Bikans, now in production with two-factor authentication, and integrated QuickBooks Online through an n8n agent in 4 days. I also build plugins and integrations for U.S. clients and maintain the infrastructure on a Linux server with Docker, Coolify and Traefik.",
     "p3": "I'm in my 10th semester of Systems Engineering at Universidad de San Buenaventura. My thesis is a multi-agent system that detects IDN homograph phishing domains, validated with 359 automated tests. I'm now building a LangGraph agent that drafts my blog and publishes nothing without my approval.",
     "portraitAlt": "Pixel art portrait of Miguel Bonilla wearing glasses, a white shirt and a blue suit"
@@ -126,7 +126,7 @@
     "courses": "Courses & certificates",
     "strengths": "Strengths",
     "strengthsList": "Technical ownership · Troubleshooting under deadline pressure · Async communication · Client communication across industries · Self-directed learning · Remote autonomy",
-    "summaryText": "Full Stack Developer and AI Engineer with 2+ years of professional software development experience building and deploying SaaS products, REST APIs, and automation workflows, plus AI-powered systems using multi-agent architectures, RAG pipelines, and LLM integrations. Proficient in Python, React, FastAPI, Django, TypeScript, PostgreSQL, LlamaStack, Ollama, ChromaDB, Docker, and Linux. Experienced in authentication, third-party API integrations, production troubleshooting, and remote collaboration with international clients.",
+    "summaryText": "Full Stack Developer and AI Engineer with 1+ year of professional software development experience building and deploying SaaS products, REST APIs, and automation workflows, plus AI-powered systems using multi-agent architectures, RAG pipelines, and LLM integrations. Proficient in Python, React, FastAPI, Django, TypeScript, PostgreSQL, LlamaStack, Ollama, ChromaDB, Docker, and Linux. Experienced in authentication, third-party API integrations, production troubleshooting, and remote collaboration with international clients.",
     "technologies": "Technologies",
     "otherLang": "Leer en español"
   },

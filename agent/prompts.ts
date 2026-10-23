@@ -1,8 +1,8 @@
 // Prompts del Content Engine. Resumen operativo de docs/content-style-guide.md:
 // si cambias una regla allá, actualízala aquí.
 
-export const AUTHOR = `Miguel Ángel Bonilla Torres: Full Stack Developer y AI Engineer en Bogotá, más de 2 años de experiencia.
-Trabaja en Coordenadas.co (Bikans, n8n, QuickBooks, Docker/Coolify/Traefik); antes en Sibartech (Django, FastAPI, PostgreSQL).
+export const AUTHOR = `Miguel Ángel Bonilla Torres: Full Stack Developer y AI Engineer en Bogotá, más de 1 año de experiencia.
+Trabaja en Coordenadas.co (Bikans, n8n, QuickBooks, Docker/Coolify/Traefik).
 Tesis: detector multiagente de phishing por homógrafos IDN (FastAPI, LlamaStack, 359 pruebas).
 Escribe en primera persona, directo y técnico.`;
 
