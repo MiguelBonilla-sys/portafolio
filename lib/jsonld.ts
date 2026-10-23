@@ -4,6 +4,7 @@ import type { Post } from "@/lib/blog";
 import { getSkills, skillNames, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import { CATEGORY_LABEL } from "@/lib/taxonomy";
+import { PROFILE_UPDATED, toDateTime } from "@/lib/dates";
 
 const PERSON_ID = `${SITE_URL}/#person`;
 
@@ -44,7 +45,7 @@ export function profilePageSchema(locale: Locale) {
     "@type": "ProfilePage",
     url: absoluteUrl(locale, "/"),
     inLanguage: locale,
-    dateModified: new Date().toISOString().slice(0, 10),
+    dateModified: toDateTime(PROFILE_UPDATED),
     mainEntity: person,
   };
 }
@@ -113,8 +114,8 @@ export function blogPostingSchema(locale: Locale, post: Post) {
     headline: post.title,
     description: post.description,
     abstract: post.summary,
-    datePublished: post.date,
-    dateModified: post.updated ?? post.date,
+    datePublished: toDateTime(post.date),
+    dateModified: toDateTime(post.updated ?? post.date),
     inLanguage: locale,
     keywords: post.tags.join(", "),
     url,

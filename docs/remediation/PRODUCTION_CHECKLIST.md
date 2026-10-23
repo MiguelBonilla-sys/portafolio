@@ -39,6 +39,7 @@
 4. Titular "Full Stack Engineer · Python, React y sistemas con IA". Hoy dice "Full Stack AI Engineer".
 5. `GET /api/agent/setup` con `ADMIN_SECRET`, y la prueba de humo del bot (`CONTENT_ENGINE_READINESS.md` §3).
 6. Enviar el sitemap a IndexNow: `pnpm indexnow`.
+7. Search Console → Mejoras → "Página de perfil": pasar la URL por la prueba de resultados enriquecidos y pulsar "Validar corrección". `dateModified` ahora sale con fecha, hora y zona (`2026-10-23T00:00:00-05:00`); en producción hoy es `2026-10-22`, sin hora, y cambia en cada build.
 
 ## 4. Métricas: laboratorio y campo
 
