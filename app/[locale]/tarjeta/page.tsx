@@ -5,7 +5,7 @@ import Sigil from "@/components/brand/Sigil";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { CARD } from "@/lib/card";
-import { alternatesFor } from "@/lib/site";
+import { alternatesFor, openGraphFor } from "@/lib/site";
 import { googleWalletConfig } from "@/lib/wallet";
 import styles from "./card.module.css";
 
@@ -14,10 +14,12 @@ const SHOW_GOOGLE_WALLET = false;
 export async function generateMetadata({ params }: PageProps<"/[locale]/tarjeta">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };
   const t = await getTranslations({ locale, namespace: "card" });
+  const title = `${t("title")}: ${CARD.fullName}`;
   return {
-    title: `${t("title")}: ${CARD.fullName}`,
+    title,
     description: t("metaDescription"),
     alternates: alternatesFor(locale, "/tarjeta"),
+    openGraph: openGraphFor(locale, "/tarjeta", { title, description: t("metaDescription") }),
     // Página utilitaria para compartir en persona; el teléfono no necesita más exposición en buscadores
     robots: { index: false, follow: true },
   };

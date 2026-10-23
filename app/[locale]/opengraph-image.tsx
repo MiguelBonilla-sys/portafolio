@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { loadDisplayFont } from "@/lib/og-font";
 
-export const alt = "Miguel Bonilla, Full Stack AI Engineer";
+export const alt = "Miguel Bonilla, Full Stack Engineer: Python, React & AI Systems";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -52,7 +52,8 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 168, fontWeight: 900, color: INK, lineHeight: 0.9, letterSpacing: -2 }}>MIGUEL</div>
           <div style={{ fontSize: 168, fontWeight: 900, color: INK, lineHeight: 0.9, letterSpacing: -2 }}>BONILLA</div>
-          <div style={{ marginTop: 28, fontSize: 64, fontWeight: 900, color: BLUE }}>FULL STACK AI ENGINEER</div>
+          <div style={{ marginTop: 28, fontSize: 64, fontWeight: 900, color: BLUE }}>FULL STACK ENGINEER</div>
+          <div style={{ marginTop: 8, fontSize: 40, fontWeight: 900, color: INK }}>PYTHON · REACT · AI SYSTEMS</div>
           <div style={{ marginTop: 28, display: "flex" }}>
             <div style={{ background: ACCENT, color: GROUND, fontSize: 34, fontWeight: 900, padding: "6px 16px" }}>
               {t("ogTag")}

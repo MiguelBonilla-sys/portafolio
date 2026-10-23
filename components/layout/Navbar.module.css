@@ -180,3 +180,31 @@
     font-size: 1.25rem;
   }
 }
+
+/* 320–360 px: marca, idioma, tema y menú caben sin desbordar (WCAG 1.4.10) */
+@media (max-width: 360px) {
+  .inner {
+    gap: 0.5rem;
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
+  .mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .name {
+    font-size: 1.0625rem;
+  }
+
+  .actions {
+    gap: 0.375rem;
+  }
+
+  .menuBtn {
+    padding: 0 0.625rem;
+  }
+}
