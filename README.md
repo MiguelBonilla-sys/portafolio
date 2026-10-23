@@ -1,6 +1,6 @@
 # Miguel Bonilla: Portfolio
 
-Portafolio bilingüe (español/inglés) de Miguel Bonilla, Full Stack AI Engineer en Bogotá. Incluye proyectos, blog, CV, una capa de SEO/GEO para buscadores y navegadores con IA, y el **Content Engine**: un agente en LangGraph.js que convierte notas enviadas por Telegram en artículos del blog y posts de LinkedIn, con aprobación humana.
+Portafolio bilingüe (español/inglés) de Miguel Bonilla, Full Stack Engineer (Python, React y sistemas con IA) en Bogotá. Incluye proyectos, blog, CV, una capa de SEO/GEO para buscadores y navegadores con IA, y el **Content Engine**: un agente en LangGraph.js que convierte notas enviadas por Telegram en artículos del blog y posts de LinkedIn, con aprobación humana.
 
 ## Stack
 
@@ -10,6 +10,12 @@ Portafolio bilingüe (español/inglés) de Miguel Bonilla, Full Stack AI Enginee
 - **Estilos:** CSS Modules y tokens propios (brutalismo cyberpunk, ver `DESIGN.md`)
 - **Tipografías:** Big Shoulders, Atkinson Hyperlegible Next, JetBrains Mono
 - **Agente:** LangGraph.js + PostgresSaver, OpenCode Go (compatible con OpenAI), Telegram, LinkedIn Posts API, GitHub, IndexNow, Vercel Cron
+
+## Contenido
+
+- Proyectos: `data/projects.{es,en}.json`. Cada uno lleva un `status` verificable (`commercial`, `deployed`, `academic`, `prototype`, `archived`, `unverified`) y, si es destacado, un `caseStudy` cuyas secciones solo se muestran cuando tienen contenido (`components/project/CaseStudy.tsx`).
+- Experiencia: `data/experience.{es,en}.json`; stack: `data/skills.json` (`core` = principales, `items` = secundarias).
+- `pnpm test` falla si los dos idiomas no coinciden o si un proyecto declara producción sin URL.
 
 ## Inicio rápido
 
@@ -28,7 +34,8 @@ Abre [http://localhost:3000](http://localhost:3000); redirige a `/es` o `/en` se
 | `pnpm build` | Build de producción |
 | `pnpm start` | Servidor de producción |
 | `pnpm lint` | ESLint |
-| `pnpm test` | Linter anti-slop y grafo del agente con un LLM simulado |
+| `pnpm test` | Linter anti-slop, grafo del agente con un LLM simulado e integridad del contenido ES/EN (`test/`) |
+| `pnpm test:e2e` | Recorrido con Playwright del sitio compilado: rutas, desbordamiento en 7 anchos, menú móvil, idioma, 404 y formulario (con `pnpm start` corriendo; `BASE_URL`, `CHROME_PATH`) |
 | `pnpm cv` | Regenera `public/cv/*.pdf` desde `/[locale]/cv` (con el sitio corriendo) |
 | `pnpm indexnow` | Avisa a Bing de todas las URLs del sitemap (`SITE_URL=https://dominio`) |
 
@@ -53,4 +60,5 @@ El sitio funciona solo con `NEXT_PUBLIC_SITE_URL` (y opcionalmente GA4 y Web3For
 - `docs/setup.md`: puesta en marcha del agente
 - `docs/linkedin-profile.md`: textos del perfil de LinkedIn (EN/ES)
 - `docs/baseline.md`: métricas semanales
+- `docs/audit/`: auditoría de octubre 2026 (hallazgos, plan, cambios, verificación de contenido y reporte final)
 - `PRODUCT.md`, `DESIGN.md`: producto e identidad visual
