@@ -1,11 +1,11 @@
 // Genera public/cv/miguel-bonilla-cv-{es,en}.pdf desde la página /[locale]/cv.
 // Uso: pnpm build && pnpm start (en otra terminal) && pnpm cv
-// Variables opcionales: BASE_URL (por defecto http://localhost:3000), CHROME_PATH.
+// Variables opcionales: BASE_URL (por defecto http://localhost:3000), CHROME_PATH (si no, el Chromium de playwright-core).
 import { chromium } from "playwright-core";
 import { mkdir } from "node:fs/promises";
 
 const base = (process.env.BASE_URL ?? "http://localhost:3000").replace(/\/$/, "");
-const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : { channel: "chrome" });
+const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 await mkdir("public/cv", { recursive: true });
 
 for (const locale of ["es", "en"]) {
