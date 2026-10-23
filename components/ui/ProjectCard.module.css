@@ -1,4 +1,5 @@
 .row {
+  position: relative;
   display: grid;
   grid-template-columns: 12rem minmax(0, 1fr) auto;
   gap: 1rem 2.5rem;
@@ -7,16 +8,20 @@
   padding: clamp(1.5rem, 3vw, 2.25rem) 0;
   border-bottom: var(--border);
   color: var(--ink);
-  text-decoration: none;
   transition:
     background-color 160ms var(--ease-out),
     color 160ms var(--ease-out),
     padding 160ms var(--ease-out);
 }
 
+.compact {
+  padding: 1.25rem 0;
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 0.5rem;
 }
 
@@ -25,11 +30,6 @@
   font-family: var(--font-data);
   font-size: 0.8125rem;
   color: var(--ink-2);
-}
-
-.row:hover .context,
-.row:focus-visible .context {
-  color: var(--on-blue);
 }
 
 .main {
@@ -41,7 +41,7 @@
 .title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
   line-height: 0.95;
   text-transform: uppercase;
   text-wrap: balance;
@@ -52,9 +52,43 @@
   font-size: clamp(2.25rem, 4.4vw, 3.75rem);
 }
 
+/* El enlace del título cubre toda la fila; los enlaces de repo y demo van por encima */
+.stretch {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stretch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.stretch:focus-visible {
+  outline: none;
+}
+
+.row:has(.stretch:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
 .desc {
   max-width: 44rem;
   color: var(--ink-2);
+}
+
+.compact .desc {
+  font-size: 0.9375rem;
+}
+
+.contribution {
+  max-width: 44rem;
+}
+
+.contributionLabel {
+  font-weight: 700;
 }
 
 .tags {
@@ -71,6 +105,24 @@
   color: var(--blue);
 }
 
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.ext {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-data);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
 .arrow {
   display: grid;
   place-items: center;
@@ -82,8 +134,13 @@
     background-color 160ms var(--ease-out);
 }
 
+.compact .arrow {
+  width: 44px;
+  height: 44px;
+}
+
 .row:hover,
-.row:focus-visible {
+.row:has(.stretch:focus-visible) {
   background: var(--blue);
   color: var(--on-blue);
   padding-left: 1.25rem;
@@ -91,10 +148,6 @@
 }
 
 /* Al activar la fila, la corriente recorre su regla inferior de izquierda a derecha */
-.row {
-  position: relative;
-}
-
 .row::after {
   content: "";
   position: absolute;
@@ -108,32 +161,23 @@
 }
 
 .row:hover::after,
-.row:focus-visible::after {
+.row:has(.stretch:focus-visible)::after {
   transform: scaleX(1);
 }
 
-.row:hover .desc,
-.row:hover .tags,
-.row:hover .tag::before,
-.row:focus-visible .desc,
-.row:focus-visible .tags,
-.row:focus-visible .tag::before {
+.row:hover :is(.desc, .tags, .tag::before, .context, .ext),
+.row:has(.stretch:focus-visible) :is(.desc, .tags, .tag::before, .context, .ext) {
   color: var(--on-blue);
 }
 
 .row:hover :global(.chip),
-.row:focus-visible :global(.chip) {
+.row:has(.stretch:focus-visible) :global(.chip) {
   border-color: var(--on-blue);
   color: var(--on-blue);
 }
 
-.row:hover :global(.chip-accent),
-.row:focus-visible :global(.chip-accent) {
-  color: var(--ink-on-accent);
-}
-
 .row:hover .arrow,
-.row:focus-visible .arrow {
+.row:has(.stretch:focus-visible) .arrow {
   border-color: var(--on-blue);
   background: var(--accent);
   color: var(--ink-on-accent);

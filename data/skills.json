@@ -1,126 +1,38 @@
 [
   {
-    "id": "languages",
-    "label": {
-      "es": "Lenguajes",
-      "en": "Languages"
-    },
-    "items": [
-      "Python",
-      "JavaScript",
-      "TypeScript",
-      "PHP",
-      "SQL"
-    ]
-  },
-  {
-    "id": "frontend",
-    "label": {
-      "es": "Frontend",
-      "en": "Frontend"
-    },
-    "items": [
-      "React",
-      "Next.js",
-      "Vite",
-      "Tailwind CSS",
-      "HTML/CSS",
-      "WordPress"
-    ]
+    "id": "core",
+    "label": { "es": "Lenguajes", "en": "Core languages" },
+    "core": ["Python", "TypeScript", "JavaScript", "SQL"],
+    "items": ["PHP", "Java"]
   },
   {
     "id": "backend",
-    "label": {
-      "es": "Backend",
-      "en": "Backend"
-    },
-    "items": [
-      "FastAPI",
-      "Django",
-      "Node.js",
-      "REST APIs",
-      "JWT",
-      "OAuth 2.0"
-    ]
+    "label": { "es": "Backend, APIs y datos", "en": "Backend, APIs & data" },
+    "core": ["FastAPI", "Django", "PostgreSQL", "REST APIs", "JWT", "Redis"],
+    "items": ["Flask", "Node.js", "OAuth 2.0", "SQLAlchemy", "MySQL", "SQLite", "ChromaDB"]
   },
   {
-    "id": "databases",
-    "label": {
-      "es": "Bases de datos",
-      "en": "Databases"
-    },
-    "items": [
-      "PostgreSQL",
-      "MySQL",
-      "SQLite",
-      "Redis",
-      "ChromaDB"
-    ]
-  },
-  {
-    "id": "cloud",
-    "label": {
-      "es": "Nube y DevOps",
-      "en": "Cloud & DevOps"
-    },
-    "items": [
-      "AWS (EC2, S3, RDS)",
-      "Docker",
-      "Docker Compose",
-      "Coolify",
-      "Traefik",
-      "Linux",
-      "Git/GitHub",
-      "CI/CD"
-    ]
-  },
-  {
-    "id": "testing",
-    "label": {
-      "es": "Testing y seguridad",
-      "en": "Testing & Security"
-    },
-    "items": [
-      "pytest",
-      {
-        "es": "Pruebas unitarias e integración",
-        "en": "Unit & integration testing"
-      },
-      "bcrypt",
-      "TOTP 2FA",
-      "OWASP Top 10"
-    ]
+    "id": "frontend",
+    "label": { "es": "Frontend", "en": "Frontend" },
+    "core": ["React", "Next.js"],
+    "items": ["Vite", "Tailwind CSS", "HTML/CSS", "WordPress"]
   },
   {
     "id": "ai",
-    "label": {
-      "es": "IA y automatización",
-      "en": "AI & Automation"
-    },
-    "items": [
-      "LlamaStack",
-      "Ollama",
-      "RAG",
-      {
-        "es": "Agentes de IA",
-        "en": "AI agents"
-      },
-      "LangGraph",
-      "PySpark",
-      "n8n",
-      "Make",
-      "GoHighLevel",
-      "Webhooks"
-    ]
+    "label": { "es": "IA y automatización", "en": "AI & automation" },
+    "core": [{ "es": "Integración de LLM", "en": "LLM integration" }, "RAG", "LangGraph", "n8n"],
+    "items": [{ "es": "Agentes de IA", "en": "AI agents" }, "Ollama", "LlamaStack", "Make", "GoHighLevel", "Webhooks", "PySpark"]
   },
   {
-    "id": "methods",
-    "label": {
-      "es": "Metodologías",
-      "en": "Methodologies"
-    },
-    "items": [
-      "Agile / Scrum"
-    ]
+    "id": "infra",
+    "label": { "es": "Infraestructura y entrega", "en": "Infrastructure & delivery" },
+    "core": ["Docker", "Linux", "Git/GitHub", "Vercel"],
+    "items": ["Docker Compose", "Coolify", "Traefik", "Railway", "AWS (EC2, S3, RDS)", "CI/CD", "Agile / Scrum"]
+  },
+  {
+    "id": "testing",
+    "label": { "es": "Pruebas y seguridad", "en": "Testing & security" },
+    "core": ["pytest", { "es": "Pruebas unitarias e integración", "en": "Unit & integration testing" }],
+    "items": ["bcrypt", "TOTP 2FA", "OWASP Top 10"]
   }
 ]

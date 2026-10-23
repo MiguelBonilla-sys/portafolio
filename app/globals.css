@@ -154,6 +154,11 @@ time,
   white-space: nowrap;
 }
 
+.chip-muted {
+  border-style: dashed;
+  color: var(--ink-2);
+}
+
 .chip-accent {
   background: var(--accent);
   border-color: var(--accent);
