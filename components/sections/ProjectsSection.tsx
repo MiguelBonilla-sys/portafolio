@@ -1,11 +1,13 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import ProjectCard from "@/components/ui/ProjectCard";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { ArrowIcon, GithubIcon } from "@/components/ui/icons";
-import { getProjects, GITHUB_URL } from "@/lib/content";
+import { ArrowIcon } from "@/components/ui/icons";
+import { Link } from "@/i18n/navigation";
+import { getProjects } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
 import styles from "./ProjectsSection.module.css";
 
+/** Portada: solo los proyectos principales. Los demás viven en /proyectos */
 export default async function ProjectsSection() {
   const t = await getTranslations("projects");
   const locale = (await getLocale()) as Locale;
@@ -25,26 +27,12 @@ export default async function ProjectsSection() {
           ))}
         </ul>
 
-        <div className={styles.archiveBlock}>
-          <h3 id="otros-proyectos-title" className={styles.subTitle}>
-            {t("otherTitle")}
-          </h3>
-          <p className={styles.subLede}>{t("otherLede")}</p>
-          <ul className={styles.list} aria-labelledby="otros-proyectos-title">
-            {others.map((project) => (
-              <li key={project.id}>
-                <ProjectCard project={project} variant="compact" />
-              </li>
-            ))}
-            <li>
-              <a href={`${GITHUB_URL}?tab=repositories`} target="_blank" rel="noopener noreferrer" className={styles.archive}>
-                <GithubIcon size={22} />
-                <span>{t("archive")}</span>
-                <ArrowIcon />
-              </a>
-            </li>
-          </ul>
-        </div>
+        {others.length > 0 && (
+          <Link href="/proyectos" className={styles.more}>
+            <span>{t("seeOthers", { count: others.length })}</span>
+            <ArrowIcon />
+          </Link>
+        )}
       </div>
     </section>
   );

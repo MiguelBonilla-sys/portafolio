@@ -68,8 +68,8 @@
     "back": "Back to projects",
     "language": "Language",
     "otherProjects": "Other projects",
-    "otherTitle": "Other projects & academic archive",
-    "otherLede": "Course projects, prototypes and work without public code. Each one shows its status.",
+    "otherTitle": "Other projects",
+    "otherLede": "Course projects, prototypes and work without public code. Each one shows its status. The main ones are on the home page.",
     "readCase": "Read the case study",
     "solves": "What it does",
     "featuredProjects": "Featured projects",
@@ -101,7 +101,9 @@
     "ctaBody": "I'm looking for remote work as a Full Stack Engineer. If you'd like to talk about this project or your team, get in touch.",
     "ctaContact": "Get in touch",
     "ctaCv": "View resume",
-    "repoWithheld": "Repository temporarily unlinked; the code is available on request."
+    "repoWithheld": "Repository temporarily unlinked; the code is available on request.",
+    "seeOthers": "See the other {count} projects",
+    "backHome": "Back to the main projects"
   },
   "blog": {
     "title": "Blog",
@@ -162,7 +164,7 @@
     "summary": "Summary",
     "skills": "Skills",
     "experience": "Experience",
-    "projects": "Selected projects",
+    "projects": "Main projects",
     "education": "Education",
     "courses": "Courses & certificates",
     "strengths": "Strengths",
@@ -170,7 +172,8 @@
     "summaryText": "Full Stack Engineer with 2+ years of professional software development experience. I build and deploy SaaS products, REST APIs and automation workflows, and integrate LLMs, RAG and agents into applications. I work with Python, FastAPI, Django, React, TypeScript, PostgreSQL, Docker and Linux. Experienced in authentication, third-party API integrations, production troubleshooting and remote collaboration with international clients.",
     "technologies": "Technologies",
     "otherLang": "Leer en español",
-    "role": "Full Stack Engineer · Python, React & AI Systems"
+    "role": "Full Stack Engineer · Python, React & AI Systems",
+    "otherProjects": "Other projects"
   },
   "card": {
     "title": "Contact card",

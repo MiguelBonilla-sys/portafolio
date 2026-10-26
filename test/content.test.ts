@@ -78,6 +78,12 @@ test("el repositorio con credenciales expuestas no se enlaza mientras siga sin l
   assert.doesNotMatch(all, /API_AUTH_HACKATON/i);
 });
 
+test("el CV detalla exactamente los proyectos principales", () => {
+  const page = readFileSync(new URL("../app/[locale]/cv/page.tsx", import.meta.url), "utf8");
+  const cv = JSON.parse(page.match(/const CV_PROJECTS = (\[[^\]]*\])/)![1]) as string[];
+  assert.deepEqual(cv, projectsEs.filter((p) => p.featured).map((p) => p.id));
+});
+
 test("los destacados dicen qué resuelven y tienen caso de estudio, con las mismas secciones en ambos idiomas", () => {
   const featured = projectsEs.filter((p) => p.featured);
   assert.ok(featured.length >= 3 && featured.length <= 5, `destacados: ${featured.length}`);

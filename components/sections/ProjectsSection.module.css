@@ -8,7 +8,8 @@
   border-top: var(--border);
 }
 
-.archive {
+.archive,
+.more {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -28,25 +29,14 @@
     padding 160ms var(--ease-out);
 }
 
-.archive:hover {
+.more {
+  grid-template-columns: 1fr auto;
+}
+
+.archive:hover,
+.more:hover {
   background: var(--accent);
   color: var(--ink-on-accent);
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.archiveBlock {
-  margin-top: clamp(4rem, 8vw, 6rem);
-}
-
-.subTitle {
-  font-weight: 900;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1;
-}
-
-.subLede {
-  max-width: 44rem;
-  margin: 1rem 0 1.5rem;
-  color: var(--ink-2);
 }

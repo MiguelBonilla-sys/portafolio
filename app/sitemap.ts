@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/"),
     ...entries("/blog"),
     ...entries("/cv"),
+    ...entries("/proyectos"),
     ...entries("/privacidad"),
     ...projectIds.flatMap((id) => entries({ pathname: "/proyectos/[id]", params: { id } })),
     ...posts.flatMap((p) => entries({ pathname: "/blog/[slug]", params: { slug: p.slug } }, p.updated ?? p.date)),

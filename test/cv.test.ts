@@ -50,6 +50,11 @@ for (const [locale, { projects, experience, messages }] of Object.entries(LOCALE
       assert.ok(text.includes(norm(p.description)), `descripción desactualizada: ${p.id}`);
       if ((p as { context?: string }).context) assert.ok(text.includes(norm((p as { context?: string }).context!)), `contexto: ${p.id}`);
     }
+    // Los demás proyectos con evidencia van en la línea «Otros proyectos»
+    assert.ok(text.includes(norm(messages.cv.otherProjects)), "sección de otros proyectos");
+    for (const p of projects.filter((x) => !CV_PROJECTS.includes(x.id) && x.status !== "unverified" && !x.hidden)) {
+      assert.ok(text.includes(norm(p.title)), `otro proyecto: ${p.title}`);
+    }
     for (const p of projects.filter((x) => x.status === "unverified" || x.hidden)) {
       assert.ok(!text.includes(norm(p.title)), `proyecto sin evidencia en el CV: ${p.id}`);
     }

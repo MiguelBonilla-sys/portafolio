@@ -10,7 +10,8 @@ import styles from "./cv.module.css";
 // Proyectos y orden que lleva el CV (los demás quedan en el portafolio). Solo proyectos con código,
 // demo o documento verificable: taskflow, ledgercore y sentinel-rag salieron hasta tener repositorio
 // (ver docs/audit/CONTENT_VERIFICATION.md).
-const CV_PROJECTS = ["bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton", "etl-parcial"];
+// Los proyectos principales, con detalle. Los demás con código público van en una línea aparte
+const CV_PROJECTS = ["bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton"];
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/cv">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };
@@ -36,6 +37,8 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
   const education = experience.filter((e) => e.type === "education");
   const courses = experience.filter((e) => e.type === "course");
   const projects = CV_PROJECTS.map((id) => getProjects(locale).find((p) => p.id === id)).filter((p) => p !== undefined);
+  // Sin los que no tienen código ni demo públicos: el CV solo lista lo que se puede revisar
+  const otherProjects = getProjects(locale).filter((p) => !CV_PROJECTS.includes(p.id) && p.status !== "unverified");
   const site = SITE_URL.replace(/^https?:\/\//, "");
 
   return (
@@ -122,6 +125,11 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
               </ul>
             </div>
           ))}
+          {otherProjects.length > 0 && (
+            <p className={styles.sub}>
+              <strong>{t("otherProjects")}:</strong> {otherProjects.map((p) => p.title).join(" · ")}
+            </p>
+          )}
         </section>
 
         <section className={styles.block}>
