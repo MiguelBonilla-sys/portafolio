@@ -237,9 +237,9 @@ Los botones llevan `callback_data` de menos de 64 bytes con la forma `<acción>:
 
 ## 7. Tareas automáticas (cron)
 
-`/api/cron/daily` corre a las 13:00 UTC (8:00 en Bogotá) y se protege con `Bearer CRON_SECRET`. Hace cuatro cosas:
+`/api/cron/daily` corre una vez al día, entre las 8:00 y las 9:00 a. m. de Bogotá (en `vercel.json` es la 1:00 p. m. UTC; el código lo lee de `CRON_UTC_HOUR`), y se protege con `Bearer CRON_SECRET`. Hace cuatro cosas:
 
-- publica **solo** lo que aprobaste y programaste, con el hash guardado;
+- publica **solo** lo que aprobaste y programaste, con el hash guardado. Al programar, la pieza se guarda en la primera franja del cron que la va a encontrar vencida, y el bot dice cuál es: si pides «2026-11-03 6:30 pm», responde que sale «el miércoles, 4 de noviembre, entre las 8:00 a. m. y las 9:00 a. m.». Las horas siempre van en formato de 12 horas;
 - reintenta los deploys pendientes;
 - vence las propuestas con más de 48 horas sin respuesta;
 - avisa si el token de LinkedIn vence en 10 días o menos.

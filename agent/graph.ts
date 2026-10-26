@@ -10,7 +10,7 @@ import { describeFindings, lintText, type LintReport } from "./lib/lint.ts";
 import { assetPath, blogPath, buildMdx } from "./lib/mdx.ts";
 import { toPublicError, UserFacingError } from "./lib/redact.ts";
 import { callback, esc, type InlineButton } from "./lib/telegram.ts";
-import { dateIn, normalizeNumber, numbersIn, slugify, wordCount } from "./lib/text.ts";
+import { dateIn, describeSlot, formatDateTime, nextCronSlot, normalizeNumber, numbersIn, slugify, wordCount } from "./lib/text.ts";
 import {
   carouselPrompt,
   draftBlogPrompt,
@@ -675,10 +675,15 @@ export function buildGraph(deps: AgentDeps) {
       await deps.telegram.sendMessage(`Ese botón era de una versión anterior (la actual es la ${s.version}). Programa desde la última vista previa.`);
       return { review: null };
     }
-    const at = r.at ?? null;
+    // El cron publica una vez al día: se guarda la franja que de verdad la va a publicar y se dice cuál es
+    const slot = r.at ? nextCronSlot(new Date(r.at)) : null;
+    const at = slot?.toISOString() ?? null;
     const st = await to(s, "scheduled", { scheduled_for: at }, `programado v${s.version} ${s.contentHash}`);
-    const when = at ? new Date(at).toLocaleString("es-CO", { timeZone: deps.timezone, dateStyle: "medium", timeStyle: "short" }) : "?";
-    await deps.telegram.sendMessage(`Programado para ${esc(when)} (hora de Bogotá), versión ${s.version}. Lo publico en el cron de esa mañana.`);
+    await deps.telegram.sendMessage(
+      slot
+        ? `Programada la versión ${s.version}. Pediste ${esc(formatDateTime(new Date(r.at!), deps.timezone))}; como el publicador corre una vez al día, sale ${esc(describeSlot(slot, deps.timezone))} (hora de Bogotá).`
+        : `Programada la versión ${s.version}.`
+    );
     return { ...st, scheduledFor: at, approvedChannels: r.channels ?? ALL_CHANNELS };
   }
 

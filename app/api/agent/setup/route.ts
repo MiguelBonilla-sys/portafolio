@@ -1,6 +1,7 @@
 import { envReport, getEnv } from "@/agent/config.ts";
 import { hasBearer } from "@/agent/lib/auth.ts";
 import { redact } from "@/agent/lib/redact.ts";
+import { formatDateTime } from "@/agent/lib/text.ts";
 import { getRuntime, LINKEDIN_TOKEN_KEY, type StoredLinkedInToken } from "@/agent/runtime.ts";
 
 export const runtime = "nodejs";
@@ -36,7 +37,7 @@ export async function GET(req: Request) {
     result.telegramWebhook = res.ok ? webhookUrl : `error ${res.status}: ${redact((await res.text()).slice(0, 300))}`;
 
     const token = await rt.store.kvGet<StoredLinkedInToken>(LINKEDIN_TOKEN_KEY);
-    result.linkedin = token ? `conectado, vence ${token.expiresAt}` : `sin conectar: abre ${rt.linkedinAuthUrl()} (vence en 24 h)`;
+    result.linkedin = token ? `conectado, vence el ${formatDateTime(new Date(token.expiresAt), cfg.AGENT_TIMEZONE)}` : `sin conectar: abre ${rt.linkedinAuthUrl()} (vence en 24 h)`;
 
     await rt.telegram.sendMessage("Content Engine configurado. Escríbeme /help para empezar.");
     result.telegramTest = "mensaje de prueba enviado";
