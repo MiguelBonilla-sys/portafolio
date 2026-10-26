@@ -2,6 +2,8 @@
 
 # Architecture: Portafolio + Content Engine
 
+> Cómo funciona el agente, de punta a punta: [agent-Functionality.md](agent-Functionality.md).
+
 Todo vive en un solo proyecto de Vercel: el sitio estático y el agente de contenido. El agente funciona por eventos (webhook de Telegram y cron diario); no hay servidores aparte.
 
 ## Tech Stack
