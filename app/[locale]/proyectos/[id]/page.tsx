@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getFeaturedProjects, getProject, getProjects } from "@/lib/content";
 import { breadcrumbSchema, projectSchema } from "@/lib/jsonld";
+import OrgText from "@/components/ui/OrgText";
 import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./project.module.css";
 
@@ -68,7 +69,11 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
             {t(`status.${project.status}`)}
           </span>
           <span className="chip">{project.language}</span>
-          {project.context && <span className="data">{project.context}</span>}
+          {project.context && (
+            <span className="data">
+              <OrgText text={project.context} />
+            </span>
+          )}
         </div>
         <h1 className={styles.title}>{project.title}</h1>
         <p className={styles.lede}>{project.description}</p>

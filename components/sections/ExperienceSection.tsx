@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import OrgText from "@/components/ui/OrgText";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getExperience } from "@/lib/content";
 import type { Locale } from "@/i18n/routing";
@@ -21,14 +22,18 @@ export default async function ExperienceSection() {
               </div>
               <div>
                 <h3 className={styles.title}>{item.title}</h3>
-                <p className={styles.place}>{item.place}</p>
+                <p className={styles.place}>
+                  <OrgText text={item.place} />
+                </p>
               </div>
               <div className={styles.desc}>
                 <p>{item.description}</p>
                 {item.highlights && (
                   <ul className={styles.highlights}>
                     {item.highlights.map((h) => (
-                      <li key={h}>{h}</li>
+                      <li key={h}>
+                        <OrgText text={h} />
+                      </li>
                     ))}
                   </ul>
                 )}

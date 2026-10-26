@@ -90,3 +90,25 @@ test("los artículos enlazan proyectos que existen, con categoría válida y fue
     }
   }
 });
+
+test("Sibartech figura como freelance en todas las superficies que la nombran", () => {
+  const offenders = PUBLIC_SURFACES.filter((file) => {
+    const text = read(file);
+    return /Sibartech/.test(text) && !/freelance/i.test(text);
+  });
+  assert.deepEqual(offenders, []);
+  for (const job of experience.filter((e) => e.id === "sibartech")) assert.match(job.place, /Freelance/);
+});
+
+test("Coordenadas.co se referencia con su sitio y su página de LinkedIn, sin declarar su Organization", () => {
+  const jsonld = read("lib/jsonld.ts");
+  assert.match(jsonld, /worksFor: \{ "@type": "Organization", name: COORDENADAS\.name, url: COORDENADAS\.url, sameAs: \[COORDENADAS\.linkedin\] \}/);
+  const orgs = read("lib/orgs.ts");
+  assert.match(orgs, /url: "https:\/\/coordenadas\.co\/"/);
+  assert.match(orgs, /linkedin: "https:\/\/www\.linkedin\.com\/company\/coordenadas-co\/"/);
+  assert.match(orgs, /url: "https:\/\/bikans\.com\/"/);
+  // Los enlaces a empresas conservan el origen de la visita (sin noreferrer) y son editoriales (sin nofollow)
+  assert.match(orgs, /ORG_LINK_REL = "noopener"/);
+  const bikans = projects.find((p) => p.id === "bikans")!;
+  assert.match(bikans.context ?? "", /Coordenadas\.co for Bikans/);
+});

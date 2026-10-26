@@ -1,4 +1,5 @@
 import matter from "gray-matter";
+import { linkOrgsMarkdown } from "../../lib/orgs.ts";
 import type { BlogDraft } from "../state.ts";
 
 interface MdxInput {
@@ -59,7 +60,8 @@ export function sanitizeMdxBody(body: string): { body: string; findings: string[
 export function buildMdx({ draft, slug, locale, date, category, contentId, sources, projects = [], version }: MdxInput): string {
   if (!SLUG.test(slug)) throw new Error(`slug inválido: ${slug}`);
   const description = draft.description.length > 170 ? `${draft.description.slice(0, 167).trimEnd()}…` : draft.description;
-  const { body } = sanitizeMdxBody(draft.body);
+  // Las empresas con las que trabajo enlazan a su sitio en su primera mención (lib/orgs.ts)
+  const body = linkOrgsMarkdown(sanitizeMdxBody(draft.body).body);
   const data: Record<string, unknown> = {
     title: draft.title.slice(0, 70),
     description: description.length >= 50 ? description : `${description} ${draft.summary}`.slice(0, 160),

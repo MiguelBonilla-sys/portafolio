@@ -4,7 +4,7 @@
     "title": "Bikans: SaaS de nómina y retención",
     "language": "React · Django",
     "status": "commercial",
-    "context": "Coordenadas.co · app.bikans.com",
+    "context": "Coordenadas.co para Bikans · app.bikans.com",
     "description": "SaaS colombiano de nómina y retención en la fuente para contadores. Unificó dos herramientas que obligaban a digitar los mismos datos dos veces.",
     "contribution": "Construí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
     "longDescription": "Bikans unificó dos herramientas que obligaban a digitar los mismos datos dos veces: una de nómina y otra de retención en la fuente. Hoy es un solo SaaS en producción.\n\nConstruí el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas, sobre un backend en Django con PostgreSQL. Lo desarrollé como Full Stack Developer en Coordenadas.co.",
@@ -22,7 +22,7 @@
     "featured": true,
     "caseStudy": {
       "problem": "Los contadores llevaban la nómina en una herramienta y la retención en la fuente en otra, y tenían que digitar los mismos datos de la empresa y de los empleados en las dos.",
-      "role": "Lo desarrollé como Full Stack Developer en Coordenadas.co, para un cliente. Mi parte: el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
+      "role": "Lo desarrollé como Full Stack Developer en Coordenadas.co para Bikans, una firma de asesoría contable y de nómina. Mi parte: el frontend en React, el panel de administración y la autenticación de dos factores (TOTP) del inicio de sesión que comparten las dos herramientas.",
       "architecture": {
         "summary": "Aplicación de una sola página que consume una API REST en Django. Los módulos de nómina y de retenciones trabajan sobre los mismos datos.",
         "flow": [

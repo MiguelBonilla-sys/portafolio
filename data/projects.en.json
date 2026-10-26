@@ -4,7 +4,7 @@
     "title": "Bikans: Payroll & Tax SaaS",
     "language": "React · Django",
     "status": "commercial",
-    "context": "Coordenadas.co · app.bikans.com",
+    "context": "Coordenadas.co for Bikans · app.bikans.com",
     "description": "A Colombian payroll and tax withholding SaaS for accountants. It merged two tools that forced the same data to be entered twice.",
     "contribution": "I built the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share.",
     "longDescription": "Bikans merged two tools that forced the same data to be entered twice, one for payroll and one for tax withholding, into a single SaaS that is now in production.\n\nI built the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share, on a Django and PostgreSQL backend. I built it as a Full Stack Developer at Coordenadas.co.",
@@ -22,7 +22,7 @@
     "featured": true,
     "caseStudy": {
       "problem": "Accountants ran payroll in one tool and tax withholding in another, and had to enter the same company and employee data in both.",
-      "role": "I built it as a Full Stack Developer at Coordenadas.co, for a client. My part: the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share.",
+      "role": "I built it as a Full Stack Developer at Coordenadas.co for Bikans, an accounting and payroll advisory firm. My part: the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share.",
       "architecture": {
         "summary": "A single-page app that consumes a Django REST API. The payroll and withholding modules work on the same data.",
         "flow": [

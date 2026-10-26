@@ -127,3 +127,18 @@ test("el formulario de contacto valida antes de enviar", async () => {
   assert.equal(await page.evaluate(() => document.activeElement?.id), "contact-name");
   await page.close();
 });
+
+test("Coordenadas.co y Bikans enlazan a sus sitios, sin nofollow ni noreferrer", async () => {
+  const check = async (path, urls) => {
+    const { page } = await open(path);
+    for (const url of urls) {
+      const rels = await page.locator(`a[href="${url}"]`).evaluateAll((as) => as.map((a) => a.getAttribute("rel") ?? ""));
+      assert.ok(rels.length > 0, `${path}: falta el enlace a ${url}`);
+      for (const rel of rels) assert.doesNotMatch(rel, /nofollow|noreferrer|sponsored/, `${path}: rel="${rel}"`);
+    }
+    await page.close();
+  };
+  await check("/es", ["https://coordenadas.co/", "https://bikans.com/"]);
+  await check("/en/projects/bikans", ["https://coordenadas.co/", "https://bikans.com/"]);
+  await check("/es/cv", ["https://coordenadas.co/", "https://bikans.com/"]);
+});
