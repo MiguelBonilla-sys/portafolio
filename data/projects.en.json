@@ -5,9 +5,9 @@
     "language": "React · Django",
     "status": "commercial",
     "context": "Coordenadas.co for Bikans · app.bikans.com",
-    "description": "A Colombian payroll and tax withholding SaaS for accountants. It merged two tools that forced the same data to be entered twice.",
-    "contribution": "I built the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share.",
-    "longDescription": "Bikans merged two tools that forced the same data to be entered twice, one for payroll and one for tax withholding, into a single SaaS that is now in production.\n\nI built the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share, on a Django and PostgreSQL backend. I built it as a Full Stack Developer at Coordenadas.co.",
+    "description": "The clients of an accounting and payroll advisory firm ran payroll and tax withholding in two separate tools, and entered the same company and employee data twice.",
+    "solves": "One platform where employee data is entered once and feeds both payroll and tax withholding, with a mandatory second factor and per-tool access.",
+    "longDescription": "Bikans brings payroll and tax withholding for Bikans Asesores' clients into one platform. They used to be two tools, and the same data was typed into both: data entered twice can drift apart, and both calculations depend on it.\n\nToday there is a single employee registry, a period's payroll is imported from Excel, and withholding is calculated from the DIAN (Colombian tax authority) catalogs. I built the whole system, backend and frontend, and it is in production at app.bikans.com.",
     "tags": [
       "React",
       "TypeScript",
@@ -21,20 +21,45 @@
     },
     "featured": true,
     "caseStudy": {
-      "problem": "Accountants ran payroll in one tool and tax withholding in another, and had to enter the same company and employee data in both.",
-      "role": "I built it as a Full Stack Developer at Coordenadas.co for Bikans, an accounting and payroll advisory firm. My part: the React frontend, the admin panel and two-factor authentication (TOTP) for the sign-in both tools share.",
+      "need": "The firm's clients ran payroll in one tool and tax withholding in another, and typed the same company and employee data into both. Data entered twice can drift apart, and both calculations depend on it.",
+      "constraints": [
+        "It is third-party payroll and tax data: each account sees only its own, and a password alone is not enough to sign in.",
+        "Each client uses only the tools it pays for, and the firm assigns them, not the user.",
+        "Peso amounts and percentages come from DIAN rules and cannot lose precision to rounding.",
+        "Payroll already lived in Excel: it had to come in without being typed again."
+      ],
+      "solution": "A single employee registry, keyed by national ID number, shared by both modules. Each period's payroll is imported from Excel or entered with its adjustments, and withholding is calculated from the DIAN catalogs: concepts with their minimum base in UVT (the tax value unit) and their rate, and economic activities with their ICA (municipal business tax) rate. Users sign in with a password and a TOTP code, and the firm decides from the admin panel which tools each account sees.",
       "architecture": {
-        "summary": "A single-page app that consumes a Django REST API. The payroll and withholding modules work on the same data.",
+        "summary": "A single-page app in React and TypeScript on a Django REST Framework API, with PostgreSQL as the single database. Each tool is a Django app, and every view checks the tool and the data's owner.",
         "flow": [
-          "React and TypeScript frontend: payroll, withholding and admin modules",
-          "Sign-in with a TOTP second factor",
-          "Django REST API",
-          "PostgreSQL as the single database for both tools"
+          "Sign-in: the password returns a signed challenge token that expires in 5 minutes, not a session",
+          "Mandatory TOTP second factor: users without one set it up before getting in; the secret is stored encrypted with Fernet",
+          "Session as JWT in httpOnly cookies, not in localStorage",
+          "Every view requires access to the tool (`HasProductAccess`) and filters by the data's owner",
+          "Payroll: periods, per-employee detail, adjustments and Excel import",
+          "Tax withholding from the DIAN concept and economic activity catalogs",
+          "PostgreSQL: one employee registry for both modules"
         ]
       },
+      "decisions": [
+        "An employee is identified by national ID within each account: re-importing a payroll updates the employee instead of duplicating it (`update_or_create`).",
+        "Tokens travel in httpOnly cookies so a script injected into the page cannot read them.",
+        "Money and percentages as `Decimal`, never `float`.",
+        "Records are deactivated, not deleted: the history of payrolls already calculated is kept.",
+        "Accounts the firm creates start without a password: the person gets an activation email and sets their own."
+      ],
+      "validation": [
+        "105 automated backend tests (Django test runner): sign-in, second factor, per-tool permissions, payroll, import and withholding.",
+        "After five failed attempts, django-axes locks sign-in for one hour.",
+        "The second-factor challenge expires after 5 minutes and keeps no state on the server."
+      ],
+      "results": [
+        "In production at app.bikans.com: both modules work on the same data, behind a single sign-in."
+      ],
       "limitations": [
         "It is a client's private product: the code is not public and I don't publish usage or customer data."
-      ]
+      ],
+      "role": "I built the whole system as a Full Stack Developer at Coordenadas.co for Bikans, an accounting and payroll advisory firm: the Django backend, the React frontend, two-factor authentication and the admin panel."
     }
   },
   {
@@ -43,9 +68,9 @@
     "language": "Python",
     "status": "academic",
     "context": "Co-authored thesis · USB Bogotá · 2026",
-    "description": "An API that takes a URL, an email or an .eml file and returns a phishing verdict with a risk score and the reasons behind it. It targets domains that imitate others with near-identical Unicode characters.",
-    "contribution": "FastAPI backend that combines five signals: IDN analysis, threat intelligence, an LLM with RAG, a URL classifier and a page probe.",
-    "longDescription": "My Systems Engineering thesis at Universidad de San Buenaventura, co-authored with Juan Sebastián Fandiño Novoa: a system that detects phishing domains that imitate well-known domains with visually similar characters (IDN homographs).\n\nThe backend runs on FastAPI with PostgreSQL, Redis and ChromaDB. It combines five signals into a risk score and explains every verdict. A browser extension, an Outlook add-in and an admin dashboard consume it.",
+    "description": "A domain that swaps letters for nearly identical Unicode characters looks just like the original, so the person reading the email has no way to notice.",
+    "solves": "Analyzes a URL or an email when the person asks and says whether it is phishing, with the reasons and what to do. The security team sees each incident and how each signal voted.",
+    "longDescription": "Systems Engineering thesis at Universidad de San Buenaventura, co-authored with Juan Sebastián Fandiño Novoa.\n\nA homograph domain swaps letters for nearly identical Unicode characters, like a Cyrillic \"а\" in place of a Latin \"a\". The system combines five signals into a risk score and explains every verdict. It is used from a browser extension and an Outlook add-in, which analyze the open email only when the person clicks Analyze, and from a dashboard for the university's security administrators.",
     "tags": [
       "Python",
       "FastAPI",
@@ -61,8 +86,15 @@
     },
     "featured": true,
     "caseStudy": {
-      "problem": "A homograph domain swaps letters for near-identical Unicode characters, such as a Cyrillic “а” in place of a Latin “a”. The URL looks legitimate at a glance. The system had to catch them in URLs and emails, and explain why it flagged something as phishing.",
-      "role": "A two-person thesis project with Juan Sebastián Fandiño Novoa. This repository is the backend: the API used by the browser extension, the Outlook add-in and the dashboard.",
+      "need": "At a glance, a homograph domain is indistinguishable from the original. A filter that only says \"dangerous\" does not help anyone decide either: the person needs the reason and the next step. And the university's security team needs to see what came in and why it was flagged.",
+      "constraints": [
+        "External reputation services can fail or lack API keys, and without them the system must not start flagging everything as phishing.",
+        "These are people's emails: Colombia's Law 1581 of 2012 limits what is stored, and personal data cannot be sent to the LLM.",
+        "The extension does not read the inbox in the background: it only analyzes the message the person opens and asks to analyze.",
+        "The public datasets reviewed contained no real IDN homographs.",
+        "The system advises; it does not block or quarantine email. A person handles the incident response."
+      ],
+      "solution": "An API that takes a URL, an email or an .eml file and returns a verdict with its risk score, the reasons and the steps to follow. It is used by an extension for Chrome, Edge and Firefox, an Outlook add-in and a dashboard where administrators see incidents, each agent's score and each user's permissions.",
       "architecture": {
         "summary": "`services/orchestrator.py` gathers five signals and `agents/fusion_agent.py` computes the final risk. It deploys with Docker Compose on Coolify: backend, PostgreSQL, Redis, ChromaDB and Ollama for embeddings.",
         "flow": [
@@ -93,7 +125,8 @@
         "The comparison against a monolithic classifier is being re-run: the review found duplicated URLs and cases shared between calibration and evaluation, so I won't publish those metrics until the new run is done.",
         "The public datasets we reviewed had no real IDN homographs; the homograph corpus used in the evaluation is synthetic.",
         "Without API keys, the threat intelligence signals default to zero."
-      ]
+      ],
+      "role": "Thesis with Juan Sebastián Fandiño Novoa. I developed the system's four repositories: the backend described on this page, the browser extension with the Outlook add-in, the admin dashboard, and the local and lab infrastructure with Docker Compose and Kubernetes."
     }
   },
   {
@@ -102,9 +135,9 @@
     "language": "TypeScript",
     "status": "deployed",
     "context": "This site · mangel14.dev",
-    "description": "This bilingual portfolio and a LangGraph.js agent that turns notes, documents and links sent over Telegram into blog posts and LinkedIn posts, publishing nothing without my confirmation.",
-    "contribution": "Design, code and deployment: a static Next.js site with SEO for search engines and AI assistants, and the agent's editorial graph with source checking, a writing linter and code-generated visuals.",
-    "longDescription": "The site you're reading: Next.js 16 with static generation, in Spanish and English, with structured data, `llms.txt` and a sitemap with per-language alternates.\n\nThe Content Engine lives in the same Vercel deployment: a LangGraph.js graph that takes a note I send over Telegram, drafts the article and the post, reviews the text and waits for my approval before publishing.",
+    "description": "Publishing steadily about what I build without a model making up facts in my name, on a portfolio that search engines and AI assistants can read and cite.",
+    "solves": "Turns the notes, documents and links I send it on Telegram into blog posts and LinkedIn posts. No number goes out without its source, and nothing is published without my confirmation.",
+    "longDescription": "The site you're reading: Next.js 16 with static generation, in Spanish and English, with structured data, `llms.txt` and a sitemap with per-language alternates.\n\nThe Content Engine, a LangGraph.js graph, runs in the same Vercel deployment. It takes what I send on Telegram, proposes an angle, drafts the post and the LinkedIn version, checks them against a style linter and waits for my approval of an exact version before publishing.",
     "tags": [
       "TypeScript",
       "Next.js",
@@ -118,8 +151,13 @@
     },
     "featured": true,
     "caseStudy": {
-      "problem": "I wanted a portfolio that search engines and AI assistants could read and cite, and a way to publish consistently without a model making up facts in my name.",
-      "role": "Personal project: design, code, content and deployment.",
+      "need": "I wanted to publish steadily about what I build, but a language model drafting on its own makes up numbers, experiences and sources, and whatever is published carries my name. The portfolio also had to be readable and citable by search engines and AI assistants, not only by people.",
+      "constraints": [
+        "No separate servers and no fixed cost: Vercel's Hobby plan, with 300-second functions at most and one cron run a day.",
+        "Whatever arrives on Telegram (documents, pages, forwarded messages) can carry hidden instructions: it is untrusted material.",
+        "LinkedIn has no idempotency key, and its text format silently truncates a post when reserved characters are not escaped."
+      ],
+      "solution": "An agent that works like an editor: it extracts what I send, marks which numbers have a source and which don't, asks me for what's missing, drafts in both languages with a cover and diagrams, and publishes only the version I approve, first on the blog and then on LinkedIn.",
       "architecture": {
         "summary": "The site is static (SSG) with Next.js 16 and next-intl. The agent runs in the API routes of the same Vercel deployment, with its state in Postgres; there are no separate servers.",
         "flow": [
@@ -146,7 +184,8 @@
         "The agent's variables are configured in production (the webhook rejects requests without the secret instead of answering “not configured”), but it hasn't published real content yet.",
         "The first blog post is still a draft.",
         "LinkedIn publishing is implemented with the Posts API but hasn't been tested against the real account; LinkedIn has no idempotency key, so an attempt cut off midway asks for confirmation before repeating."
-      ]
+      ],
+      "role": "Personal project: design, code, content and deployment."
     }
   },
   {
@@ -155,9 +194,9 @@
     "language": "Python",
     "status": "prototype",
     "context": "Hackathon · 2025",
-    "description": "A FastAPI gateway that adds authentication and owner-based access control in front of a university inventory API that had no users.",
-    "contribution": "Authentication with access and refresh tokens, per-owner asset filtering, and deployment on Railway with Sentry.",
-    "longDescription": "An API gateway built with FastAPI that acts as a secure proxy in front of an external university asset inventory API. It implements full authentication with JWT access and refresh tokens, user registration with bcrypt, and ownership-based access control: each user can only query the assets they own according to the `dueno_de_activo` field, while superusers see the full set.\n\nThe gateway was deployed on Railway with PostgreSQL as the database, uses httpx as an async HTTP client for the proxy, and integrates Sentry for error and performance monitoring. The architecture is fully asynchronous (async/await) with layered separation: routers, services, typed SQLAlchemy 2.0 models and Pydantic schemas for validation. It includes Docker, docker-compose and utility scripts for bulk user loading.",
+    "description": "A university's asset inventory API returned the whole inventory to anyone who asked, and it could not be modified.",
+    "solves": "Puts users and permissions in front of that API: each person sees only the assets they own and superusers see everything, without touching the original API.",
+    "longDescription": "Hackathon project. The university's asset inventory API already existed and had no users: anyone who queried it got the full inventory.\n\nThe gateway sits in front of it. It authenticates with JWT access and refresh tokens, queries the original API and filters the response by the `dueno_de_activo` (asset owner) field, so each user sees only their own. It is built with FastAPI and PostgreSQL, async end to end, deployed on Railway and reports errors to Sentry.",
     "tags": [
       "Python",
       "FastAPI",
@@ -174,7 +213,12 @@
     },
     "featured": true,
     "caseStudy": {
-      "problem": "The university's asset inventory API already existed and returned everything to anyone who asked. Each user had to see only their own assets, without changing that API.",
+      "need": "The university's asset inventory API already existed and returned everything to anyone who asked. What each user could see had to be limited.",
+      "constraints": [
+        "The original API could not be modified: access control had to live outside it.",
+        "A hackathon deadline."
+      ],
+      "solution": "A gateway that requires sign-in, queries the original API on the user's behalf and returns only the assets they own. Superusers get the full inventory.",
       "architecture": {
         "summary": "The gateway sits in front of the original API: it authenticates, queries and filters. Layers are split into routers, async SQLAlchemy 2.0 models and Pydantic schemas.",
         "flow": [
@@ -193,7 +237,8 @@
       "limitations": [
         "Filtering happens after fetching up to 2,000 assets from the external API on every request; with more data it would need to filter at the source or cache.",
         "It's a hackathon project: there are no automated tests, only manual check scripts."
-      ]
+      ],
+      "role": "Hackathon project. I developed the gateway: authentication, the owner filter and the deployment on Railway with Sentry."
     }
   },
   {
@@ -203,7 +248,7 @@
     "status": "prototype",
     "context": "Public repository · 2025",
     "description": "A complete PySpark ETL pipeline for sentiment analysis of Dow Jones news, with visualizations and multi-format storage.",
-    "contribution": "Schema-validated extraction, PySpark feature engineering and loading to Parquet, CSV, SQLite and JSON, with pytest tests.",
+    "solves": "Schema-validated extraction, PySpark feature engineering and loading to Parquet, CSV, SQLite and JSON, with pytest tests.",
     "longDescription": "An ETL pipeline that processes 4,101 Dow Jones news records (2008–2016) using PySpark with Adaptive Query Execution. The extraction stage validates the CSV schema and runs automatic quality checks. The transformation applies feature engineering: null cleanup, date conversion, sentiment indicators, text statistics, headline aggregation and temporal features.\n\nThe multi-format load writes to Parquet (Snappy compression), CSV, SQLite with indexes, and JSON. Visualizations include class distribution, sentiment over time, word clouds, top unigrams/bigrams and an interactive Plotly dashboard. The full pipeline runs in under 60 seconds with less than 4 GB of RAM, includes a pytest unit and integration test suite, and is dockerized for reproducibility.",
     "tags": [
       "Python",
@@ -227,7 +272,7 @@
     "status": "prototype",
     "context": "Personal tool",
     "description": "Generates .docx bibliographic tracking documents from academic references using a local LLM through Ollama.",
-    "contribution": "Real metadata from CrossRef, OpenAlex and arXiv combined with a local LLM analysis, with automatic GPU or CPU detection.",
+    "solves": "Real metadata from CrossRef, OpenAlex and arXiv combined with a local LLM analysis, with automatic GPU or CPU detection.",
     "longDescription": "A Python system that automates the generation of .docx bibliographic tracking documents from a JSON file of academic references (DOI, arXiv, GitHub, web, PDF). It pulls real metadata from CrossRef, OpenAlex and arXiv, and combines it with an analysis generated by a local LLM running on Ollama, with automatic detection of GPU (NVIDIA/CUDA, AMD/ROCm) or CPU.\n\nThe system has four operating modes: metadata only (no LLM), CPU analysis, GPU analysis, and initial setup. Each generated document includes general data, the IEEE reference, abstract, a content analysis (methodology, results, contributions, limitations) and how it relates to the researcher's project. It supports models such as Mistral, Phi-3 Mini and LLaMA 3, taking 30–90 seconds per document on GPU.",
     "tags": [
       "Python",
@@ -249,7 +294,7 @@
     "language": "Python",
     "status": "prototype",
     "description": "A Flask REST API for managing a video game catalog, with full CRUD, Swagger/OpenAPI and PostgreSQL.",
-    "contribution": "Layered architecture (controllers, services, models, routes and schemas) with interactive docs generated by Flasgger.",
+    "solves": "Layered architecture (controllers, services, models, routes and schemas) with interactive docs generated by Flasgger.",
     "longDescription": "A REST API built with Flask 3 and SQLAlchemy 2 to manage a video game catalog. It exposes full CRUD endpoints with filters by category, price and rating, pagination, and statistics endpoints. Documentation is generated automatically by Flasgger, which serves an interactive Swagger UI at `/apidocs/` where every endpoint can be tried directly.\n\nThe project follows a strict modular architecture with separate layers: Controllers, Services, Models, Routes and Schemas. It includes centralized error handling, structured logging, CORS configured for frontend use, a Dockerfile for containerization, and Procfile + railway.json configuration for deployment on Railway with PostgreSQL as the production database.",
     "tags": [
       "Python",
@@ -272,7 +317,7 @@
     "language": "Python",
     "status": "prototype",
     "description": "An interactive geospatial dashboard built with Streamlit for visualizing and analyzing geographic data.",
-    "contribution": "Folium maps (marker clustering and a heatmap) and Plotly charts over a country dataset.",
+    "solves": "Folium maps (marker clustering and a heatmap) and Plotly charts over a country dataset.",
     "longDescription": "A geospatial analysis web app built with Streamlit that lets you explore and visualize geographic data interactively without a separate backend. It loads a country dataset, applies dynamic filters and renders interactive maps directly in the browser.\n\nMaps use Folium (marker clustering, a heatmap and drawing tools) through streamlit-folium, and charts are built with Plotly. Data is processed with pandas.",
     "tags": [
       "Python",
@@ -293,7 +338,7 @@
     "language": "Java",
     "status": "archived",
     "description": "An Android app for managing a pizzeria's orders, menu and inventory, with order status tracking.",
-    "contribution": "Customer flow (menu, cart, order and tracking) and a staff panel (orders, inventory and reports).",
+    "solves": "Customer flow (menu, cart, order and tracking) and a staff panel (orders, inventory and reports).",
     "longDescription": "An Android app developed in Java with Android Studio that digitizes a pizzeria's whole operation. Customers can browse the menu with images and descriptions, customize pizzas by toppings, size and crust, manage a shopping cart, and track their order status in real time (preparing → on the way → delivered). It also keeps an order history for quick reorders.\n\nThe admin panel lets staff manage incoming orders, update their status, control ingredient inventory and check sales reports. The architecture follows the MVC/MVVM pattern with local persistence in SQLite/Room, adapters for dynamic lists and XML resources for the UI. The project builds with Gradle (Kotlin DSL).",
     "tags": [
       "Java",
@@ -316,7 +361,7 @@
     "status": "academic",
     "context": "Computer Networks course",
     "description": "TCP and UDP server implementations in Java with graphical client interfaces for network communication.",
-    "contribution": "A TCP server with a graphical client and a connectionless UDP server, to compare both models.",
+    "solves": "A TCP server with a graphical client and a connectionless UDP server, to compare both models.",
     "longDescription": "A Computer Networks course project that implements concurrent TCP and UDP servers in plain Java. The TCP server listens on port 5004 and comes with a graphical client that connects by entering an IP and a name, sends and receives messages in real time, and controls the connection with disconnect/reconnect buttons. It shows details for each connected client.\n\nThe UDP server listens on port 9107, receives datagrams from multiple clients without keeping connection state, shows the source IP and port of each message, and stops after a configurable maximum number of messages. The project is built with Maven and shows the core differences between connection-oriented (TCP) and connectionless (UDP) communication.",
     "tags": [
       "Java",

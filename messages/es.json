@@ -40,7 +40,7 @@
   "about": {
     "title": "Sobre mí",
     "p1": "Tengo más de 2 años de experiencia profesional construyendo software. Hoy trabajo de forma remota como Full Stack Developer en Coordenadas.co, y antes fui Junior Backend Engineer freelance para Sibartech Technology SAS, con Django, FastAPI y PostgreSQL en producción.",
-    "p2": "En Coordenadas uní en Bikans dos herramientas de nómina y retención en la fuente, hoy en producción con doble factor de autenticación, e integré QuickBooks Online con un agente en n8n en 4 días. También construyo plugins e integraciones para clientes de EE. UU. y mantengo la infraestructura en un servidor Linux con Docker, Coolify y Traefik.",
+    "p2": "En Coordenadas hice Bikans de punta a punta: una plataforma de nómina y retención en la fuente, en producción con doble factor de autenticación, donde los datos de los empleados se cargan una vez en lugar de digitarse en dos herramientas. También construyo plugins e integraciones para clientes de EE. UU. y mantengo la infraestructura en un servidor Linux con Docker, Coolify y Traefik.",
     "p3": "Estudio décimo semestre de Ingeniería de Sistemas en la Universidad de San Buenaventura. Mi tesis, en coautoría, es un sistema multiagente que detecta dominios de phishing por homógrafos IDN. También construí el Content Engine, un agente en LangGraph que redacta los artículos de este blog y no publica nada sin mi aprobación.",
     "portraitAlt": "Retrato en pixel art de Miguel Bonilla con gafas, camisa blanca y traje azul"
   },
@@ -59,7 +59,7 @@
   },
   "projects": {
     "title": "Proyectos",
-    "lede": "Primero los proyectos con más evidencia: cada uno tiene un caso de estudio con el problema, la arquitectura, las decisiones y sus límites.",
+    "lede": "Primero los proyectos con más evidencia: cada uno explica qué necesidad atiende, cómo la resuelve, qué se decidió y qué le falta.",
     "featured": "Destacado",
     "stack": "Stack",
     "viewRepo": "Ver repositorio",
@@ -71,7 +71,7 @@
     "otherTitle": "Otros proyectos y archivo académico",
     "otherLede": "Proyectos de curso, prototipos y trabajos sin código público. Cada uno indica su estado.",
     "readCase": "Leer el caso de estudio",
-    "contribution": "Mi aporte",
+    "solves": "Qué hace",
     "featuredProjects": "Proyectos destacados",
     "status": {
       "commercial": "Producción comercial",
@@ -84,15 +84,17 @@
     "unverifiedNote": "Este proyecto no tiene repositorio ni demo públicos. La descripción no incluye resultados que no se puedan revisar.",
     "case": {
       "overview": "Resumen",
-      "problem": "Problema",
-      "role": "Rol y responsabilidades",
-      "architecture": "Arquitectura",
+      "need": "La necesidad",
+      "constraints": "Restricciones",
+      "solution": "La solución",
+      "architecture": "Cómo funciona",
       "flow": "Flujo de datos",
       "decisions": "Decisiones técnicas",
       "challenges": "Retos de ingeniería",
-      "validation": "Pruebas y validación",
-      "results": "Resultados",
-      "limitations": "Limitaciones y próximos pasos",
+      "validation": "Cómo se valida",
+      "results": "Resultado",
+      "limitations": "Límites y próximos pasos",
+      "role": "Mi parte",
       "contents": "En esta página"
     },
     "ctaTitle": "¿Te interesa este tipo de trabajo?",

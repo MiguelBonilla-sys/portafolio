@@ -94,7 +94,7 @@ El token de LinkedIn dura 60 días. El cron diario te avisa por Telegram 10 día
 
 Escríbele al bot lo que construiste, con cifras y decisiones. Por ejemplo:
 
-> Integré QuickBooks Online con un agente en n8n. Fueron 4 días, 5 fases y 17 tareas. A mitad de camino el OAuth 2.0 fallaba porque el refresh token se guardaba antes de confirmar el intercambio; lo arreglé guardándolo después de la respuesta 200.
+> En Bikans el segundo factor es obligatorio, pero una cuenta nueva todavía no tiene TOTP configurado. La contraseña no devuelve una sesión: devuelve un token de reto firmado que vence en 5 minutos, y con él la persona configura el TOTP antes de entrar. El reto no guarda estado en el servidor.
 
 El bot te devuelve:
 - el artículo en español e inglés (archivo adjunto)

@@ -1,6 +1,6 @@
 # Perfil de LinkedIn (EN y ES)
 
-> Actualizado: 2026-10-26 (Sibartech como freelance; Coordenadas.co y Bikans enlazadas). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`.
+> Actualizado: 2026-10-26 (Bikans como sistema completo; proyectos por necesidad y solución; Sibartech como freelance; Coordenadas.co y Bikans enlazadas). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`.
 > Esta sesión no tiene acceso a LinkedIn: son textos listos para revisar y pegar a mano. No agregan cargos, cifras ni experiencia que no estén en esas fuentes.
 
 Perfil principal en inglés (mercado remoto) y perfil secundario en español ("Add profile in another language").
@@ -37,8 +37,7 @@ I build web applications end to end: APIs in FastAPI and Django, interfaces in R
 I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I was a freelance Junior Backend Engineer for Sibartech Technology SAS, working with Django, FastAPI and PostgreSQL in production.
 
 Some of what I've built:
-- Bikans, the payroll and tax withholding platform I built at Coordenadas.co for the accounting firm Bikans Asesores. It replaced two tools with duplicate data entry; I built the React frontend, the admin panel and two-factor authentication.
-- An n8n agent that integrates QuickBooks Online over OAuth 2.0, delivered in 4 days across 5 phases and 17 tasks.
+- Bikans, the payroll and tax withholding platform for the clients of the accounting firm Bikans Asesores, built at Coordenadas.co. Employee data is entered once instead of being typed into two tools. I built the whole system: Django backend, React frontend, two-factor authentication and admin panel.
 - My co-authored thesis: an API that flags IDN homograph phishing by combining five signals (Unicode confusables, threat intelligence, an LLM with RAG, a URL classifier and a page probe), with integration and adversarial test suites.
 - This portfolio and its content agent (LangGraph.js): it drafts from my notes, checks every number against its source and publishes nothing without my approval.
 
@@ -53,8 +52,7 @@ Construyo aplicaciones web de punta a punta: APIs en FastAPI y Django, interface
 Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes fui Junior Backend Engineer freelance para Sibartech Technology SAS, con Django, FastAPI y PostgreSQL en producción.
 
 Algunas cosas que he construido:
-- Bikans, la plataforma de nómina y retención en la fuente que construí en Coordenadas.co para la firma contable Bikans Asesores. Reemplazó dos herramientas que obligaban a digitar los datos dos veces; hice el frontend en React, el panel de administración y la autenticación de dos factores.
-- Un agente en n8n que integra QuickBooks Online por OAuth 2.0, entregado en 4 días, en 5 fases y 17 tareas.
+- Bikans, la plataforma de nómina y retención en la fuente para los clientes de la firma contable Bikans Asesores, hecha en Coordenadas.co. Los datos de los empleados se cargan una vez en lugar de digitarse en dos herramientas. Hice el sistema completo: backend en Django, frontend en React, autenticación de dos factores y panel de administración.
 - Mi tesis en coautoría: una API que detecta phishing por homógrafos IDN combinando cinco señales (confundibles Unicode, threat intelligence, un LLM con RAG, un clasificador de URL y un sondeo de la página), con pruebas de integración y una suite adversaria.
 - Este portafolio y su agente de contenido (LangGraph.js): redacta a partir de mis notas, revisa cada cifra contra su fuente y no publica nada sin mi aprobación.
 
@@ -74,18 +72,18 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 ### Coordenadas.co · Full Stack Developer · Aug 2025 – Present · Bogotá (Remote)
 
 **EN**
-- Merged two tools that forced duplicate payroll and tax withholding data entry into Bikans, now in production with two-factor authentication.
-- Delivered an n8n automation agent integrating QuickBooks Online (OAuth 2.0) in 4 days across 5 phases and 17 tasks, fixing an authentication bug without missing the deadline.
-- Automated content distribution for 6 real estate projects into 1 reusable system that personalizes data per contact.
-- Built custom plugins and API integrations for U.S. clients in 3 industries; deploy and maintain project infrastructure on a self-hosted Linux server with Docker, Coolify and Traefik.
+- Bikans: one payroll and tax withholding platform where employee data is entered once instead of being typed into two tools. I built the whole system with Django, React and PostgreSQL, with a mandatory second factor; it is in production.
+- Content distribution for 6 real estate projects from a single reusable system that personalizes the data for each contact.
+- Plugins and API integrations for U.S. clients in 3 industries.
+- I deploy and maintain the projects on a self-hosted Linux server with Docker, Coolify and Traefik: automatic HTTPS and no database ports exposed.
 
-Skills: React · Django · n8n · OAuth 2.0 · Docker · Coolify · Traefik · Linux
+Skills: React · Django · PostgreSQL · n8n · Docker · Coolify · Traefik · Linux
 
 **ES**
-- Uní en Bikans dos herramientas que obligaban a digitar dos veces los datos de nómina y retención; hoy está en producción con autenticación de dos factores.
-- Entregué en 4 días un agente de automatización en n8n que integra QuickBooks Online (OAuth 2.0), en 5 fases y 17 tareas, y corregí un error de autenticación sin mover la fecha de entrega.
-- Automaticé la distribución de contenido de 6 proyectos inmobiliarios en 1 sistema reutilizable que personaliza los datos por contacto.
-- Construí plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias; despliego y mantengo la infraestructura en un servidor Linux propio con Docker, Coolify y Traefik.
+- Bikans: una sola plataforma de nómina y retención en la fuente donde los datos de los empleados se cargan una vez, en vez de digitarse en dos herramientas. Hice el sistema completo, en Django, React y PostgreSQL, con segundo factor obligatorio; está en producción.
+- Distribución de contenido para 6 proyectos inmobiliarios desde un solo sistema reutilizable, que personaliza los datos para cada contacto.
+- Plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias.
+- Despliego y mantengo los proyectos en un servidor Linux propio con Docker, Coolify y Traefik: HTTPS automático y bases de datos sin puertos expuestos.
 
 ### Sibartech Technology SAS · Junior Backend Engineer · Feb 2024 – Aug 2025 · Colombia
 

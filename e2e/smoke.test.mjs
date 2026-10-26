@@ -92,14 +92,19 @@ test("el cambio de idioma conserva la página", async () => {
 
 test("los destacados muestran el caso de estudio y los demás no tienen secciones vacías", async () => {
   const { page } = await open("/es/proyectos/idn-phishing-detector");
-  for (const heading of ["Problema", "Arquitectura", "Decisiones técnicas", "Pruebas y validación", "Limitaciones y próximos pasos"]) {
+  const headings = ["La necesidad", "Restricciones", "La solución", "Cómo funciona", "Decisiones técnicas", "Cómo se valida", "Límites y próximos pasos", "Mi parte"];
+  for (const heading of headings) {
     assert.ok(await page.getByRole("heading", { level: 2, name: heading }).count(), heading);
   }
+  // Primero la necesidad, "Mi parte" al final
+  const order = await page.locator("h2").allTextContents();
+  assert.ok(order.indexOf("La necesidad") < order.indexOf("La solución"), order.join(" · "));
+  assert.equal(order.filter((h) => headings.includes(h)).at(-1), "Mi parte", order.join(" · "));
   assert.ok((await page.locator("ol li").count()) >= 6, "diagrama de flujo");
   await page.close();
 
   const other = await open("/es/proyectos/redes-sockets");
-  assert.equal(await other.page.getByRole("heading", { level: 2, name: "Problema" }).count(), 0);
+  assert.equal(await other.page.getByRole("heading", { level: 2, name: "La necesidad" }).count(), 0);
   assert.equal(await other.page.getByRole("heading", { level: 2, name: "En esta página" }).count(), 0);
   assert.ok(await other.page.getByRole("link", { name: "Escríbeme" }).count(), "CTA de contacto");
   await other.page.close();

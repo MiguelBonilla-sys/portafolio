@@ -13,11 +13,18 @@ export interface ProjectLink {
  */
 export type ProjectStatus = "commercial" | "deployed" | "academic" | "prototype" | "archived" | "unverified";
 
-/** Secciones del caso de estudio. Todas opcionales: la página solo muestra las que tienen contenido. */
+/**
+ * Secciones del caso de estudio, en el orden en que se muestran (docs/research/PROJECT_NARRATIVE.md):
+ * necesidad → restricciones → solución → cómo funciona → decisiones → validación → resultado → límites → mi parte.
+ * Todas opcionales: la página solo muestra las que tienen contenido.
+ */
 export interface CaseStudy {
-  problem?: string;
-  /** Qué hizo Miguel y con quién */
-  role?: string;
+  /** Quién tenía qué problema y qué le costaba, sin nombrar la solución */
+  need?: string;
+  /** Lo que el proyecto no podía cambiar ni elegir */
+  constraints?: string[];
+  /** Qué hace el sistema, en términos de quien lo usa */
+  solution?: string;
   architecture?: {
     summary?: string;
     /** Pasos del flujo de datos, en orden; se dibujan como diagrama */
@@ -28,6 +35,8 @@ export interface CaseStudy {
   validation?: string[];
   results?: string[];
   limitations?: string[];
+  /** Mi parte: qué hizo Miguel y con quién. Va al final: confirma la autoría sin ser el titular */
+  role?: string;
 }
 
 export interface Project {
@@ -37,10 +46,10 @@ export interface Project {
   status: ProjectStatus;
   /** Dónde vive: "Coordenadas.co · app.bikans.com", "Tesis en coautoría · USB Bogotá"... */
   context?: string;
-  /** Qué resuelve, en una o dos frases */
+  /** La necesidad: para quién y qué problema, en una o dos frases */
   description: string;
-  /** Aporte técnico principal, para la tarjeta */
-  contribution?: string;
+  /** Qué hace ahora el sistema que antes no pasaba, para la tarjeta. Sin "construí": eso va en caseStudy.role */
+  solves?: string;
   longDescription?: string;
   tags: string[];
   links: ProjectLink;

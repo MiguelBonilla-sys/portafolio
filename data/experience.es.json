@@ -6,17 +6,16 @@
     "place": "Coordenadas.co · Bogotá, Colombia (remoto)",
     "description": "Plataformas web, integraciones de APIs y CRM, y automatizaciones para clientes de Colombia y EE. UU.",
     "highlights": [
-      "Uní en Bikans dos herramientas que obligaban a digitar dos veces los datos de nómina y retención en la fuente; hoy está en producción con autenticación de dos factores.",
-      "Entregué en 4 días un agente de automatización en n8n que integra QuickBooks Online (OAuth 2.0), en 5 fases y 17 tareas, y corregí un error de autenticación en el camino sin mover la fecha de entrega.",
-      "Automaticé la distribución de contenido de 6 proyectos inmobiliarios en un solo sistema reutilizable que personaliza los datos por contacto.",
-      "Construí plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias, y despliego y mantengo la infraestructura en un servidor Linux propio con Docker, Coolify y Traefik."
+      "Bikans: una sola plataforma de nómina y retención en la fuente donde los datos de los empleados se cargan una vez, en vez de digitarse en dos herramientas. Hice el sistema completo, en Django, React y PostgreSQL, con segundo factor obligatorio; está en producción.",
+      "Distribución de contenido para 6 proyectos inmobiliarios desde un solo sistema reutilizable, que personaliza los datos para cada contacto.",
+      "Plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias.",
+      "Despliego y mantengo los proyectos en un servidor Linux propio con Docker, Coolify y Traefik: HTTPS automático y bases de datos sin puertos expuestos."
     ],
     "stack": [
       "React",
       "Django",
+      "PostgreSQL",
       "n8n",
-      "QuickBooks Online API",
-      "OAuth 2.0",
       "Docker",
       "Coolify",
       "Traefik",
@@ -31,8 +30,8 @@
     "place": "Sibartech Technology SAS · Freelance · Colombia",
     "description": "Backend en producción con Python, Django, FastAPI y PostgreSQL.",
     "highlights": [
-      "Desarrollé y mantuve soluciones backend en Python con Django y FastAPI, con PostgreSQL como base de datos principal en un entorno de producción real.",
-      "Escribí pruebas con pytest y contenedoricé servicios con Docker: mis primeros pasos en testing y DevOps."
+      "Desarrollé y mantuve servicios backend en producción con Python, Django y FastAPI, sobre PostgreSQL.",
+      "Pruebas con pytest y servicios en contenedores Docker."
     ],
     "stack": [
       "Python",

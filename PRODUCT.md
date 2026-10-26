@@ -22,7 +22,7 @@ Escribirle (formulario o LinkedIn). Secundaria: abrir un proyecto y su repositor
 
 ## Product truth (fuente: CV de agosto de 2026; no inventar más allá de esto)
 - Más de 2 años de experiencia profesional en desarrollo de software.
-- Full Stack Developer en Coordenadas.co, Bogotá (remoto), desde agosto de 2025: Bikans (nómina + retención, en producción con 2FA), agente n8n para QuickBooks Online en 4 días (5 fases, 17 tareas), distribución de contenido de 6 proyectos inmobiliarios en 1 sistema, plugins e integraciones para clientes de EE. UU. en 3 industrias, infraestructura propia con Docker, Coolify y Traefik.
+- Full Stack Developer en Coordenadas.co, Bogotá (remoto), desde agosto de 2025: Bikans (sistema completo hecho por Miguel: backend en Django, frontend en React, nómina + retención en la fuente, en producción con 2FA), distribución de contenido de 6 proyectos inmobiliarios en 1 sistema, plugins e integraciones para clientes de EE. UU. en 3 industrias, infraestructura propia con Docker, Coolify y Traefik. Otros proyectos de clientes no se publican hasta que Miguel diga qué y cuándo.
 - Junior Backend Engineer freelance para Sibartech Technology SAS (feb 2024 – ago 2025): Python, Django, FastAPI, PostgreSQL, pytest, Docker.
 - Ingeniería de Sistemas, Universidad de San Buenaventura (ene 2021 – presente), décimo semestre. Tesis: sistema multiagente para detectar phishing por homógrafos IDN, 359 pruebas automatizadas.
 - Cursos: Ethical Hacking & Cyber Risk (U. Sergio Arboleda, 2025); Desarrollo de aplicaciones móviles (U. Nacional, 2023–2024).
