@@ -6,7 +6,7 @@ import { LIMITS, type Attachment } from "./inputs.ts";
 import type { Collection, CollectedPart, ContentRow, ContentStore } from "./lib/db.ts";
 import { logError, toPublicError } from "./lib/redact.ts";
 import { callback, esc, parseCallback, type TelegramClient, type TelegramMessage, type TelegramUpdate } from "./lib/telegram.ts";
-import { parseBogotaDateTime } from "./lib/text.ts";
+import { describeSlot, parseBogotaDateTime } from "./lib/text.ts";
 import type { Review, State } from "./state.ts";
 
 // Telegram como mesa de edición: comandos para lo explícito y conversación para lo demás.
@@ -374,7 +374,7 @@ export function createHandlers(rt: Runtime) {
       `Estado: ${STATUS_LABEL[row.status] ?? row.status}${row.version ? ` · versión ${row.version} (<code>${row.content_hash}</code>)` : ""}`,
       values.publishedChannels?.length ? `Publicado en: ${values.publishedChannels.map((c) => CHANNEL_LABEL[c]).join(", ")}` : "",
       values.missingFacts?.length ? `Datos pendientes: ${values.missingFacts.length}` : "",
-      row.scheduled_for ? `Programado: ${new Date(row.scheduled_for).toLocaleString("es-CO", { timeZone: rt.env.AGENT_TIMEZONE, dateStyle: "medium", timeStyle: "short" })}` : "",
+      row.scheduled_for ? `Programado: sale ${describeSlot(new Date(row.scheduled_for), rt.env.AGENT_TIMEZONE)}` : "",
       row.published_urls?.blog_es ? `Blog: ${row.published_urls.blog_es}` : "",
       row.published_urls?.linkedin ? `LinkedIn: ${row.published_urls.linkedin}` : "",
     ].filter(Boolean);
@@ -539,7 +539,7 @@ export function createHandlers(rt: Runtime) {
     if (pendingSchedule && text) {
       const at = parseBogotaDateTime(text);
       if (!at || at <= new Date()) {
-        return void (await tg.sendMessage("No entendí la fecha o ya pasó. Usa <code>AAAA-MM-DD HH:mm</code>, por ejemplo <code>2026-11-03 08:00</code>."));
+        return void (await tg.sendMessage("No entendí la fecha, ya pasó o falta decir si es a. m. o p. m. Escríbela así: <code>2026-11-03 8:00 am</code> o <code>2026-11-03 6:30 pm</code>."));
       }
       await rt.store.kvDelete(PENDING_SCHEDULE);
       return resume(pendingSchedule.id, { action: "reschedule", at: at.toISOString(), hash: pendingSchedule.hash, channels: pendingSchedule.channels });
@@ -650,7 +650,7 @@ export function createHandlers(rt: Runtime) {
         if (waitingAt !== "humanReview") return stale();
         await rt.store.kvSet(PENDING_SCHEDULE, { id: contentId, hash, channels: ["blog", "linkedin"] });
         await tg.answerCallback(cb.id);
-        return void (await tg.sendMessage("¿Cuándo lo publico? Responde <code>AAAA-MM-DD HH:mm</code> en hora de Bogotá (el cron corre a las 8:00)."));
+        return void (await tg.sendMessage("¿Cuándo lo publico? Responde con la fecha y la hora de Bogotá, por ejemplo <code>2026-11-03 8:00 am</code>. El publicador corre una vez al día, entre las 8:00 y las 9:00 a. m.; te digo el día exacto en que sale."));
       case "r":
         if (!["humanReview", "waitSchedule", "hold", "awaitProposal"].includes(waitingAt ?? "")) return stale();
         await tg.answerCallback(cb.id);
@@ -695,7 +695,7 @@ export function createHandlers(rt: Runtime) {
     return onText(msg, text);
   }
 
-  /** Cron diario (13:00 UTC = 8:00 Bogotá) */
+  /** Cron diario (13:00 UTC = 8:00 a. m. en Bogotá; ver CRON_UTC_HOUR) */
   async function runDaily(now = new Date()) {
     const report: string[] = [];
     for (const row of await rt.store.dueScheduled(now)) {

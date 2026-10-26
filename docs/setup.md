@@ -147,9 +147,9 @@ Mientras la cuenta de emisor está en modo demo, solo pueden guardar el pase los
 
 Si cambias la foto o el símbolo: `pnpm wallet-assets` regenera las imágenes de `wallet/` y `public/wallet/`.
 
-## Qué hace el cron diario (8:00 Bogotá)
+## Qué hace el cron diario (entre las 8:00 y las 9:00 a. m., hora de Bogotá)
 
-- Publica lo programado para ese día.
+- Publica lo programado cuya hora ya pasó. Como corre una vez al día (plan Hobby de Vercel), algo programado para las 6:30 p. m. sale a la mañana siguiente; al programar, el bot te dice el día exacto. Las horas se escriben en formato de 12 horas: `2026-11-03 6:30 pm` o `2026-11-03 8 am` (sin «am» o «pm», el bot pregunta).
 - Reintenta los artículos cuyo deploy no respondió.
 - Marca como expirado lo que lleva más de 48 h sin respuesta.
 - Avisa si el token de LinkedIn vence en 10 días o menos.
