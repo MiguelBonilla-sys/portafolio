@@ -1,6 +1,6 @@
 # Perfil de LinkedIn (EN y ES)
 
-> Actualizado: 2026-10-23 (fase 2). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`.
+> Actualizado: 2026-10-26 (Sibartech como freelance; Coordenadas.co y Bikans enlazadas). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`.
 > Esta sesión no tiene acceso a LinkedIn: son textos listos para revisar y pegar a mano. No agregan cargos, cifras ni experiencia que no estén en esas fuentes.
 
 Perfil principal en inglés (mercado remoto) y perfil secundario en español ("Add profile in another language").
@@ -34,10 +34,10 @@ Antes de pegar: cada cifra tiene que ser una que puedas defender en una entrevis
 
 I build web applications end to end: APIs in FastAPI and Django, interfaces in React and Next.js, and LLM and RAG integrations where they solve a real problem.
 
-I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I was a Junior Backend Engineer at Sibartech, working with Django, FastAPI and PostgreSQL in production.
+I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I was a freelance Junior Backend Engineer for Sibartech Technology SAS, working with Django, FastAPI and PostgreSQL in production.
 
 Some of what I've built:
-- Bikans, a payroll and tax withholding SaaS that replaced two tools with duplicate data entry. I built the React frontend, the admin panel and two-factor authentication.†
+- Bikans, the payroll and tax withholding platform I built at Coordenadas.co for the accounting firm Bikans Asesores. It replaced two tools with duplicate data entry; I built the React frontend, the admin panel and two-factor authentication.
 - An n8n agent that integrates QuickBooks Online over OAuth 2.0, delivered in 4 days across 5 phases and 17 tasks.
 - My co-authored thesis: an API that flags IDN homograph phishing by combining five signals (Unicode confusables, threat intelligence, an LLM with RAG, a URL classifier and a page probe), with integration and adversarial test suites.
 - This portfolio and its content agent (LangGraph.js): it drafts from my notes, checks every number against its source and publishes nothing without my approval.
@@ -50,10 +50,10 @@ Open to remote Full Stack roles. Portfolio, case studies and resume: mangel14.de
 
 Construyo aplicaciones web de punta a punta: APIs en FastAPI y Django, interfaces en React y Next.js, e integraciones con LLM y RAG cuando resuelven un problema real.
 
-Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes fui Junior Backend Engineer en Sibartech, con Django, FastAPI y PostgreSQL en producción.
+Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes fui Junior Backend Engineer freelance para Sibartech Technology SAS, con Django, FastAPI y PostgreSQL en producción.
 
 Algunas cosas que he construido:
-- Bikans, un SaaS de nómina y retención en la fuente que reemplazó dos herramientas que obligaban a digitar los datos dos veces. Hice el frontend en React, el panel de administración y la autenticación de dos factores.†
+- Bikans, la plataforma de nómina y retención en la fuente que construí en Coordenadas.co para la firma contable Bikans Asesores. Reemplazó dos herramientas que obligaban a digitar los datos dos veces; hice el frontend en React, el panel de administración y la autenticación de dos factores.
 - Un agente en n8n que integra QuickBooks Online por OAuth 2.0, entregado en 4 días, en 5 fases y 17 tareas.
 - Mi tesis en coautoría: una API que detecta phishing por homógrafos IDN combinando cinco señales (confundibles Unicode, threat intelligence, un LLM con RAG, un clasificador de URL y un sondeo de la página), con pruebas de integración y una suite adversaria.
 - Este portafolio y su agente de contenido (LangGraph.js): redacta a partir de mis notas, revisa cada cifra contra su fuente y no publica nada sin mi aprobación.
@@ -74,7 +74,7 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 ### Coordenadas.co · Full Stack Developer · Aug 2025 – Present · Bogotá (Remote)
 
 **EN**
-- Merged two tools that forced duplicate payroll and tax withholding data entry into Bikans, now in production with two-factor authentication.†
+- Merged two tools that forced duplicate payroll and tax withholding data entry into Bikans, now in production with two-factor authentication.
 - Delivered an n8n automation agent integrating QuickBooks Online (OAuth 2.0) in 4 days across 5 phases and 17 tasks, fixing an authentication bug without missing the deadline.
 - Automated content distribution for 6 real estate projects into 1 reusable system that personalizes data per contact.
 - Built custom plugins and API integrations for U.S. clients in 3 industries; deploy and maintain project infrastructure on a self-hosted Linux server with Docker, Coolify and Traefik.
@@ -82,10 +82,24 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 Skills: React · Django · n8n · OAuth 2.0 · Docker · Coolify · Traefik · Linux
 
 **ES**
-- Uní en Bikans dos herramientas que obligaban a digitar dos veces los datos de nómina y retención; hoy está en producción con autenticación de dos factores.†
+- Uní en Bikans dos herramientas que obligaban a digitar dos veces los datos de nómina y retención; hoy está en producción con autenticación de dos factores.
 - Entregué en 4 días un agente de automatización en n8n que integra QuickBooks Online (OAuth 2.0), en 5 fases y 17 tareas, y corregí un error de autenticación sin mover la fecha de entrega.
 - Automaticé la distribución de contenido de 6 proyectos inmobiliarios en 1 sistema reutilizable que personaliza los datos por contacto.
 - Construí plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias; despliego y mantengo la infraestructura en un servidor Linux propio con Docker, Coolify y Traefik.
+
+### Sibartech Technology SAS · Junior Backend Engineer · Feb 2024 – Aug 2025 · Colombia
+
+Tipo de empleo: **Freelance** (en LinkedIn, campo «Employment type»).
+
+**EN**
+- Developed and maintained production backend services in Python with Django and FastAPI, with PostgreSQL as the primary database.
+- Wrote tests with pytest and containerized services with Docker.
+
+Skills: Python · Django · FastAPI · PostgreSQL · pytest · Docker
+
+**ES**
+- Desarrollé y mantuve servicios backend en producción con Python, Django y FastAPI, sobre PostgreSQL.
+- Escribí pruebas con pytest y contenedoricé servicios con Docker.
 
 ### Universidad de San Buenaventura · Systems Engineering · 2021 – Present
 
@@ -109,6 +123,16 @@ Enlaza siempre la página del portafolio: ahí está el caso de estudio y desde 
 | mangel14.dev & Content Engine | `https://mangel14.dev/en/projects/portafolio-content-engine` |
 | API Auth Gateway (hackathon) | `https://mangel14.dev/en/projects/api-auth-hackaton` (sin enlace al repo hasta limpiarlo) |
 | ETL Pipeline: Dow Jones Sentiment | `https://mangel14.dev/en/projects/etl-parcial` |
+
+## Coordenadas.co y Bikans: cómo vincularlas en LinkedIn
+
+Lo que más visibilidad les da a ellas y a ti no es un enlace en el texto, sino que LinkedIn reconozca la relación:
+
+- **Experiencia → Coordenadas.co:** al escribir la empresa, elígela de la lista desplegable (página `linkedin.com/company/coordenadas-co`), no la escribas a mano. Así aparece su logo, tu cargo enlaza a su página y figuras entre las personas que trabajan allí.
+- **Sibartech:** si tiene página en LinkedIn, elígela igual; si no, queda como texto. Tipo de empleo: Freelance.
+- **Proyecto Bikans (sección Projects):** asócialo a la experiencia de Coordenadas.co y, en la descripción, nombra a Bikans Asesores. Enlace del proyecto: la página del portafolio.
+- **Posts:** el Content Engine menciona a la empresa (`@Coordenadas.co`, `@Bikans Asesores`) solo cuando el post dice que el trabajo o el aprendizaje fue allí, y una sola vez. La mención avisa a la página y la enlaza; mencionarla en cada post por cortesía resta, no suma.
+- **Sitio web de la empresa:** el portafolio enlaza `https://coordenadas.co/` y `https://bikans.com/` sin `nofollow` (es un enlace editorial, no pagado) y sin `noreferrer`, para que ellas vean en su analítica las visitas que llegan desde tu sitio.
 
 ## Top 5 skills (fijadas)
 

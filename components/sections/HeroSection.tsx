@@ -1,5 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Sigil from "@/components/brand/Sigil";
+import OrgText from "@/components/ui/OrgText";
 import { Link } from "@/i18n/navigation";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { GithubIcon, LinkedInIcon, MailIcon, XIcon } from "@/components/ui/icons";
@@ -68,7 +69,9 @@ export default async function HeroSection() {
             {facts.map((f) => (
               <div key={f.term} className={styles.fact}>
                 <dt>{f.term}</dt>
-                <dd>{f.value}</dd>
+                <dd>
+                  <OrgText text={f.value} />
+                </dd>
               </div>
             ))}
           </dl>

@@ -39,6 +39,7 @@ for (const [locale, { projects, experience, messages }] of Object.entries(LOCALE
     assert.ok(text.includes(norm(messages.cv.summaryText)), "perfil");
     for (const job of experience) {
       assert.ok(text.includes(norm(job.title)), `cargo: ${job.title}`);
+      for (const part of job.place.split(" · ")) assert.ok(text.includes(norm(part)), `lugar: ${part}`);
       if (job.type === "course") continue; // los cursos solo muestran título y lugar
       for (const line of job.highlights ?? [job.description]) assert.ok(text.includes(norm(line)), `logro: ${line.slice(0, 60)}`);
     }
@@ -47,6 +48,7 @@ for (const [locale, { projects, experience, messages }] of Object.entries(LOCALE
       assert.ok(p && !p.hidden, `proyecto del CV inexistente u oculto: ${id}`);
       assert.ok(text.includes(norm(p.title)), `título: ${p.title}`);
       assert.ok(text.includes(norm(p.description)), `descripción desactualizada: ${p.id}`);
+      if ((p as { context?: string }).context) assert.ok(text.includes(norm((p as { context?: string }).context!)), `contexto: ${p.id}`);
     }
     for (const p of projects.filter((x) => x.status === "unverified" || x.hidden)) {
       assert.ok(!text.includes(norm(p.title)), `proyecto sin evidencia en el CV: ${p.id}`);

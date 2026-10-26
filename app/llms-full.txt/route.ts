@@ -1,6 +1,7 @@
 import { getPosts } from "@/lib/blog";
 import { getExperience, getProjects, getSkills, skillNames, EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/content";
 import { absoluteUrl } from "@/lib/site";
+import { withOrgUrls } from "@/lib/orgs";
 import en from "@/messages/en.json";
 import type { Project } from "@/types";
 
@@ -49,7 +50,7 @@ export function GET() {
     ...getExperience("en").flatMap((e) => [
       `### ${e.title}`,
       "",
-      `${e.place} · ${e.date}`,
+      `${withOrgUrls(e.place)} · ${e.date}`,
       "",
       e.description,
       ...(e.highlights ?? []).map((h) => `- ${h}`),

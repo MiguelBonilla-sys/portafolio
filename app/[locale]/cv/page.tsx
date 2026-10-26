@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills, skillNames } from "@/lib/content";
+import OrgText from "@/components/ui/OrgText";
 import { SITE_URL, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./cv.module.css";
 
@@ -82,7 +83,9 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
           {jobs.map((job) => (
             <div key={job.id} className={styles.item}>
               <div className={styles.itemHead}>
-                <h3>{job.place.split(" · ")[0]}</h3>
+                <h3>
+                  <OrgText text={job.place.split(" · ")[0]} />
+                </h3>
                 <span>{job.date}</span>
               </div>
               <p className={styles.sub}>
@@ -90,7 +93,9 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
               </p>
               <ul>
                 {(job.highlights ?? [job.description]).map((h) => (
-                  <li key={h}>{h}</li>
+                  <li key={h}>
+                    <OrgText text={h} />
+                  </li>
                 ))}
               </ul>
             </div>
@@ -103,7 +108,11 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
             <div key={p.id} className={styles.item}>
               <div className={styles.itemHead}>
                 <h3>{p.title}</h3>
-                {p.context && <span>{p.context}</span>}
+                {p.context && (
+                  <span>
+                    <OrgText text={p.context} />
+                  </span>
+                )}
               </div>
               <p className={styles.sub}>
                 {t("technologies")}: {p.tags.join(", ")}

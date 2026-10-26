@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import OrgText from "@/components/ui/OrgText";
 import SectionHeader from "@/components/ui/SectionHeader";
 import styles from "./AboutSection.module.css";
 
@@ -12,8 +13,12 @@ export default async function AboutSection() {
         <SectionHeader id="sobre-mi-title" title={t("title")} />
         <div className={styles.grid}>
           <div className={styles.body}>
-            <p className={styles.lead}>{t("p1")}</p>
-            <p>{t("p2")}</p>
+            <p className={styles.lead}>
+              <OrgText text={t("p1")} />
+            </p>
+            <p>
+              <OrgText text={t("p2")} />
+            </p>
             <p>{t("p3")}</p>
           </div>
 

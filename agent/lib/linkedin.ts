@@ -1,7 +1,27 @@
 // LinkedIn: OAuth 2.0 ("Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect")
 // y Posts API. Docs: https://learn.microsoft.com/linkedin/marketing/community-management/shares/posts-api
 
+import { findOrgs } from "../../lib/orgs.ts";
 import { redact } from "./redact.ts";
+
+/**
+ * El campo commentary usa el "little text format": ( ) [ ] { } < > @ * _ ~ | \ y # son sintaxis, y LinkedIn
+ * corta el post en el primero que no esté escapado (y aun así responde 201). Se escapa todo salvo los
+ * hashtags (#palabra). Con `mentions`, la primera mención de cada empresa de lib/orgs.ts se convierte en
+ * @[nombre](urn), que enlaza su página y le avisa.
+ * Docs: https://learn.microsoft.com/linkedin/marketing/community-management/shares/little-text-format
+ */
+export function toLittleText(text: string, opts: { mentions?: boolean } = {}): string {
+  const escape = (t: string) => t.replace(/[\\|{}@[\]()<>*_~]/g, (c) => `\\${c}`).replace(/#(?![\p{L}\p{N}])/gu, "\\#");
+  if (!opts.mentions) return escape(text);
+  let out = "";
+  let at = 0;
+  for (const h of findOrgs(text)) {
+    out += `${escape(text.slice(at, h.start))}@[${escape(h.org.linkedinName)}](${h.org.linkedinUrn})`;
+    at = h.end;
+  }
+  return out + escape(text.slice(at));
+}
 
 // openid + profile: identificar al miembro; w_member_social: publicar, comentar y subir imágenes o documentos
 // en su nombre. La app no pide permisos de lectura de publicaciones (r_member_social es restringido).
@@ -77,12 +97,12 @@ export function createLinkedIn(accessToken: string, memberId: string, version: s
 
   return {
     async createPost(text, opts = {}) {
-      const res = await fetch("https://api.linkedin.com/rest/posts", {
+      const send = (mentions: boolean) => fetch("https://api.linkedin.com/rest/posts", {
         method: "POST",
         headers,
         body: JSON.stringify({
           author,
-          commentary: text,
+          commentary: toLittleText(text, { mentions }),
           visibility: "PUBLIC",
           distribution: { feedDistribution: "MAIN_FEED", targetEntities: [], thirdPartyDistributionChannels: [] },
           ...(opts.documentUrn
@@ -94,6 +114,9 @@ export function createLinkedIn(accessToken: string, memberId: string, version: s
           isReshareDisabledByAuthor: false,
         }),
       });
+      let res = await send(true);
+      // Una mención rechazada (400/422) no debe frenar el post: un 4xx no lo crea, así que se reintenta sin ella
+      if ((res.status === 400 || res.status === 422) && findOrgs(text).length) res = await send(false);
       await check(res, "createPost");
       const urn = res.headers.get("x-restli-id");
       if (!urn) throw new Error("LinkedIn createPost: la respuesta no trae x-restli-id");

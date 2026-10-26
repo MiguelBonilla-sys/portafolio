@@ -3,6 +3,7 @@ import type { Project } from "@/types";
 import type { Post } from "@/lib/blog";
 import { getSkills, skillNames, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
+import { COORDENADAS } from "@/lib/orgs";
 import { CATEGORY_LABEL } from "@/lib/taxonomy";
 import { PROFILE_UPDATED, toDateTime } from "@/lib/dates";
 
@@ -25,7 +26,8 @@ export function personSchema(locale: Locale) {
     url: absoluteUrl(locale, "/"),
     image: `${SITE_URL}/avatar.png`,
     sameAs: [GITHUB_URL, LINKEDIN_URL, X_URL],
-    worksFor: { "@type": "Organization", name: "Coordenadas.co" },
+    // Solo una referencia: los datos de la empresa los declara su propio sitio
+    worksFor: { "@type": "Organization", name: COORDENADAS.name, url: COORDENADAS.url, sameAs: [COORDENADAS.linkedin] },
     alumniOf: [
       { "@type": "CollegeOrUniversity", name: "Universidad de San Buenaventura" },
       { "@type": "CollegeOrUniversity", name: "Universidad Sergio Arboleda" },

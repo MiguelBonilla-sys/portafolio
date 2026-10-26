@@ -1,5 +1,6 @@
 import { getPosts } from "@/lib/blog";
 import { getExperience, getProjects, getSkills, skillNames, EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/content";
+import { withOrgUrls } from "@/lib/orgs";
 import { SITE_URL, absoluteUrl } from "@/lib/site";
 import type { Project } from "@/types";
 
@@ -25,7 +26,7 @@ export function GET() {
     "",
     "> Full Stack Engineer (Python, React & AI systems) based in Bogotá, Colombia (UTC−5). Builds Python backends, React frontends, LLM and RAG integrations, and n8n automations. Open to remote work.",
     "",
-    "Miguel Ángel Bonilla Torres (handle: mangel14) has 1+ year of professional software experience. He has worked as a Full Stack Developer at Coordenadas.co (remote) since August 2025, and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
+    "Miguel Ángel Bonilla Torres (handle: mangel14) has 2+ years of professional software experience. He has worked as a Full Stack Developer at Coordenadas.co (https://coordenadas.co/, remote) since August 2025, was a freelance Junior Backend Engineer for Sibartech Technology SAS (Feb 2024 – Aug 2025), and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
     "",
     `Full content in one file: ${SITE_URL}/llms-full.txt`,
     "",
@@ -40,7 +41,7 @@ export function GET() {
     "",
     "## Experience",
     "",
-    ...experience.map((e) => `- ${e.title}, ${e.place} (${e.date}): ${[e.description, ...(e.highlights ?? [])].join(" ")}`),
+    ...experience.map((e) => `- ${e.title}, ${withOrgUrls(e.place)} (${e.date}): ${[e.description, ...(e.highlights ?? [])].join(" ")}`),
     "",
     "## Projects",
     "",

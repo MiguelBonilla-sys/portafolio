@@ -167,7 +167,8 @@ draftBlogEs → draftLinkedIn → antiSlop ◄───────────�
     - `publishBlog` sube los SVG y el MDX en ES y EN a GitHub, un commit por archivo (API de contenidos). Eso dispara el deploy de Vercel.
     - `waitDeploy` espera a que la página responda, hasta `DEPLOY_WAIT_SECONDS`.
     - `validatePublished` revisa estado, título, canonical, hreflang, JSON-LD e indexabilidad.
-    - `publishLinkedIn` publica el post y pone el enlace al artículo en el **primer comentario**. LinkedIn no tiene clave de idempotencia, así que un intento cortado pide confirmación manual en vez de repetirse solo.
+    - Al armar el MDX, la primera mención de **Coordenadas.co** o **Bikans** enlaza a su sitio (`lib/orgs.ts`). El redactor solo las nombra si el material dice que el trabajo o el aprendizaje ocurrió allí.
+    - `publishLinkedIn` publica el post y pone el enlace al artículo en el **primer comentario**. El texto se escapa para el formato de LinkedIn (sin eso, un paréntesis corta el post), y la primera mención de cada empresa pasa a ser `@Coordenadas.co` o `@Bikans Asesores`, que enlaza su página. Si LinkedIn rechaza la mención, publica sin ella. LinkedIn no tiene clave de idempotencia, así que un intento cortado pide confirmación manual en vez de repetirse solo.
     - Después vienen IndexNow y el aviso con las URLs.
     - Si solo se publicó un canal, la pieza queda en `partially_published` y vuelve a la vista previa.
 
@@ -261,6 +262,7 @@ Los botones llevan `callback_data` de menos de 64 bytes con la forma `<acción>:
 | Publicar cifras inventadas | `[DATO?]` bloquea; las fuentes del artículo son solo las URLs que mandaste |
 | Secretos en los logs | `logError` redacta tokens, claves y URLs con credenciales; tú ves un mensaje con una referencia, sin detalles internos |
 | Token de LinkedIn | Cifrado con `TOKEN_ENCRYPTION_KEY` |
+| Post de LinkedIn cortado o con formato roto | `toLittleText` escapa los caracteres reservados del formato de LinkedIn; los hashtags se conservan |
 
 ## 9. Persistencia
 
