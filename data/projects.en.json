@@ -126,7 +126,7 @@
         "The public datasets we reviewed had no real IDN homographs; the homograph corpus used in the evaluation is synthetic.",
         "Without API keys, the threat intelligence signals default to zero."
       ],
-      "role": "Thesis with Juan Sebastián Fandiño Novoa. I developed the system's four repositories: the backend described on this page, the browser extension with the Outlook add-in, the admin dashboard, and the local and lab infrastructure with Docker Compose and Kubernetes."
+      "role": "Thesis built by Juan Sebastián Fandiño Novoa and me. Together we built the backend described on this page, the browser extension with the Outlook add-in, the admin dashboard, and the local and lab infrastructure with Docker Compose and Kubernetes."
     }
   },
   {

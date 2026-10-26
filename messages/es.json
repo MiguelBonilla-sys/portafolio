@@ -68,8 +68,8 @@
     "back": "Volver a proyectos",
     "language": "Lenguaje",
     "otherProjects": "Otros proyectos",
-    "otherTitle": "Otros proyectos y archivo académico",
-    "otherLede": "Proyectos de curso, prototipos y trabajos sin código público. Cada uno indica su estado.",
+    "otherTitle": "Otros proyectos",
+    "otherLede": "Proyectos de curso, prototipos y trabajos sin código público. Cada uno indica su estado. Los principales están en la portada.",
     "readCase": "Leer el caso de estudio",
     "solves": "Qué hace",
     "featuredProjects": "Proyectos destacados",
@@ -101,7 +101,9 @@
     "ctaBody": "Busco trabajo remoto como Full Stack Engineer. Si quieres hablar de este proyecto o de tu equipo, escríbeme.",
     "ctaContact": "Escríbeme",
     "ctaCv": "Ver CV",
-    "repoWithheld": "Repositorio no enlazado temporalmente; el código está disponible a pedido."
+    "repoWithheld": "Repositorio no enlazado temporalmente; el código está disponible a pedido.",
+    "seeOthers": "Ver los otros {count} proyectos",
+    "backHome": "Volver a los proyectos principales"
   },
   "blog": {
     "title": "Blog",
@@ -162,7 +164,7 @@
     "summary": "Perfil",
     "skills": "Habilidades",
     "experience": "Experiencia",
-    "projects": "Proyectos seleccionados",
+    "projects": "Proyectos principales",
     "education": "Formación",
     "courses": "Cursos y certificados",
     "strengths": "Fortalezas",
@@ -170,7 +172,8 @@
     "summaryText": "Full Stack Engineer con más de 2 años de experiencia profesional en desarrollo de software. Construyo y despliego productos SaaS, APIs REST y automatizaciones, e integro LLM, RAG y agentes en aplicaciones. Trabajo con Python, FastAPI, Django, React, TypeScript, PostgreSQL, Docker y Linux. Experiencia en autenticación, integraciones con APIs de terceros, resolución de problemas en producción y colaboración remota con clientes internacionales.",
     "technologies": "Tecnologías",
     "otherLang": "Read in English",
-    "role": "Full Stack Engineer · Python, React y sistemas con IA"
+    "role": "Full Stack Engineer · Python, React y sistemas con IA",
+    "otherProjects": "Otros proyectos"
   },
   "card": {
     "title": "Tarjeta de contacto",

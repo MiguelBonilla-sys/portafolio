@@ -6,7 +6,7 @@ import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
   project: Project;
-  /** compact: fila corta para el archivo de proyectos secundarios */
+  /** compact: fila corta para la página de otros proyectos (/proyectos) */
   variant?: "featured" | "compact";
 }
 
@@ -21,7 +21,8 @@ export default async function ProjectCard({ project, variant = "featured" }: Pro
   const tags = project.tags.slice(0, VISIBLE_TAGS);
   const hasLinks = !compact && (project.links.repo || project.links.demo);
   // En el archivo, los proyectos cuelgan del h3 "Otros proyectos"
-  const Heading = compact ? "h4" : "h3";
+  // compact solo se usa en /proyectos, bajo el h1 de la página
+  const Heading = compact ? "h2" : "h3";
 
   return (
     <article className={`${styles.row} ${compact ? styles.compact : styles.featured}`}>

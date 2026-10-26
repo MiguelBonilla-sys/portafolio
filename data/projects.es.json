@@ -126,7 +126,7 @@
         "Los datasets públicos revisados no traían homógrafos IDN reales; el corpus de homógrafos de la evaluación es sintético.",
         "Sin llaves de API, las señales de threat intelligence quedan en cero."
       ],
-      "role": "Proyecto de grado con Juan Sebastián Fandiño Novoa. Desarrollé los cuatro repositorios del sistema: el backend que describe esta página, la extensión de navegador con el complemento de Outlook, el dashboard de administración y la infraestructura local y de laboratorio con Docker Compose y Kubernetes."
+      "role": "Proyecto de grado hecho entre Juan Sebastián Fandiño Novoa y yo. Entre los dos construimos el backend que describe esta página, la extensión de navegador con el complemento de Outlook, el dashboard de administración y la infraestructura local y de laboratorio con Docker Compose y Kubernetes."
     }
   },
   {

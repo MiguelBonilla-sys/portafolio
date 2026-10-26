@@ -21,6 +21,10 @@ export const routing = defineRouting({
       es: "/tarjeta",
       en: "/card",
     },
+    "/proyectos": {
+      es: "/proyectos",
+      en: "/projects",
+    },
     "/proyectos/[id]": {
       es: "/proyectos/[id]",
       en: "/projects/[id]",

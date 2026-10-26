@@ -19,6 +19,8 @@ const ROUTES = [
   "/es/proyectos/portafolio-content-engine",
   "/en/projects/api-auth-hackaton",
   "/es/proyectos/redes-sockets",
+  "/es/proyectos",
+  "/en/projects",
   "/en/blog",
 ];
 
@@ -107,6 +109,24 @@ test("los destacados muestran el caso de estudio y los demás no tienen seccione
   assert.equal(await other.page.getByRole("heading", { level: 2, name: "La necesidad" }).count(), 0);
   assert.equal(await other.page.getByRole("heading", { level: 2, name: "En esta página" }).count(), 0);
   assert.ok(await other.page.getByRole("link", { name: "Escríbeme" }).count(), "CTA de contacto");
+  await other.page.close();
+});
+
+test("la portada muestra solo los principales y los demás viven en /proyectos", async () => {
+  const { page } = await open("/es");
+  const section = page.locator("#proyectos");
+  assert.equal(await section.locator('a[href="/es/proyectos/bikans"]').count() > 0, true, "Bikans en la portada");
+  assert.equal(await section.locator('a[href="/es/proyectos/redes-sockets"]').count(), 0, "un proyecto secundario en la portada");
+  await section.getByRole("link", { name: /Ver los otros \d+ proyectos/ }).click();
+  await page.waitForURL(`${BASE}/es/proyectos`);
+  assert.equal(await page.getByRole("heading", { level: 1, name: "Otros proyectos" }).count(), 1);
+  assert.ok(await page.locator('a[href="/es/proyectos/redes-sockets"]').count(), "Sockets en Otros proyectos");
+  assert.equal(await page.locator('a[href="/es/proyectos/bikans"]').count(), 0, "un principal repetido en Otros proyectos");
+  await page.close();
+
+  const other = await open("/es/proyectos/redes-sockets");
+  await other.page.getByRole("link", { name: "← Otros proyectos" }).click();
+  await other.page.waitForURL(`${BASE}/es/proyectos`);
   await other.page.close();
 });
 

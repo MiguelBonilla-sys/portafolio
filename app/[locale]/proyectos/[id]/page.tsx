@@ -52,15 +52,23 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
           projectSchema(locale, project),
           breadcrumbSchema([
             { name: "Miguel Bonilla", url: absoluteUrl(locale, "/") },
-            { name: t("title"), url: `${absoluteUrl(locale, "/")}#proyectos` },
+            project.featured
+              ? { name: t("title"), url: `${absoluteUrl(locale, "/")}#proyectos` }
+              : { name: t("otherTitle"), url: absoluteUrl(locale, "/proyectos") },
             { name: project.title, url: absoluteUrl(locale, href) },
           ]),
         ]}
       />
       <nav aria-label="Breadcrumb">
-        <Link href={{ pathname: "/", hash: "proyectos" }} className={`data ${styles.back}`}>
-          ← {t("back")}
-        </Link>
+        {project.featured ? (
+          <Link href={{ pathname: "/", hash: "proyectos" }} className={`data ${styles.back}`}>
+            ← {t("back")}
+          </Link>
+        ) : (
+          <Link href="/proyectos" className={`data ${styles.back}`}>
+            ← {t("otherTitle")}
+          </Link>
+        )}
       </nav>
 
       <header className={styles.header}>
