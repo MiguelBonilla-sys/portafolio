@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { Command } from "@langchain/langgraph";
 import { CHANNEL_LABEL, STATUS_LABEL, WAITING_FOR_AUTHOR, isTerminal, type Channel, type EditorialStatus } from "./editorial.ts";
 import { blockers } from "./graph.ts";
-import type { Attachment } from "./inputs.ts";
-import type { ContentRow, ContentStore } from "./lib/db.ts";
+import { LIMITS, type Attachment } from "./inputs.ts";
+import type { Collection, CollectedPart, ContentRow, ContentStore } from "./lib/db.ts";
 import { logError, toPublicError } from "./lib/redact.ts";
 import { callback, esc, parseCallback, type TelegramClient, type TelegramMessage, type TelegramUpdate } from "./lib/telegram.ts";
 import { parseBogotaDateTime } from "./lib/text.ts";
@@ -17,6 +17,11 @@ const ACTIVE = "active_content";
 const PENDING_EDIT = "pending_edit";
 const PENDING_SCHEDULE = "pending_schedule";
 const PENDING_TEXT = "pending_text";
+/** Material que llega en varios mensajes para un solo borrador */
+const COLLECTING = "collecting";
+const COLLECT_TTL = 6 * 3600_000;
+const ALBUM_TTL = 10 * 60_000;
+const DONE = /^(listo|lista|ya|ya est[aá]|eso es todo|termin[eé]|done|ready|that'?s all)[.!]?$/i;
 const LOCK_TTL = 5 * 60_000;
 const NEW_PER_HOUR = 10;
 const MIN_NOTE_WORDS = 8;
@@ -27,14 +32,17 @@ Mándame lo que construiste o aprendiste: notas, un Markdown, un PDF, una imagen
 Puedes hablarme normal: «el inicio está muy genérico», «enfatiza las pruebas», «publica el blog y LinkedIn».
 
 <b>Comandos</b>
-/new — empezar un borrador nuevo (puedes escribir las notas a continuación)
+/new — empezar un borrador; mándame en varios mensajes las notas, imágenes, Markdown, PDF y enlaces, y escribe «listo» (también funciona con un álbum)
 /drafts — borradores recientes
 /status — estado del borrador activo
 /preview — volver a ver la vista previa
 /revise texto — pedir un cambio
 /approve o /publish [blog|linkedin] — preparar la publicación (te pido confirmar)
 /sources — fuentes y afirmaciones sin respaldo
-/cancel — cancelar lo pendiente
+/done o «listo» — terminar de juntar material y empezar el borrador
+/cancel — cancelar lo pendiente (incluido el material que estás juntando)
+
+Para sumar un archivo a una propuesta, respóndele al mensaje de la propuesta con el archivo.
 
 Opciones al empezar: /es (LinkedIn en español), /carrusel (además un carrusel PDF), «con imagen» (el post lleva la portada).`;
 
@@ -133,6 +141,57 @@ export function attachmentsOf(msg: TelegramMessage): Attachment[] {
   return out;
 }
 
+/**
+ * Une el material de varios mensajes en la entrada de un solo borrador. Las opciones (/es, /carrusel)
+ * valen en cualquier mensaje, no solo en el primero; los archivos que pasan del límite por pieza se descartan.
+ */
+export function mergeCollection(c: Collection): { text: string; attachments: Attachment[]; forwarded: boolean; ignored: number } {
+  const options: string[] = [];
+  const notes: string[] = [];
+  for (const part of c.parts) {
+    let note = (part.note ?? "").trim();
+    for (let m = note.match(/^\/(es|carrusel)\b\s*/i); m; m = note.match(/^\/(es|carrusel)\b\s*/i)) {
+      options.push(`/${m[1].toLowerCase()}`);
+      note = note.slice(m[0].length);
+    }
+    if (note) notes.push(note);
+  }
+  // Las fotos de Telegram llegan todas como «imagen.jpg»: se numeran para distinguirlas en la propuesta
+  const photos = c.parts.flatMap((p) => p.attachments).filter((a) => a.name === "imagen.jpg").length;
+  let n = 0;
+  const all = c.parts.flatMap((p) => p.attachments).map((a) => (photos > 1 && a.name === "imagen.jpg" ? { ...a, name: `imagen-${++n}.jpg` } : a));
+  return {
+    text: [...new Set(options), notes.join("\n\n")].filter(Boolean).join(" "),
+    attachments: all.slice(0, LIMITS.filesPerPiece),
+    // Si algo fue reenviado, todo el texto se trata como material externo (lo más prudente)
+    forwarded: c.parts.some((p) => p.forwarded),
+    ignored: Math.max(0, all.length - LIMITS.filesPerPiece),
+  };
+}
+
+/** "2 archivos (1 imagen, 1 PDF), 1 nota y 1 enlace" */
+export function describeCollection(c: Collection): string {
+  const files = c.parts.flatMap((p) => p.attachments);
+  const images = files.filter((a) => a.kind === "photo" || a.mime.startsWith("image/")).length;
+  const pdfs = files.filter((a) => a.mime === "application/pdf" || /\.pdf$/i.test(a.name)).length;
+  const others = files.length - images - pdfs;
+  const notes = c.parts.filter((p) => p.note?.trim()).length;
+  const links = c.parts.reduce((n, p) => n + (p.note?.match(/https?:\/\/\S+/g)?.length ?? 0), 0);
+  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  const kinds = [
+    images && plural(images, "imagen", "imágenes"),
+    pdfs && plural(pdfs, "PDF", "PDF"),
+    others && plural(others, "documento", "documentos"),
+  ].filter(Boolean);
+  const parts = [
+    files.length ? `${plural(files.length, "archivo", "archivos")}${kinds.length > 1 ? ` (${kinds.join(", ")})` : kinds.length ? ` (${kinds[0]})` : ""}` : "",
+    notes ? plural(notes, "nota", "notas") : "",
+    links ? plural(links, "enlace", "enlaces") : "",
+  ].filter(Boolean);
+  if (!parts.length) return "nada todavía";
+  return parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} y ${parts.at(-1)}`;
+}
+
 /** Solo el chat privado de Miguel: mismo id de chat y de remitente, y no un bot */
 export function isAuthorized(update: TelegramUpdate, chatId: string): boolean {
   const msg = update.message;
@@ -223,6 +282,80 @@ export function createHandlers(rt: Runtime) {
     await tg.sendMessage("No hay un borrador activo. Mándame material para empezar, o usa /drafts para elegir uno.");
   }
 
+  // ── Material en varios mensajes ──
+
+  /** La recolección abierta, si no venció */
+  async function collecting(): Promise<Collection | null> {
+    const c = await rt.store.kvGet<Collection>(COLLECTING);
+    if (!c) return null;
+    if (Date.now() - Date.parse(c.startedAt) > COLLECT_TTL) {
+      await rt.store.kvDelete(COLLECTING);
+      if (c.parts.length) await tg.sendMessage(`Descarté el material que estabas juntando (${describeCollection(c)}): pasaron más de 6 horas sin «listo».`);
+      return null;
+    }
+    return c;
+  }
+
+  async function openCollection() {
+    const previous = await rt.store.kvTake<Collection>(COLLECTING);
+    await Promise.all([ACTIVE, PENDING_EDIT, PENDING_SCHEDULE, PENDING_TEXT].map((k) => rt.store.kvDelete(k)));
+    await rt.store.kvSet(COLLECTING, { startedAt: new Date().toISOString(), parts: [] } satisfies Collection);
+    await tg.sendMessage(
+      [
+        previous?.parts.length ? `Descarté lo que estabas juntando (${describeCollection(previous)}).` : "",
+        "Junto el material para un solo borrador. Mándame notas, imágenes, Markdown, PDF o enlaces, en uno o varios mensajes, y escribe «listo» cuando termines.",
+        "/cancel lo descarta.",
+      ].filter(Boolean).join("\n")
+    );
+  }
+
+  /** Suma el mensaje a la recolección. Con `open`, la abre si no hay una (un álbum o una respuesta en varios archivos). */
+  async function addToCollection(msg: TelegramMessage, text: string, open: false | { target?: string }): Promise<boolean> {
+    const part: CollectedPart = { attachments: attachmentsOf(msg), ...(text ? { note: text } : {}), ...(msg.forward_origin ? { forwarded: true } : {}) };
+    const current = await rt.store.kvGet<Collection>(COLLECTING);
+    const files = current?.parts.flatMap((p) => p.attachments).length ?? 0;
+    if (files + part.attachments.length > LIMITS.filesPerPiece) {
+      await tg.sendMessage(`Un borrador admite ${LIMITS.filesPerPiece} archivos y ya llevo ${files}; no agregué ${part.attachments.length === 1 ? "este" : "estos"}. Escribe «listo» para seguir con lo que hay.`);
+      return true;
+    }
+    const c = await rt.store.collect(COLLECTING, part, open);
+    if (!c) return false;
+    // Un álbum son varios mensajes casi simultáneos: se confirma una sola vez
+    if (msg.media_group_id) {
+      if (!(await rt.store.tryLock(`album:${msg.media_group_id}`, ALBUM_TTL))) return true;
+      const target = c.target ? await rt.store.get(c.target) : null;
+      await tg.sendMessage(
+        target
+          ? `Recibo el álbum para «${esc(target.title ?? target.content_id.slice(0, 8))}». Cuando terminen de llegar los archivos, escribe «listo» y reviso todo junto.`
+          : "Recibo el álbum y sumo todos sus archivos al mismo borrador. Mándame más material o escribe «listo» cuando termines."
+      );
+      return true;
+    }
+    await tg.sendMessage(`Agregado. Llevo ${describeCollection(c)}. Mándame más o escribe «listo».`);
+    return true;
+  }
+
+  async function finishCollection() {
+    const current = await rt.store.kvGet<Collection>(COLLECTING);
+    if (!current) return void (await tg.sendMessage("No estoy juntando material. Usa /new para empezar un borrador con varios mensajes."));
+    if (!current.parts.length) return void (await tg.sendMessage("Todavía no me mandaste nada. Envía notas, archivos o enlaces, o /cancel."));
+    // Leer y borrar en un paso: un segundo «listo» no arranca otro borrador
+    const c = await rt.store.kvTake<Collection>(COLLECTING);
+    if (!c) return;
+    const merged = mergeCollection(c);
+    if (merged.ignored) await tg.sendMessage(`Un borrador admite ${LIMITS.filesPerPiece} archivos; dejé fuera ${merged.ignored}.`);
+    if (c.target) {
+      const target = await rt.store.get(c.target);
+      if (!target || target.status !== "awaiting_input") {
+        return void (await tg.sendMessage("Esa propuesta ya no espera respuesta, así que no le sumé los archivos. Empieza un borrador nuevo con /new si quieres usarlos."));
+      }
+      await rt.store.kvSet(ACTIVE, target.content_id);
+      return resume(target.content_id, { ...proposalAnswer(merged.text), attachments: merged.attachments });
+    }
+    await rt.store.kvDelete(ACTIVE);
+    return startContent(merged.text, merged.attachments, merged.forwarded);
+  }
+
   async function drafts() {
     const rows = await rt.store.recent(8);
     if (!rows.length) return void (await tg.sendMessage("Todavía no hay borradores."));
@@ -298,6 +431,10 @@ export function createHandlers(rt: Runtime) {
   }
 
   async function cancel(row: ContentRow | null) {
+    const collected = await rt.store.kvTake<Collection>(COLLECTING);
+    if (collected) {
+      return void (await tg.sendMessage(collected.parts.length ? `Listo, descarté el material que estabas juntando (${describeCollection(collected)}).` : "Listo, ya no estoy juntando material."));
+    }
     const hadPending = Boolean((await rt.store.kvGet(PENDING_EDIT)) || (await rt.store.kvGet(PENDING_SCHEDULE)) || (await rt.store.kvGet(PENDING_TEXT)));
     await Promise.all([PENDING_EDIT, PENDING_SCHEDULE, PENDING_TEXT].map((k) => rt.store.kvDelete(k)));
     if (hadPending) return void (await tg.sendMessage("Listo, cancelé lo que estaba pendiente."));
@@ -317,14 +454,20 @@ export function createHandlers(rt: Runtime) {
         return void (await tg.sendMessage(HELP));
       case "new":
       case "nuevo":
+        // Sin material: se junta lo que llegue en los mensajes siguientes hasta «listo»
+        if (!args && !attachmentsOf(msg).length) return openCollection();
         await rt.store.kvDelete(ACTIVE);
-        if (!args && !attachmentsOf(msg).length) return void (await tg.sendMessage("Listo. Mándame las notas, un archivo o un enlace."));
         return startContent(args, attachmentsOf(msg));
+      case "done":
+      case "listo":
+        return finishCollection();
       case "drafts":
       case "borradores":
         return drafts();
       case "status":
       case "estado": {
+        const c = await collecting();
+        if (c && !args) return void (await tg.sendMessage(`Estoy juntando material para un borrador: ${describeCollection(c)}. Escribe «listo» cuando termines o /cancel para descartarlo.`));
         const row = await resolve(args);
         return row ? status(row) : noActive();
       }
@@ -365,6 +508,8 @@ export function createHandlers(rt: Runtime) {
         return cancel(await active());
       case "es":
       case "carrusel":
+        // Durante la recolección son opciones del borrador que se está juntando
+        if (await collecting()) return void (await addToCollection(msg, msg.text || msg.caption || "", false));
         return startContent(msg.text || msg.caption || "", attachmentsOf(msg));
       default:
         await tg.sendMessage("No conozco ese comando. /help muestra los disponibles.");
@@ -384,6 +529,12 @@ export function createHandlers(rt: Runtime) {
     const attachments = attachmentsOf(msg);
     const forwarded = Boolean(msg.forward_origin);
 
+    // Juntando material: todo lo que llega es para el mismo borrador, hasta «listo»
+    if (await collecting()) {
+      if (!attachments.length && !forwarded && DONE.test(text)) return finishCollection();
+      if (await addToCollection(msg, text, false)) return;
+    }
+
     const pendingSchedule = await rt.store.kvGet<{ id: string; hash?: string; channels?: Channel[] }>(PENDING_SCHEDULE);
     if (pendingSchedule && text) {
       const at = parseBogotaDateTime(text);
@@ -401,15 +552,26 @@ export function createHandlers(rt: Runtime) {
       if (row) return revise(row, text);
     }
 
-    // Responder a una vista previa es pedir un cambio en esa pieza
-    if (msg.reply_to_message && text && !forwarded) {
+    // Responder a una vista previa es pedir un cambio en esa pieza; responder a la propuesta con archivos, sumarlos
+    if (msg.reply_to_message && (text || attachments.length) && !forwarded) {
       const rows = await rt.store.recent(20);
       const target = rows.find((r) => Number(r.preview_message_id) === msg.reply_to_message!.message_id);
       if (target) {
         await rt.store.kvSet(ACTIVE, target.content_id);
+        if (attachments.length) {
+          if (target.status !== "awaiting_input") {
+            return void (await tg.sendMessage("Ese borrador ya está redactado: el material nuevo solo se suma antes, en la propuesta. Para usarlo, empieza otro con /new."));
+          }
+          // Un álbum llega en varios mensajes: se junta y se suma con «listo»
+          if (msg.media_group_id) return void (await addToCollection(msg, text, { target: target.content_id }));
+          return resume(target.content_id, { ...proposalAnswer(text), attachments });
+        }
         return target.status === "awaiting_input" ? resume(target.content_id, proposalAnswer(text)) : revise(target, text);
       }
     }
+
+    // Un álbum sin /new también es un solo borrador: sus archivos llegan como mensajes separados
+    if (msg.media_group_id && attachments.length) return void (await addToCollection(msg, text, {}));
 
     // Archivos o reenvíos siempre son material nuevo
     if (attachments.length || forwarded) return startContent(text, attachments, forwarded);

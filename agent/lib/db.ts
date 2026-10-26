@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import { LEGACY_STATUS, type EditorialStatus } from "../editorial.ts";
+import type { Attachment } from "../inputs.ts";
 
 // Un pool por instancia de función. Supabase/Neon aceptan la URL con sslmode en la cadena.
 let pool: Pool | null = null;
@@ -111,12 +112,33 @@ export interface ContentStore {
   kvGet<T>(key: string): Promise<T | null>;
   kvSet(key: string, value: unknown): Promise<void>;
   kvDelete(key: string): Promise<void>;
+  /** Lee y borra en un paso: dos «listo» seguidos no arrancan dos piezas */
+  kvTake<T>(key: string): Promise<T | null>;
+  /**
+   * Agrega una parte a la recolección `key` de forma atómica (los mensajes de un álbum llegan en paralelo).
+   * Con `open`, la crea si no existe; con `false`, devuelve null si no hay una abierta.
+   */
+  collect(key: string, part: CollectedPart, open: false | { target?: string }): Promise<Collection | null>;
   /** true si el update de Telegram es nuevo (deduplicación de reintentos) */
   claimUpdate(updateId: number): Promise<boolean>;
   /** Registra un uso y dice si sigue dentro del límite (max por ventana) */
   rateHit(key: string, windowMs: number, max: number): Promise<boolean>;
   /** Toma un candado atómico que vence solo; false si otro proceso lo tiene */
   tryLock(key: string, ttlMs: number): Promise<boolean>;
+}
+
+/** Material que llega en varios mensajes para una sola pieza (/nuevo … «listo», o un álbum) */
+export interface CollectedPart {
+  note?: string;
+  attachments: Attachment[];
+  forwarded?: boolean;
+}
+
+export interface Collection {
+  startedAt: string;
+  parts: CollectedPart[];
+  /** Pieza que espera respuesta a la propuesta: el material se le suma en vez de abrir otra */
+  target?: string;
 }
 
 export function createContentStore(databaseUrl: string): ContentStore {
@@ -216,6 +238,24 @@ export function createContentStore(databaseUrl: string): ContentStore {
 
     async kvDelete(key) {
       await db().query("DELETE FROM agent_kv WHERE key = $1", [key]);
+    },
+
+    async kvTake<T>(key: string) {
+      const { rows } = await db().query("DELETE FROM agent_kv WHERE key = $1 RETURNING value", [key]);
+      return rows[0] ? (rows[0].value as T) : null;
+    },
+
+    async collect(key, part, open) {
+      const initial: Collection = { startedAt: new Date().toISOString(), parts: [part], ...(open && open.target ? { target: open.target } : {}) };
+      const append = `value = jsonb_set(agent_kv.value, '{parts}', (agent_kv.value->'parts') || $2::jsonb), updated_at = now()`;
+      const { rows } = open
+        ? await db().query(
+            `INSERT INTO agent_kv (key, value) VALUES ($1, $3::jsonb)
+             ON CONFLICT (key) DO UPDATE SET ${append} RETURNING value`,
+            [key, JSON.stringify([part]), JSON.stringify(initial)]
+          )
+        : await db().query(`UPDATE agent_kv SET ${append} WHERE key = $1 RETURNING value`, [key, JSON.stringify([part])]);
+      return rows[0] ? (rows[0].value as Collection) : null;
     },
 
     async claimUpdate(updateId) {

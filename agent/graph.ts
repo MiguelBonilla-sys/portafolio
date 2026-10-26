@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ARTICLE_TYPES, ARTICLE_TYPE_LABEL, CATEGORIES, CATEGORY_LABEL } from "../lib/taxonomy.ts";
 import type { AgentDeps } from "./deps.ts";
 import { assertTransition, CHANNEL_LABEL, contentHash, type Channel, type EditorialStatus } from "./editorial.ts";
-import { extractSources, sourcesBlock, type SourceDoc } from "./inputs.ts";
+import { extractSources, LIMITS, sourcesBlock, type SourceDoc } from "./inputs.ts";
 import { askJson, askText } from "./lib/json.ts";
 import { LinkedInAuthError } from "./lib/linkedin.ts";
 import { describeFindings, lintText, type LintReport } from "./lib/lint.ts";
@@ -280,9 +280,8 @@ export function buildGraph(deps: AgentDeps) {
     const usable = s.claims.filter((c) => c.status !== "unsourced");
     const unsourcedNumbers = s.claims.filter((c) => c.status === "unsourced" && c.numeric);
     const external = s.sources.filter((x) => x.trust === "external");
-    const sourceLine = external.length
-      ? `Leí ${external.map((x) => `«${esc(x.title)}»`).join(", ")}${s.sources.length > external.length ? " y tus notas" : ""}.`
-      : "Leí tus notas.";
+    const read = [...external.map((x) => `«${esc(x.title)}»`), ...(s.sources.length > external.length ? ["tus notas"] : [])];
+    const sourceLine = external.length ? `Leí ${read.length > 1 ? `${read.slice(0, -1).join(", ")} y ${read.at(-1)}` : read[0]}.` : "Leí tus notas.";
     const topics = r.topics.length > 1 ? `Identifiqué ${r.topics.length} temas: ${r.topics.map(esc).join(", ")}.` : "";
     const lines = [sourceLine, topics, ""];
 
@@ -351,6 +350,30 @@ export function buildGraph(deps: AgentDeps) {
     const r = s.review!;
     const instructions = r.instructions?.trim() ? [...s.instructions, r.instructions.trim()] : s.instructions;
     const unsourced = r.unsourced ?? s.unsourced;
+    // Archivos enviados como respuesta a la propuesta: fuentes nuevas de la misma pieza, y se vuelve a investigar
+    if (r.attachments?.length) {
+      const room = Math.max(0, LIMITS.filesPerPiece - s.attachments.length);
+      const files = r.attachments.slice(0, room);
+      const { sources: added, notices } = await extractSources({ note: "", attachments: files, existing: s.sources }, deps.inputs);
+      if (files.length < r.attachments.length) notices.push(`Una pieza admite ${LIMITS.filesPerPiece} archivos; ignoré ${r.attachments.length - files.length}.`);
+      const answer: SourceDoc[] = (r.instructions ?? "").trim().split(/\s+/).length >= 6
+        ? [{ id: `S${s.sources.length + added.length + 1}`, kind: "note", title: "Tu respuesta", origin: "Telegram", text: r.instructions!.trim(), trust: "author", warnings: [] }]
+        : [];
+      const names = added.map((x) => `«${esc(x.title)}»`).join(", ");
+      await deps.telegram.sendMessage(
+        [added.length ? `Agregué ${names}. Vuelvo a revisar las fuentes con todo junto.` : "No pude usar los archivos nuevos; te repito la propuesta con lo que ya tenía.", ...notices.map((n) => `· ${esc(n)}`)].join("\n")
+      );
+      // Sin fuentes nuevas igual se vuelve a la propuesta: mandar un archivo no es aceptar
+      if (!added.length) return { instructions, unsourced, rerunResearch: true, review: null };
+      return {
+        instructions,
+        unsourced,
+        attachments: [...s.attachments, ...files],
+        sources: [...s.sources, ...added, ...answer],
+        rerunResearch: true,
+        review: null,
+      };
+    }
     // Si faltaban hechos o preguntas y el autor respondió algo sustancial, su respuesta es material nuevo
     const usable = s.claims.filter((c) => c.status !== "unsourced").length;
     const needsMore = usable < 2 || (s.research?.questions.length ?? 0) > 0;

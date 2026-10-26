@@ -129,6 +129,8 @@ export interface TelegramMessage {
   /** Presente en mensajes reenviados: su contenido es material externo */
   forward_origin?: unknown;
   reply_to_message?: { message_id: number };
+  /** Los archivos de un álbum llegan como mensajes separados con el mismo id */
+  media_group_id?: string;
 }
 
 export interface TelegramUpdate {
