@@ -3,9 +3,20 @@ import RichText, { Inline } from "@/components/ui/RichText";
 import type { Project } from "@/types";
 import styles from "./CaseStudy.module.css";
 
-type SectionKey = "overview" | "problem" | "role" | "architecture" | "decisions" | "challenges" | "validation" | "results" | "limitations";
+type SectionKey =
+  | "overview"
+  | "need"
+  | "constraints"
+  | "solution"
+  | "architecture"
+  | "decisions"
+  | "challenges"
+  | "validation"
+  | "results"
+  | "limitations"
+  | "role";
 
-const LIST_SECTIONS = ["decisions", "challenges", "validation", "results", "limitations"] as const;
+const LIST_SECTIONS = ["constraints", "decisions", "challenges", "validation", "results", "limitations"] as const;
 
 /**
  * Caso de estudio de un proyecto. Solo se dibujan las secciones con contenido en data/projects.*.json:
@@ -16,11 +27,14 @@ export default async function CaseStudy({ project }: { project: Project }) {
   const cs = project.caseStudy ?? {};
   const overview = project.longDescription ?? project.description;
 
+  // Primero la necesidad y la solución; "Mi parte" al final (docs/research/PROJECT_NARRATIVE.md)
   const present: SectionKey[] = ["overview"];
-  if (cs.problem) present.push("problem");
-  if (cs.role) present.push("role");
+  if (cs.need) present.push("need");
+  if (cs.constraints?.length) present.push("constraints");
+  if (cs.solution) present.push("solution");
   if (cs.architecture && (cs.architecture.flow.length > 0 || cs.architecture.summary)) present.push("architecture");
-  for (const key of LIST_SECTIONS) if (cs[key]?.length) present.push(key);
+  for (const key of LIST_SECTIONS) if (key !== "constraints" && cs[key]?.length) present.push(key);
+  if (cs.role) present.push("role");
 
   const id = (key: SectionKey) => `cs-${key}`;
   const showToc = present.length > 2;
@@ -34,7 +48,8 @@ export default async function CaseStudy({ project }: { project: Project }) {
               {t(`case.${key}`)}
             </h2>
             {key === "overview" && <RichText text={overview} />}
-            {key === "problem" && cs.problem && <RichText text={cs.problem} />}
+            {key === "need" && cs.need && <RichText text={cs.need} />}
+            {key === "solution" && cs.solution && <RichText text={cs.solution} />}
             {key === "role" && cs.role && <RichText text={cs.role} />}
             {key === "architecture" && cs.architecture && (
               <>

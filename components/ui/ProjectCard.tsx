@@ -38,9 +38,9 @@ export default async function ProjectCard({ project, variant = "featured" }: Pro
           </Link>
         </Heading>
         <p className={styles.desc}>{project.description}</p>
-        {!compact && project.contribution && (
-          <p className={styles.contribution}>
-            <span className={styles.contributionLabel}>{t("contribution")}:</span> {project.contribution}
+        {!compact && project.solves && (
+          <p className={styles.solves}>
+            <span className={styles.solvesLabel}>{t("solves")}:</span> {project.solves}
           </p>
         )}
         <p className={styles.tags}>

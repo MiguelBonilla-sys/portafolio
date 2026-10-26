@@ -1,6 +1,6 @@
 # Cómo presentar los proyectos: qué resuelve, por qué hacía falta y qué logra
 
-> Fecha: 2026-10-26. Propuesta, todavía sin aplicar al sitio.
+> Fecha: 2026-10-26. Aplicada al sitio el 2026-10-26 (tipos `solves`, `need`, `constraints`, `solution`; «Mi parte» al final; pruebas en `test/content.test.ts`).
 > Pedido: que los proyectos y la experiencia expliquen la solución, como lo haría un ingeniero de sistemas, y no una lista de lo que hice.
 
 ## 1. Lo que dicen las fuentes

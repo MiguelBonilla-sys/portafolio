@@ -30,9 +30,9 @@ const dirty: [string, "linkedin" | "blog"][] = [
 const clean: [string, "linkedin" | "blog"][] = [
   ["Mi API tardaba 1,8 s en responder. El problema era el token, no la base de datos.", "linkedin"],
   ["El gateway pide hasta 2.000 registros y filtra en memoria.", "blog"],
-  ["Entregué la integración con QuickBooks en 4 días.", "linkedin"],
+  ["Entregué la integración en 4 días.", "linkedin"],
   ["El token de acceso dura 30 minutos y el de refresco 7 días.", "blog"],
-  ["I built the admin panel and the two-factor authentication.", "blog"],
+  ["I built the backend, the frontend and the two-factor authentication.", "blog"],
   ["The pipeline runs in under 60 seconds with less than 4 GB of RAM.", "blog"],
   ["¿Alguien cachea tokens de servicio en Redis o en memoria del proceso?", "linkedin"],
   ["#FastAPI #n8n", "linkedin"],

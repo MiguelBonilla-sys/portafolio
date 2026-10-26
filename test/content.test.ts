@@ -11,7 +11,7 @@ import messagesEs from "../messages/es.json" with { type: "json" };
 import messagesEn from "../messages/en.json" with { type: "json" };
 
 const STATUSES = ["commercial", "deployed", "academic", "prototype", "archived", "unverified"];
-const CASE_LISTS = ["decisions", "challenges", "validation", "results", "limitations"] as const;
+const CASE_LISTS = ["constraints", "decisions", "challenges", "validation", "results", "limitations"] as const;
 
 type AnyProject = (typeof projectsEs)[number] & { caseStudy?: Record<string, unknown>; hidden?: boolean };
 
@@ -32,7 +32,7 @@ test("los proyectos son los mismos, en el mismo orden y con el mismo estado en E
     assert.equal(es.featured, en.featured, es.id);
     assert.deepEqual(es.links, en.links, es.id);
     assert.equal(es.tags.length, en.tags.length, `${es.id}: tags`);
-    assert.equal(Boolean(es.contribution), Boolean(en.contribution), `${es.id}: contribution`);
+    assert.equal(Boolean(es.solves), Boolean(en.solves), `${es.id}: solves`);
   }
 });
 
@@ -78,14 +78,15 @@ test("el repositorio con credenciales expuestas no se enlaza mientras siga sin l
   assert.doesNotMatch(all, /API_AUTH_HACKATON/i);
 });
 
-test("los destacados tienen aporte y caso de estudio, con las mismas secciones en ambos idiomas", () => {
+test("los destacados dicen qué resuelven y tienen caso de estudio, con las mismas secciones en ambos idiomas", () => {
   const featured = projectsEs.filter((p) => p.featured);
   assert.ok(featured.length >= 3 && featured.length <= 5, `destacados: ${featured.length}`);
   for (const es of projectsEs as AnyProject[]) {
     const en = (projectsEn as AnyProject[]).find((p) => p.id === es.id)!;
     if (es.featured) {
-      assert.ok(es.contribution, `${es.id}: falta contribution`);
+      assert.ok(es.solves, `${es.id}: falta solves`);
       assert.ok(es.caseStudy, `${es.id}: falta caseStudy`);
+      for (const key of ["need", "solution", "role"]) assert.ok(es.caseStudy?.[key], `${es.id}: falta caseStudy.${key}`);
     }
     if (!es.caseStudy) {
       assert.equal(en.caseStudy, undefined, es.id);
@@ -142,4 +143,31 @@ test("el posicionamiento no usa títulos ni adjetivos sin respaldo", () => {
     assert.doesNotMatch(text, banned);
   }
   assert.match(messagesEn.hero.role, /^Full Stack Engineer · Python, React & AI Systems$/);
+});
+
+// docs/research/PROJECT_NARRATIVE.md: la tarjeta dice qué necesidad atiende y qué hace el sistema; quién lo hizo va en "Mi parte"
+const FIRST_PERSON = /^(Construí|Desarrollé|Entregué|Hice|Implementé|Diseñé|Creé|Automaticé|Uní|Integré|Escribí|I (built|developed|delivered|made|implemented|designed|created|automated|merged|integrated|wrote))\b/;
+// Métricas de proceso ("en 4 días, 5 fases y 17 tareas"): cuentan el esfuerzo, no qué cambió. Un plazo va en Restricciones
+const PROCESS_METRIC = /\b(en|in) \d+ (días|semanas|days|weeks)\b|\b\d+ (fases|tareas|sprints|phases|tasks)\b/i;
+
+test("las tarjetas de proyecto empiezan por la necesidad y la solución, no por «construí»", () => {
+  for (const p of [...projectsEs, ...projectsEn] as AnyProject[]) {
+    assert.doesNotMatch(p.description, FIRST_PERSON, `${p.id}: description`);
+    if (p.solves) assert.doesNotMatch(p.solves, FIRST_PERSON, `${p.id}: solves`);
+    const need = p.caseStudy?.need as string | undefined;
+    if (need) assert.doesNotMatch(need, FIRST_PERSON, `${p.id}: need`);
+  }
+});
+
+test("ni los proyectos ni la experiencia usan métricas de proceso fuera de Restricciones", () => {
+  for (const p of [...projectsEs, ...projectsEn] as AnyProject[]) {
+    const rest: Record<string, unknown> = { ...p.caseStudy };
+    delete rest.constraints;
+    const text = JSON.stringify([p.description, p.solves, p.longDescription, rest]);
+    assert.doesNotMatch(text, PROCESS_METRIC, p.id);
+  }
+  for (const e of [...experienceEs, ...experienceEn]) {
+    for (const h of e.highlights ?? []) assert.doesNotMatch(h, PROCESS_METRIC, `${e.id}: ${h}`);
+  }
+  assert.doesNotMatch(JSON.stringify([messagesEs.about, messagesEn.about]), PROCESS_METRIC, "about");
 });

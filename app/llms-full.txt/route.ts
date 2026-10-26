@@ -13,8 +13,9 @@ function caseStudyLines(p: Project): string[] {
   if (!cs) return [];
   const h = en.projects.case;
   const lines: string[] = [];
-  if (cs.problem) lines.push(`${h.problem}: ${cs.problem}`, "");
-  if (cs.role) lines.push(`${h.role}: ${cs.role}`, "");
+  if (cs.need) lines.push(`${h.need}: ${cs.need}`, "");
+  if (cs.constraints?.length) lines.push(`${h.constraints}:`, ...cs.constraints.map((item) => `- ${item}`), "");
+  if (cs.solution) lines.push(`${h.solution}: ${cs.solution}`, "");
   if (cs.architecture) {
     lines.push(`${h.architecture}:${cs.architecture.summary ? ` ${cs.architecture.summary}` : ""}`);
     lines.push(...cs.architecture.flow.map((step, i) => `${i + 1}. ${step}`), "");
@@ -22,6 +23,7 @@ function caseStudyLines(p: Project): string[] {
   for (const key of ["decisions", "challenges", "validation", "results", "limitations"] as const) {
     if (cs[key]?.length) lines.push(`${h[key]}:`, ...cs[key].map((item) => `- ${item}`), "");
   }
+  if (cs.role) lines.push(`${h.role}: ${cs.role}`, "");
   return lines;
 }
 

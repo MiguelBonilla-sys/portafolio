@@ -40,7 +40,7 @@
   "about": {
     "title": "About",
     "p1": "I have 2+ years of professional experience building software. I currently work remotely as a Full Stack Developer at Coordenadas.co, and before that I was a freelance Junior Backend Engineer for Sibartech Technology SAS, running Django, FastAPI and PostgreSQL in production.",
-    "p2": "At Coordenadas I merged two payroll and tax withholding tools into Bikans, now in production with two-factor authentication, and integrated QuickBooks Online through an n8n agent in 4 days. I also build plugins and integrations for U.S. clients and maintain the infrastructure on a Linux server with Docker, Coolify and Traefik.",
+    "p2": "At Coordenadas I built Bikans end to end: a payroll and tax withholding platform, in production with two-factor authentication, where employee data is entered once instead of being typed into two tools. I also build plugins and integrations for U.S. clients and maintain the infrastructure on a Linux server with Docker, Coolify and Traefik.",
     "p3": "I'm in my 10th semester of Systems Engineering at Universidad de San Buenaventura. My co-authored thesis is a multi-agent system that detects IDN homograph phishing domains. I also built the Content Engine, a LangGraph agent that drafts the posts on this blog and publishes nothing without my approval.",
     "portraitAlt": "Pixel art portrait of Miguel Bonilla wearing glasses, a white shirt and a blue suit"
   },
@@ -59,7 +59,7 @@
   },
   "projects": {
     "title": "Projects",
-    "lede": "The projects with the most evidence come first: each one has a case study with the problem, the architecture, the decisions and their limits.",
+    "lede": "The projects with the most evidence come first: each one explains the need it serves, how it solves it, what was decided and what it still lacks.",
     "featured": "Featured",
     "stack": "Stack",
     "viewRepo": "View repository",
@@ -71,7 +71,7 @@
     "otherTitle": "Other projects & academic archive",
     "otherLede": "Course projects, prototypes and work without public code. Each one shows its status.",
     "readCase": "Read the case study",
-    "contribution": "My contribution",
+    "solves": "What it does",
     "featuredProjects": "Featured projects",
     "status": {
       "commercial": "Commercial production",
@@ -84,15 +84,17 @@
     "unverifiedNote": "This project has no public repository or demo. The description leaves out any result that can't be checked.",
     "case": {
       "overview": "Overview",
-      "problem": "Problem",
-      "role": "Role & responsibilities",
-      "architecture": "Architecture",
+      "need": "The need",
+      "constraints": "Constraints",
+      "solution": "The solution",
+      "architecture": "How it works",
       "flow": "Data flow",
       "decisions": "Technical decisions",
       "challenges": "Engineering challenges",
-      "validation": "Testing & validation",
+      "validation": "How it's validated",
       "results": "Results",
-      "limitations": "Limitations & next steps",
+      "limitations": "Limits & next steps",
+      "role": "My part",
       "contents": "On this page"
     },
     "ctaTitle": "Interested in this kind of work?",

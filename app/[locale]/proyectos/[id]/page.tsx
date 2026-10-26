@@ -77,9 +77,9 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
         </div>
         <h1 className={styles.title}>{project.title}</h1>
         <p className={styles.lede}>{project.description}</p>
-        {project.contribution && (
-          <p className={styles.contribution}>
-            <strong>{t("contribution")}:</strong> {project.contribution}
+        {project.solves && (
+          <p className={styles.solves}>
+            <strong>{t("solves")}:</strong> {project.solves}
           </p>
         )}
         {project.status === "unverified" && <p className={styles.note}>{t("unverifiedNote")}</p>}
