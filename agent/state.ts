@@ -88,6 +88,8 @@ export interface Review {
   hash?: string;
   /** Al aceptar la propuesta: qué hacer con las cifras sin fuente */
   unsourced?: "mark" | "drop";
+  /** Archivos enviados como respuesta a la propuesta: se suman como fuentes */
+  attachments?: Attachment[];
 }
 
 export interface Steps {

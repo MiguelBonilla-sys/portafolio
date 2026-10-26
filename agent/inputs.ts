@@ -36,6 +36,8 @@ export interface InputDeps {
 
 export const LIMITS = {
   fileBytes: 10 * 1024 * 1024,
+  /** Archivos por pieza, aunque lleguen en varios mensajes */
+  filesPerPiece: 10,
   textBytes: 1024 * 1024,
   pdfPages: 60,
   sourceChars: 30_000,
@@ -152,13 +154,16 @@ export interface ExtractInput {
   note: string;
   forwarded?: boolean;
   attachments: Attachment[];
+  /** Fuentes que la pieza ya tiene, al sumar material después: los ids siguen y el límite total es de la pieza */
+  existing?: SourceDoc[];
 }
 
 /** Notas, archivos y enlaces → fuentes numeradas. Los problemas por fuente se informan, no se ocultan. */
 export async function extractSources(input: ExtractInput, deps: InputDeps): Promise<{ sources: SourceDoc[]; notices: string[] }> {
   const sources: SourceDoc[] = [];
   const notices: string[] = [];
-  const nextId = () => `S${sources.length + 1}`;
+  const existing = input.existing ?? [];
+  const nextId = () => `S${existing.length + sources.length + 1}`;
 
   const note = input.note.trim();
   if (note) {
@@ -196,7 +201,7 @@ export async function extractSources(input: ExtractInput, deps: InputDeps): Prom
     }
   }
 
-  let total = 0;
+  let total = existing.reduce((n, s) => n + s.text.length, 0);
   for (const s of sources) {
     const room = Math.max(0, LIMITS.totalChars - total);
     if (s.text.length > room) {

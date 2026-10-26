@@ -68,14 +68,15 @@ Terminales: `published`, `cancelled`, `expired`. Las filas con estados del esque
 | Comando | Alias | Qué hace |
 |---|---|---|
 | `/start`, `/help` | `/ayuda` | Ayuda breve |
-| `/new [texto]` | `/nuevo` | Empieza un borrador nuevo (con el texto o archivo adjunto) |
+| `/new [texto]` | `/nuevo` | Con texto o archivo, empieza un borrador; solo, empieza a juntar material de varios mensajes |
+| `/done` | `/listo`, «listo» | Termina de juntar y arranca el borrador con todo el material |
 | `/drafts` | `/borradores` | Últimos 8 borradores con id corto, estado y versión |
 | `/status [id]` | `/estado` | Estado, versión, hash, canales publicados, datos pendientes |
 | `/preview [id]` | `/vista` | Vuelve a enviar la vista previa (solo en revisión) |
 | `/revise texto` | `/revisar` | Pide un cambio |
 | `/approve`, `/publish [blog\|linkedin]` | `/aprobar`, `/publicar` | Muestra la confirmación de publicación (no publica) |
 | `/sources [id]` | `/fuentes` | Fuentes, confianza y afirmaciones sin respaldo |
-| `/cancel` | `/cancelar` | Cancela lo pendiente o descarta el borrador activo |
+| `/cancel` | `/cancelar` | Descarta el material que se está juntando, cancela lo pendiente o descarta el borrador activo |
 
 Opciones al empezar: `/es` (post de LinkedIn en español), `/carrusel`, «con imagen» (el post lleva la portada).
 
@@ -91,9 +92,14 @@ El texto libre se interpreta según el estado del borrador activo (reglas determ
 | En revisión | "Publica el blog y LinkedIn" | Tarjeta de confirmación con versión, hash, canales y enlaces previstos |
 | En revisión | "gracias", "ok" | No edita nada |
 | En revisión | Texto de 400+ caracteres | Pregunta si es un cambio o material para un borrador nuevo |
-| Cualquiera | Archivo, enlace o reenvío | Borrador nuevo |
+| Juntando material (`/new`) | Cualquier texto, archivo, enlace o reenvío | Se suma al mismo borrador; «listo» lo arranca |
+| Esperando la propuesta | Respuesta a la propuesta con un archivo (o álbum + «listo») | Se suma como fuente y se vuelve a proponer |
+| Cualquiera | Álbum | Un solo borrador; «listo» lo arranca |
+| Cualquiera | Archivo, enlace o reenvío suelto | Borrador nuevo |
 
 Tono: español por defecto, sin emojis decorativos, sin JSON ni trazas. Los mensajes distinguen lo verificado, lo propuesto, lo pendiente y lo que necesita aprobación. Limitación: la interfaz del bot está solo en español; el idioma del post de LinkedIn sí se elige (`/es`, inglés por defecto).
+
+Material en varios mensajes: `/new` abre una recolección (`agent_kv`, clave `collecting`) que suma cada mensaje de forma atómica (los mensajes de un álbum llegan en paralelo) hasta «listo». Límite: 10 archivos por borrador; vence a las 6 h con aviso. Guía de uso en `docs/setup.md` §9.
 
 ### Progreso
 
@@ -112,6 +118,6 @@ Un solo mensaje por pieza que se edita: "Material recibido · Contenido extraíd
 
 ## 7. Pruebas
 
-`pnpm test` (68 pruebas) incluye el grafo completo con LLM y servicios simulados (`agent/test/graph.test.ts`), la conversación de Telegram con los ejemplos A–D del encargo (`handlers.test.ts`), seguridad (`security.test.ts`), visuales, SEO, linter y storyboard (`visuals.test.ts`), e integridad y consistencia del contenido del sitio (`test/`).
+`pnpm test` incluye el grafo completo con LLM y servicios simulados (`agent/test/graph.test.ts`), la conversación de Telegram con los ejemplos A–D del encargo (`handlers.test.ts`), el material en varios mensajes y álbumes (`collect.test.ts`), seguridad (`security.test.ts`), visuales, SEO, linter y storyboard (`visuals.test.ts`), e integridad y consistencia del contenido del sitio (`test/`).
 
 No probado contra servicios reales: Telegram, GitHub, LinkedIn, el LLM de producción y Postgres de producción. Primera prueba real sugerida: enviar `/new` con una nota corta al bot y seguir el flujo hasta "Solo blog".

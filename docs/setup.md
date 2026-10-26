@@ -107,6 +107,19 @@ Al aprobar: commit del artículo → espera el deploy → post en LinkedIn → c
 
 Opciones al inicio del mensaje: `/es` (post en español) y `/carrusel` (además, un carrusel PDF). Comandos: `/estado`, `/cancelar`, `/ayuda`.
 
+### Varios archivos para un solo artículo
+
+Telegram manda cada archivo como un mensaje aparte. Para que imágenes, Markdown, PDF, notas y enlaces terminen en **un** borrador:
+
+1. `/nuevo` (sin texto): el bot empieza a juntar.
+2. Manda lo que quieras, en uno o varios mensajes. Cada uno se confirma («Llevo 3 archivos (1 imagen, 1 PDF, 1 documento) y 1 nota»). `/es` y `/carrusel` valen en cualquier momento.
+3. `listo` (o `/listo`): arranca la investigación con todo junto.
+
+- Un **álbum** cuenta como un solo borrador aunque no uses `/nuevo`; igual hay que escribir `listo` cuando terminen de llegar los archivos (Telegram no avisa cuándo termina un álbum).
+- **Sumar material a una propuesta**: respóndele al mensaje de la propuesta con el archivo (o con un álbum y luego `listo`). El bot vuelve a revisar las fuentes y te manda una propuesta nueva. Después de redactado, el material nuevo ya no se suma.
+- Límites por borrador: 10 archivos, 10 MB por archivo, 90.000 caracteres de texto en total. `/estado` muestra lo que llevas; `/cancelar` lo descarta; si pasan 6 horas sin `listo`, se descarta con aviso.
+- Si algo del material es un mensaje reenviado, todo el texto del borrador se trata como externo (menos confianza en sus afirmaciones).
+
 ## 10. Tarjeta de contacto y Wallet (opcional)
 
 La tarjeta ya funciona sin configurar nada:

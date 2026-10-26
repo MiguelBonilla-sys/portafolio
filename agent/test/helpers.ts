@@ -3,7 +3,7 @@ import { MemorySaver } from "@langchain/langgraph";
 import type { AgentDeps } from "../deps.ts";
 import { canTransition, type EditorialStatus } from "../editorial.ts";
 import { compileGraph } from "../graph.ts";
-import type { ContentEvent, ContentRow, ContentStore } from "../lib/db.ts";
+import type { Collection, ContentEvent, ContentRow, ContentStore } from "../lib/db.ts";
 import { LinkedInAuthError, type LinkedInClient } from "../lib/linkedin.ts";
 import type { SafeResponse } from "../lib/safe-fetch.ts";
 import type { InlineButton, TelegramClient } from "../lib/telegram.ts";
@@ -156,6 +156,20 @@ export function memoryStore() {
     },
     async kvDelete(k) {
       kv.delete(k);
+    },
+    async kvTake<T>(k: string) {
+      const v = (kv.get(k) as T) ?? null;
+      kv.delete(k);
+      return v;
+    },
+    async collect(k, part, open) {
+      const current = kv.get(k) as Collection | undefined;
+      if (!current && !open) return null;
+      const next: Collection = current
+        ? { ...current, parts: [...current.parts, part] }
+        : { startedAt: new Date().toISOString(), parts: [part], ...(open && open.target ? { target: open.target } : {}) };
+      kv.set(k, next);
+      return next;
     },
     async claimUpdate(id) {
       if (claimed.has(id)) return false;
