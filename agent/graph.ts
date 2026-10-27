@@ -7,7 +7,7 @@ import { extractSources, LIMITS, sourcesBlock, type SourceDoc } from "./inputs.t
 import { askJson, askText } from "./lib/json.ts";
 import { LinkedInAuthError } from "./lib/linkedin.ts";
 import { describeFindings, lintText, type LintReport } from "./lib/lint.ts";
-import { assetPath, blogPath, buildMdx } from "./lib/mdx.ts";
+import { assetPath, blogPath, buildMdx, validateBlogMdx } from "./lib/mdx.ts";
 import { toPublicError, UserFacingError } from "./lib/redact.ts";
 import { callback, esc, type InlineButton } from "./lib/telegram.ts";
 import { dateIn, describeSlot, formatDateTime, nextCronSlot, normalizeNumber, numbersIn, slugify, wordCount } from "./lib/text.ts";
@@ -724,17 +724,18 @@ export function buildGraph(deps: AgentDeps) {
     const slug = await freeSlug(s);
     const sources = s.sources.filter((x) => x.kind === "url").map((x) => ({ title: x.title, url: x.origin }));
     const assets: string[] = [];
+    const assetFiles: { path: string; content: string; name: string }[] = [];
     let blogEs = s.blogEs;
     let blogEn = s.blogEn;
     for (const v of s.visuals) {
       if (v.kind === "cover") continue; // la portada la genera la ruta opengraph-image del artículo
       const { repoPath, publicPath } = assetPath(slug, v.name);
-      await deps.github.putFile(repoPath, renderSvg(v, "es"), `content: ${slug} (${v.name})`);
+      assetFiles.push({ path: repoPath, content: renderSvg(v, "es"), name: v.name });
       assets.push(publicPath);
       if (blogEs) blogEs = { ...blogEs, body: insertFigure(blogEs.body, `![${altText(v, "es")}](${publicPath})`) };
       if (blogEn) blogEn = { ...blogEn, body: insertFigure(blogEn.body, `![${altText(v, "en")}](${publicPath})`) };
     }
-    let commit = "";
+    const mdxFiles: { path: string; content: string; locale: "es" | "en" }[] = [];
     for (const [locale, draft] of [["es", blogEs], ["en", blogEn]] as const) {
       if (!draft) continue;
       const mdx = buildMdx({
@@ -748,8 +749,12 @@ export function buildGraph(deps: AgentDeps) {
         projects: s.relatedProjects,
         version: s.version,
       });
-      commit = (await deps.github.putFile(blogPath(locale, slug), mdx, `content: ${slug} (${locale}) v${s.version}`)).commitSha;
+      await validateBlogMdx(mdx);
+      mdxFiles.push({ path: blogPath(locale, slug), content: mdx, locale });
     }
+    for (const file of assetFiles) await deps.github.putFile(file.path, file.content, `content: ${slug} (${file.name})`);
+    let commit = "";
+    for (const file of mdxFiles) commit = (await deps.github.putFile(file.path, file.content, `content: ${slug} (${file.locale}) v${s.version}`)).commitSha;
     return { ...st, slug, steps: { ...s.steps, commit, assets } };
   }
 

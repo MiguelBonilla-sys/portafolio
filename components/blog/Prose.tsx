@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { blogMdxOptions } from "@/agent/lib/mdx";
 import { ORG_LINK_REL, ORGS } from "@/lib/orgs";
 import styles from "./Prose.module.css";
 
@@ -21,7 +22,7 @@ const components = {
 export default function Prose({ source }: { source: string }) {
   return (
     <div className={styles.prose}>
-      <MDXRemote source={source} components={components} />
+      <MDXRemote source={source} options={{ mdxOptions: blogMdxOptions }} components={components} />
     </div>
   );
 }

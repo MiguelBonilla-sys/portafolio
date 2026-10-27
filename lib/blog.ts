@@ -3,14 +3,14 @@ import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
 import type { Locale } from "@/i18n/routing";
-import { ARTICLE_TYPES, CATEGORIES, LEGACY_PILLAR } from "@/lib/taxonomy";
+import { ARTICLE_TYPES, CATEGORIES, LEGACY_PILLAR } from "./taxonomy.ts";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "usa el formato YYYY-MM-DD");
 
 // Contrato del frontmatter (docs/architecture.md › Data Model). Un artículo inválido rompe el build.
-const frontmatterSchema = z.object({
+export const frontmatterSchema = z.object({
   title: z.string().min(1).max(70),
   description: z.string().min(50).max(170),
   summary: z.string().min(1),
@@ -27,7 +27,7 @@ const frontmatterSchema = z.object({
   version: z.number().int().positive().optional(),
   tags: z.array(z.string()).max(5).default([]),
   faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
-  sources: z.array(z.object({ title: z.string(), url: z.url() })).default([]),
+  sources: z.array(z.object({ title: z.string(), url: z.url().refine((url) => /^https?:\/\//i.test(url), "solo http/https") })).default([]),
   draft: z.boolean().default(false),
   contentId: z.string().optional(),
   linkedinUrn: z.string().optional(),

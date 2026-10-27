@@ -4,9 +4,10 @@ import { serialize } from "next-mdx-remote/serialize";
 import { assertTransition, canTransition, contentHash, TransitionError } from "../editorial.ts";
 import { extractSources, injectionWarning, sniff, urlsIn } from "../inputs.ts";
 import { htmlToText } from "../lib/html.ts";
-import { assetPath, blogPath, buildMdx, sanitizeMdxBody } from "../lib/mdx.ts";
+import { assetPath, blogMdxOptions, blogPath, buildMdx, sanitizeMdxBody, validateBlogMdx } from "../lib/mdx.ts";
 import { redact, toPublicError, UserFacingError } from "../lib/redact.ts";
 import { isPublicAddress, safeFetch } from "../lib/safe-fetch.ts";
+import { frontmatterSchema } from "../../lib/blog.ts";
 
 // ── SSRF ──
 
@@ -134,6 +135,71 @@ test("buildMdx y las rutas validan el slug (sin path traversal)", () => {
   assert.match(mdx, /title: T{70}\n/);
   assert.doesNotMatch(mdx, /javascript:/);
   assert.match(mdx, /\\<b\\>x\\<\/b\\>/);
+});
+
+const mdxFor = (body: string) => buildMdx({
+  draft: {
+    title: "Seguridad de MDX en artículos",
+    description: "Una descripción suficientemente larga para validar el frontmatter del artículo.",
+    summary: "Este artículo describe el tratamiento de material externo.",
+    tags: [], faq: [], body,
+  },
+  slug: "seguridad-mdx",
+  locale: "es",
+  date: "2026-10-23",
+  category: "backend",
+  contentId: "id",
+  sources: [],
+});
+
+test("el compilador de producción elimina JSX aunque el sanitizador no reconozca el token", async () => {
+  const payloads = [
+    '<script src="https://x.example/a.js" data-x="`k`" />',
+    '\\`<iframe src="https://x.example/" />\\`',
+    'Antes ```\n\n<script src="https://x.example/a.js" />\n\nDespués ```',
+    '<meta http-equiv="refresh" content="0;url=https://x.example/" />',
+  ];
+  for (const payload of payloads) {
+    const mdx = mdxFor(`Contenido válido antes del ejemplo.\n\n${payload}\n\nContenido válido después.`);
+    try {
+      const { compiledSource } = await serialize(mdx, { mdxOptions: blogMdxOptions, parseFrontmatter: true });
+      assert.doesNotMatch(compiledSource, /_jsx(?:DEV)?\([^\n]*(?:"script"|"iframe"|"meta")/, payload);
+      await validateBlogMdx(mdx);
+    } catch (error) {
+      if (!(error instanceof UserFacingError)) await assert.rejects(validateBlogMdx(mdx), UserFacingError);
+    }
+  }
+});
+
+test("las URL analizadas por MDX no renderizan imágenes externas ni enlaces no permitidos", async () => {
+  const payloads = [
+    "![x][r]\n\n[r]: https://tracker.example/p.png",
+    "![x][r]\n\n[r]: https://tracker.example/p.png\n[r]: /safe.png",
+    "![x]( https://tracker.example/p.png)",
+    "![x](/\\/tracker.example/p.png)",
+    "![x](/&#47;tracker.example/p.png)",
+    "[x][r]\n\n[r]: javascript:alert(1)",
+  ];
+  for (const payload of payloads) {
+    const mdx = mdxFor(`Contenido de prueba.\n\n${payload}`);
+    try {
+      const { compiledSource } = await serialize(mdx, { mdxOptions: blogMdxOptions, parseFrontmatter: true });
+      assert.doesNotMatch(compiledSource, /tracker\.example|javascript:|_jsx(?:DEV)?\("img",\s*\{[^}]*src:\s*"\/\//, payload);
+      await validateBlogMdx(mdx);
+    } catch (error) {
+      if (!(error instanceof UserFacingError)) await assert.rejects(validateBlogMdx(mdx), UserFacingError);
+    }
+  }
+});
+
+test("el gate rechaza MDX inválido y frontmatter con URLs no HTTP", async () => {
+  for (const payload of ["latency <200 ms", "rate <5%", "a </> b", "\\\\{ ("]) {
+    await assert.rejects(validateBlogMdx(mdxFor(`Contenido de prueba.\n\n${payload}`)), UserFacingError, payload);
+  }
+  const { frontmatter } = await serialize(mdxFor("Contenido válido."), { mdxOptions: blogMdxOptions, parseFrontmatter: true });
+  assert.equal(frontmatterSchema.safeParse({ ...frontmatter, sources: [{ title: "x", url: "javascript:alert(1)" }] }).success, false);
+  assert.equal(frontmatterSchema.safeParse({ ...frontmatter, sources: [{ title: "x", url: "https://example.com/" }] }).success, true);
+  await assert.rejects(validateBlogMdx(mdxFor("Contenido válido.").replace(/^description:[\s\S]*?^summary:/m, "description: corta\nsummary:")), UserFacingError);
 });
 
 // ── Redacción y errores ──

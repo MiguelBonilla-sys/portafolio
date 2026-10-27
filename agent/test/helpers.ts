@@ -29,6 +29,7 @@ Las pruebas de integración cubren el filtro por dueño. ${PARA.repeat(8)}`;
 export interface FakeOpts {
   linkedinExtra?: string;
   inventNumber?: boolean;
+  blogBody?: string;
   /** Afirmaciones que devuelve el investigador */
   claims?: { text: string; sources: string[]; support?: string }[];
   questions?: string[];
@@ -77,7 +78,7 @@ export function fakeLlm(opts: FakeOpts = {}) {
               summary: "Un gateway en FastAPI valida el JWT, consulta la API de inventario y devuelve solo los activos del usuario. El token de acceso dura 30 minutos y el filtro corre en memoria sobre hasta 2.000 registros por consulta.",
               tags: ["FastAPI", "JWT"],
               faq: [],
-              body: opts.inventNumber ? `${BODY_ES}\n\nRedujo la latencia un 45 %.` : BODY_ES,
+              body: opts.blogBody ?? (opts.inventNumber ? `${BODY_ES}\n\nRedujo la latencia un 45 %.` : BODY_ES),
             }) +
             "\n```"
         );

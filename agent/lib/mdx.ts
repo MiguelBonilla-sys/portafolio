@@ -1,5 +1,9 @@
 import matter from "gray-matter";
+import { serialize } from "next-mdx-remote/serialize";
+import { frontmatterSchema } from "../../lib/blog.ts";
 import { linkOrgsMarkdown } from "../../lib/orgs.ts";
+import { decodeEntities } from "./html.ts";
+import { UserFacingError } from "./redact.ts";
 import type { BlogDraft } from "../state.ts";
 
 interface MdxInput {
@@ -15,6 +19,74 @@ interface MdxInput {
 }
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+interface BlogNode {
+  type: string;
+  children?: BlogNode[];
+  identifier?: string;
+  url?: string;
+  value?: string;
+  alt?: string;
+}
+
+function safeDestination(raw: string, image: boolean): boolean {
+  if (raw !== raw.trim()) return false;
+  let url: string;
+  try {
+    url = decodeURIComponent(decodeEntities(raw).replace(/&sol;/gi, "/")).replace(/\\/g, "/");
+  } catch {
+    return false;
+  }
+  if (/[\u0000-\u001f\u007f]/.test(url)) return false;
+  if (/^\/(?!\/)/.test(url)) return true;
+  if (image) return false;
+  if (url.startsWith("#") || /^mailto:[^\s]+$/i.test(url)) return true;
+  try {
+    return /^https?:\/\//i.test(url) && ["http:", "https:"].includes(new URL(url).protocol);
+  } catch {
+    return false;
+  }
+}
+
+function blogMdxSafety() {
+  return (tree: unknown) => {
+    const root = tree as BlogNode;
+    const definitions = new Map<string, string>();
+    const readDefinitions = (node: BlogNode): void => {
+      if (node.type === "definition" && node.identifier && !definitions.has(node.identifier.toLowerCase())) {
+        definitions.set(node.identifier.toLowerCase(), node.url ?? "");
+      }
+      node.children?.forEach(readDefinitions);
+    };
+    readDefinitions(root);
+    const textOf = (node: BlogNode): string => node.value ?? node.alt ?? node.children?.map(textOf).join("") ?? "";
+    const clean = (node: BlogNode): BlogNode | null => {
+      if (["mdxJsxFlowElement", "mdxJsxTextElement", "mdxFlowExpression", "mdxTextExpression", "mdxjsEsm"].includes(node.type)) return null;
+      if ((node.type === "image" || node.type === "link") && !safeDestination(node.url ?? "", node.type === "image")) {
+        return { type: "text", value: textOf(node) };
+      }
+      if (node.type === "definition" && !safeDestination(node.url ?? "", false)) return null;
+      if (node.type === "imageReference" || node.type === "linkReference") {
+        const url = definitions.get(node.identifier?.toLowerCase() ?? "");
+        if (!url || !safeDestination(url, node.type === "imageReference")) return { type: "text", value: textOf(node) };
+      }
+      if (node.children) node.children = node.children.map(clean).filter((child): child is BlogNode => child !== null);
+      return node;
+    };
+    clean(root);
+  };
+}
+
+export const blogMdxOptions = { remarkPlugins: [blogMdxSafety] };
+
+export async function validateBlogMdx(mdx: string): Promise<void> {
+  try {
+    const { frontmatter } = await serialize(mdx, { mdxOptions: blogMdxOptions, parseFrontmatter: true });
+    if (!frontmatterSchema.safeParse(frontmatter).success) throw new Error("frontmatter inválido");
+  } catch {
+    throw new UserFacingError("El artículo generado tiene MDX o frontmatter inválido. No lo publiqué.");
+  }
+}
 
 /**
  * El cuerpo lo escribe un modelo a partir de material no confiable, y MDX compila JSX y expresiones.
