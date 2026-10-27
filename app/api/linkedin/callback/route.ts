@@ -26,7 +26,7 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const jar = await cookies();
   const expected = jar.get("li_oauth_state")?.value;
-  jar.delete("li_oauth_state");
+  jar.delete({ name: "li_oauth_state", path: "/api/linkedin" });
 
   if (url.searchParams.get("error")) return page("LinkedIn no conectado", (url.searchParams.get("error_description") ?? "Se canceló la autorización.").slice(0, 300), 400);
   if (!expected || !safeEqual(url.searchParams.get("state"), expected)) return page("Estado inválido", "Vuelve a abrir el enlace de conexión.", 400);
