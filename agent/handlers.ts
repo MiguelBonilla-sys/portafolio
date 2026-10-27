@@ -345,6 +345,9 @@ export function createHandlers(rt: Runtime) {
     const merged = mergeCollection(c);
     if (merged.ignored) await tg.sendMessage(`Un borrador admite ${LIMITS.filesPerPiece} archivos; dejé fuera ${merged.ignored}.`);
     if (c.target) {
+      if (merged.forwarded) {
+        return void (await tg.sendMessage("No sumé este material a la propuesta porque incluye un mensaje reenviado. Envíalo con /new para tratarlo como fuente externa."));
+      }
       const target = await rt.store.get(c.target);
       if (!target || target.status !== "awaiting_input") {
         return void (await tg.sendMessage("Esa propuesta ya no espera respuesta, así que no le sumé los archivos. Empieza un borrador nuevo con /new si quieres usarlos."));
