@@ -26,6 +26,8 @@ export interface PageText {
 }
 
 export function htmlToText(html: string, maxChars = 40_000): PageText {
+  // Acotar antes de las expresiones regulares: etiquetas incompletas fuerzan búsquedas cuadráticas.
+  html = html.slice(0, 40_000);
   const title = attr(html, /<title[^>]*>([\s\S]*?)<\/title>/i);
   const description =
     attr(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
