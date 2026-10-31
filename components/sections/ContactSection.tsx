@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useWebMCP } from "use-webmcp-tool";
 import { EMAIL, GITHUB_URL, LINKEDIN_URL, X_URL } from "@/lib/content";
 import SectionHeader from "@/components/ui/SectionHeader";
 import type messagesEs from "@/messages/es.json";
@@ -18,6 +19,16 @@ const contactItems = [
 ];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const contactToolSchema = {
+  type: "object",
+  properties: {
+    name: { type: "string", minLength: 1, maxLength: 120, description: "Sender name" },
+    email: { type: "string", format: "email", maxLength: 254, description: "Sender email address" },
+    message: { type: "string", minLength: 10, maxLength: 5000, description: "Message draft for the visible contact form" },
+  },
+  required: ["name", "email", "message"],
+  additionalProperties: false,
+} as const;
 
 type Translate = (key: "errName" | "errEmailEmpty" | "errEmailInvalid" | "errMessage") => string;
 
@@ -35,9 +46,46 @@ type ContactMessages = (typeof messagesEs)["contact"];
 
 export default function ContactSection({ messages }: { messages: ContactMessages }) {
   const t = (key: keyof ContactMessages) => messages[key];
+  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
+
+  useWebMCP({
+    name: "prepare_contact_message",
+    description: "Validate and fill the visible contact form for the user to review and submit manually; never sends it.",
+    inputSchema: contactToolSchema,
+    annotations: { readOnlyHint: false },
+    execute: (input: unknown) => {
+      if (!input || typeof input !== "object" || Array.isArray(input)) {
+        return { ok: false, error: { code: "invalid_input", message: "Expected contact fields" } };
+      }
+      const fields = input as Record<string, unknown>;
+      if (typeof fields.name !== "string" || typeof fields.email !== "string" || typeof fields.message !== "string" ||
+          fields.name.length > 120 || fields.email.length > 254 || fields.message.length > 5000) {
+        return { ok: false, error: { code: "invalid_input", message: "Invalid contact field length or type" } };
+      }
+      const values = { name: fields.name, email: fields.email, message: fields.message };
+      const found = validate(values, t);
+      if (Object.keys(found).length > 0) {
+        setErrors(found);
+        return { ok: false, error: { code: "validation_failed", fields: found } };
+      }
+      const form = formRef.current;
+      if (!form || status === "loading") return { ok: false, error: { code: "unavailable", message: "Contact form is not ready" } };
+      for (const field of ["name", "email", "message"] as const) {
+        const control = form.elements.namedItem(field);
+        if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)) {
+          return { ok: false, error: { code: "unavailable", message: "Contact field is missing" } };
+        }
+        control.value = values[field];
+        control.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      setErrors({});
+      form.querySelector<HTMLElement>('[name="message"]')?.focus();
+      return { ok: true, data: { prepared: true, sent: false, requiresHumanSubmit: true } };
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -120,7 +168,7 @@ export default function ContactSection({ messages }: { messages: ContactMessages
           </dl>
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        <form ref={formRef} className={styles.form} onSubmit={handleSubmit} noValidate>
           <input type="checkbox" name="botcheck" className={styles.honeypot} tabIndex={-1} aria-hidden="true" />
 
           <div className={styles.group}>
