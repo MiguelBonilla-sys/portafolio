@@ -1,0 +1,31 @@
+# SEO, GEO, AEO y WebMCP de mangel14.dev
+
+Objetivo: auditar y mejorar el portafolio existente sin rediseñarlo ni desplegarlo. Rama: `feat/seo-geo-webmcp`; entrega: `ask-on-risk`, cadena elegida `stacked-to-main` (sin push, PR ni deploy). Runner: `pnpm test`, `pnpm lint`, `pnpm build`, `pnpm exec tsc --noEmit`, `pnpm test:e2e`.
+
+## Specs
+
+- **S1 · Auditoría.** “Antes de implementar: Inspecciona el árbol completo del proyecto.” Crear `docs/SEO_GEO_WEBMCP_AUDIT.md` con estado inicial verificable, evidencia, impacto estimado, P0/P1/P2, archivos, solución y estado. No inventar puntuaciones.
+- **S2 · SEO/GEO.** “No optimices el portafolio para aparentar autoridad.” Corregir únicamente fallos demostrados de metadata, canonical, hreflang, sitemap, JSON-LD, accesibilidad, rastreo y contenido citable; preservar el diseño y los controles de publicación.
+- **S3 · WebMCP.** “La implementación debe ser una mejora progresiva que no afecte navegadores incompatibles.” Investigar las cuatro fuentes oficiales indicadas, validar `useWebMCP` y exponer herramientas útiles sobre datos públicos, con esquemas, validación y limpieza; no simular un servidor MCP ni enviar contacto. Crear `docs/WEBMCP.md` y probar invocación real si el navegador compatible está disponible.
+- **S4 · Blog y autoridad.** “Nunca publiques automáticamente contenido pendiente de aprobación.” Respetar Content Engine y el blog, mejorar enlaces justificados y crear `docs/BACKLINK_STRATEGY.md` sin fabricar backlinks o métricas.
+- **S5 · Medición y cierre.** Crear `docs/SEO_GEO_METRICS.md` y `docs/SEO_GEO_IMPLEMENTATION_REPORT.md`. Ejecutar los checks disponibles y distinguir IMPLEMENTADO, VERIFICADO, PARCIAL, PENDIENTE y NO APLICA.
+- **S6 · Promoción futura.** “A partir de noviembre de 2026 asumiré el cargo de Development Lead / Líder de Desarrollo” y “Antes de esa fecha, mantén el cargo actual y prepara los cambios sin presentarlos como vigentes.” Mantener dos cargos independientes de Coordenadas.co, pero no publicar el futuro antes de su vigencia. No inventar resultados ni responsabilidades cumplidas; preservar especialización Full Stack.
+
+## Tasks
+
+- [x] **T1** · S1 · ruta inline; evidencia: `docs/SEO_GEO_WEBMCP_AUDIT.md` y `pnpm test` 109/109 de línea base; commit: `ba70c34`.
+- [x] **T2** · S2, S6 · ruta inline; evidencia: RED de consistencia/alternates, GREEN, PDFs ES/EN y sitemap local; commit: `f1bfb40` (revisión nativa aprobada y reconocida).
+- [x] **T3** · S3 · ruta inline; evidencia: RED/GREEN unitario, Chrome 156 nativo con seis invocaciones, fallback y verificación independiente; commits: `3d02285` (revisión nativa aprobada y reconocida) y `ba70c34` (revisión nativa no requerida: `under_budget`).
+- [x] **T4** · S4 · ruta inline; evidencia: aprobación editorial preservada, blog vacío, `docs/BACKLINK_STRATEGY.md`; commit: `ba70c34`.
+- [x] **T5** · S5 · ruta inline; evidencia: `pnpm test` 116/116, lint/typecheck/build, E2E 11/11, Lighthouse y cinco docs; commit: `ba70c34`.
+
+## Log
+
+- **L1 · 2026-10-30.** Solicitud original: auditoría e implementación SEO, GEO, AEO y WebMCP para `mangel14.dev`, con entregables `docs/SEO_GEO_WEBMCP_AUDIT.md`, `docs/WEBMCP.md`, `docs/BACKLINK_STRATEGY.md`, `docs/SEO_GEO_METRICS.md` y `docs/SEO_GEO_IMPLEMENTATION_REPORT.md`; fase adicional de promoción futura en Coordenadas.co desde noviembre de 2026. El texto íntegro permanece en la solicitud de esta sesión; las frases contractuales se preservan literalmente en `## Specs`.
+- **L2 · 2026-10-30.** Mapa de repositorio: Next.js 16.4.3/React 19.2.3, App Router, rutas ES/EN, metadata y JSON-LD existentes, blog MDX con un borrador bilingüe, Content Engine con aprobación, sin WebMCP. `/`, `/en`, `/es`, sitemap, robots y llms responden 200 en producción; `/` termina en `/es`. `docs/audit/CONTENT_VERIFICATION.md` documenta que “359 pruebas” y “agentes sobre LlamaStack” ya se retiraron. Rama creada; `.atl/` preexistente se respeta.
+- **L3 · 2026-10-30.** T1: auditoría inicial documentada; línea base `pnpm test` 109/109. Hallazgos P0/P1/P2 en `docs/SEO_GEO_WEBMCP_AUDIT.md`.
+- **L4 · 2026-10-30.** T2–T5: implementación local y checks observados. Chrome 156 nativo descubre, invoca y desregistra herramientas; Chrome sin API funciona. La promoción futura se guarda fuera de superficies públicas; se requerirá confirmación de vigencia, nueva build y autorización de despliegue después del 1 de noviembre.
+- **L5 · 2026-10-30.** Verificación independiente de S1–S6 sin bloqueos en dominio; corrigió navegación WebMCP de claves heredadas con RED/GREEN y recheck nativo. La copia aislada omitió una prueba de historial por carecer de `.git`; la prueba pasó en el repo real. Pendiente: estrategia de entrega antes de commits, revisión RDD de candidatos si corresponde, ninguna publicación remota.
+- **L6 · 2026-10-30.** El propietario delegó la decisión de entrega. Se elige `stacked-to-main` porque el ajuste SEO/perfil, las herramientas de consulta WebMCP y el contacto/guía pueden revisarse en unidades sucesivas sin un PR rastreador. Se prepararán commits locales; abrir PR o publicar sigue fuera de autorización. Orden previsto: SEO/perfil → herramientas WebMCP de consulta → preparación de contacto y documentación de cierre.
+- **L7 · 2026-10-30.** `f1bfb40` (153 líneas) y `3d02285` (399 líneas) superaron la revisión nativa tras consentimiento específico para cada candidato; ambas autoridades quedaron reconocidas. La primera revisión dejó una advertencia no bloqueante: ampliar pruebas observables del sitemap con artículos publicados y traducciones borrador en una tarea futura. Ninguna revisión autoriza publicación.
+- **L8 · 2026-10-30.** Cierre local: `ba70c34` agrega preparación segura del contacto, E2E nativo y cinco documentos; evaluación RDD `medium/under_budget`, sin ceremonia de revisión requerida. Tras los últimos cambios: `pnpm test` 116/116, `pnpm lint`, `pnpm exec tsc --noEmit`, `pnpm build` y `pnpm test:e2e` 11/11 aprobados. Producción y cuentas externas sin cambios; `.atl/` preexistente permanece intacto.
