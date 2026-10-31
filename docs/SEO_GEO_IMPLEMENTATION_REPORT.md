@@ -47,7 +47,7 @@ No se usó un servidor MCP ni se llamó a operaciones administrativas. El formul
 | `pnpm test:e2e` con Chrome 156 | 11/11, incluidos WebMCP nativo y navegador sin API |
 | Verificación independiente aislada | `pnpm test` 115 aprobadas y 1 omitida por falta de `.git` en la copia; lint, build, typecheck y E2E 11/11 aprobados. Hallazgo de navegación corregido y revalidado con unit 4/4 y E2E nativo 2/2 |
 | `pnpm cv` y `test/cv.test.ts` | PDFs ES/EN regenerados y 2/2 pruebas de contenido aprobadas |
-| Revisión nativa de commits | `f1bfb40` y `3d02285`: consentimiento individual, revisión aprobada y reconocimiento exacto. La advertencia no bloqueante sobre el sitemap se atendió con una prueba de resultados en una unidad posterior. |
+| Revisión nativa de candidatos | Los candidatos hasta `f1bfb40`, `3d02285` y `dc78037` recibieron consentimiento individual, revisión aprobada y reconocimiento exacto. El último incluyó el tramo pendiente de contacto/documentación y la prueba observable del sitemap. |
 | HTTP local | `/es`, `/en`, `/en/blog`, caso Bikans, sitemap, robots y llms: 200; sitemap con 34 URLs y 0 fechas ficticias |
 | Lighthouse 13.6.0 móvil `/en` | Producción previa: Performance/Accessibility/SEO 100/100/100, LCP 1,1 s, CLS 0,001. Build local: 100/100/92, LCP 0,8 s, CLS 0. **No son mediciones comparables**: HTTPS/red real frente a localhost; la única deducción SEO local es que canonical apunta a producción, como debe hacerlo. |
 | PageSpeed Insights API | HTTP 429 por cuota; no se obtuvo medición |

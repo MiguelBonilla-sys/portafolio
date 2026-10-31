@@ -4,7 +4,7 @@
 
 | Métrica | Estado inicial | Estado final local | Método y límite |
 | --- | --- | --- | --- |
-| Rutas EN/ES, sitemap, robots, llms | HTTP 200 en producción; `/` termina en `/es` | Build local completado; rutas por verificar al cierre | `curl -L`, build y E2E; no implica indexación |
+| Rutas EN/ES, sitemap, robots, llms | HTTP 200 en producción; `/` termina en `/es` | `/es`, `/en`, `/en/blog`, caso Bikans, sitemap, robots y llms: HTTP 200 local; sitemap con 34 URLs | `curl -L`, build y E2E; no implica indexación ni verifica el nuevo código en producción |
 | Canonical, `hreflang`, OG y JSON-LD | Ya presentes en el código anterior | Corrección de artículos monolingües y fechas de sitemap | Pruebas unitarias/E2E; JSON-LD semántico requiere revisión externa adicional |
 | Artículos publicados | 0 (un borrador por idioma) | 0; ningún borrador publicado | Frontmatter `draft` y catálogo del blog |
 | Herramientas WebMCP | 0 | 6 registrables en tres contextos; 6 invocadas o verificadas en Chrome 156 local | `e2e/webmcp.test.mjs`, API nativa con bandera; no representa otros navegadores |
