@@ -16,7 +16,7 @@
 | LCP, CLS, INP de campo | No verificado | No verificado | Requiere CrUX/PageSpeed con muestra suficiente o RUM autorizado. La API pública de PageSpeed respondió HTTP 429 (cuota diaria), sin medición |
 | Dominios de referencia | No verificado | No verificado | Requiere índice de backlinks autorizado; no se infiere desde el código |
 | Menciones y citas de asistentes a URLs concretas | No verificado | No verificado | Evaluación manual fechada por asistente/consulta; distinguir respuesta correcta de enlace citado |
-| Exactitud del perfil público | Cargo/fecha de Coordenadas contradichos por corrección del propietario | Development Lead vigente y Frontend Developer septiembre 2025–octubre 2026; sin resultados ni responsabilidades ya cumplidas | Pruebas de consistencia, CV PDF y `get_professional_profile`; confirmar de nuevo con el empleador tras el 1 de noviembre |
+| Exactitud del perfil público | Cargo/fecha de Coordenadas contradichos por corrección del propietario | Development Lead vigente y Full Stack Developer septiembre 2025–octubre 2026 (título histórico corregido); sin resultados ni responsabilidades ya cumplidas | Pruebas de consistencia, CV PDF y `get_professional_profile`; confirmar de nuevo con el empleador tras el 1 de noviembre |
 
 ## Seguimiento recomendado
 
