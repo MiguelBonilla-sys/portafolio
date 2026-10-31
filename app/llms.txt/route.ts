@@ -26,7 +26,7 @@ export function GET() {
     "",
     "> Full Stack Engineer (Python, React & AI systems) based in Bogotá, Colombia (UTC−5). Builds Python backends, React frontends, LLM and RAG integrations, and n8n automations. Open to remote work.",
     "",
-    "Miguel Ángel Bonilla Torres (handle: mangel14) has 2+ years of professional software experience. He joined Coordenadas.co (https://coordenadas.co/, remote) as a Frontend Developer in September 2025 and became its Development Lead effective November 2026, was a freelance Junior Backend Engineer for Sibartech Technology SAS (Feb 2024 – Aug 2025), and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
+    "Miguel Ángel Bonilla Torres (handle: mangel14) has 2+ years of professional software experience. He joined Coordenadas.co (https://coordenadas.co/, remote) as a Full Stack Developer in September 2025 and became its Development Lead effective November 2026, was a freelance Junior Backend Engineer for Sibartech Technology SAS (Feb 2024 – Aug 2025), and is in the 10th semester of Systems Engineering at Universidad de San Buenaventura, Bogotá. The site is available in Spanish (/es) and English (/en).",
     "",
     `Full content in one file: ${SITE_URL}/llms-full.txt`,
     "",

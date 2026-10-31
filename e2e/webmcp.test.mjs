@@ -34,7 +34,7 @@ test("native WebMCP registers, invokes, and removes contextual tools", { skip: !
     const profile = await execute(page, "get_professional_profile", {});
     assert.equal(profile.data.currentRole, "Development Lead");
     assert.equal(profile.data.experience[0].dates, "Nov 2026 — Present");
-    assert.equal(profile.data.experience[1].title, "Frontend Developer");
+    assert.equal(profile.data.experience[1].title, "Full Stack Developer");
     assert.equal(profile.data.experience[1].dates, "Sep 2025 — Oct 2026");
 
     let sends = 0;

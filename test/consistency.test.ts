@@ -68,9 +68,9 @@ test("la experiencia declarada es la misma en todas partes (años, cargos y empl
   }
 });
 
-test("Coordenadas publica el ascenso a Development Lead vigente y conserva el historial de Frontend Developer", () => {
+test("Coordenadas publica el ascenso a Development Lead vigente y conserva el historial de Full Stack Developer", () => {
   const lead = experience.find((job) => job.title === "Development Lead");
-  const frontend = experience.find((job) => job.title === "Frontend Developer");
+  const frontend = experience.find((job) => job.title === "Full Stack Developer");
   assert.equal(lead?.date, "Nov 2026 — Present");
   assert.equal(lead?.place, "Coordenadas.co · Bogotá, Colombia (Remote)");
   assert.equal(frontend?.date, "Sep 2025 — Oct 2026");
@@ -78,12 +78,12 @@ test("Coordenadas publica el ascenso a Development Lead vigente y conserva el hi
   assert.equal(experience[0]?.title, "Development Lead");
   const spanish = JSON.parse(read("data/experience.es.json")) as typeof experience;
   const sLead = spanish.find((job) => job.title === "Development Lead");
-  const sFrontend = spanish.find((job) => job.title === "Frontend Developer");
+  const sFrontend = spanish.find((job) => job.title === "Full Stack Developer");
   assert.equal(sLead?.date, "Nov 2026 — Actualidad");
   assert.equal(sFrontend?.date, "Sep 2025 — Oct 2026");
   assert.equal(en.hero.factNowValue, "Development Lead · Coordenadas.co");
   assert.equal(es.hero.factNowValue, "Development Lead · Coordenadas.co");
-  assert.match(read("app/llms.txt/route.ts"), /joined Coordenadas\.co \(https:\/\/coordenadas\.co\/, remote\) as a Frontend Developer in September 2025 and became its Development Lead effective November 2026/);
+  assert.match(read("app/llms.txt/route.ts"), /joined Coordenadas\.co \(https:\/\/coordenadas\.co\/, remote\) as a Full Stack Developer in September 2025 and became its Development Lead effective November 2026/);
   const record = JSON.parse(read("content/experience/development-lead-2026.json"));
   assert.equal(record.effectiveDate, "2026-11-01");
   assert.equal(record.status, "published");
