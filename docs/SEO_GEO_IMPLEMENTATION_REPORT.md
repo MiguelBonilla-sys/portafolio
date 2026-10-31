@@ -7,10 +7,10 @@
 | Estado | Resultado |
 | --- | --- |
 | **IMPLEMENTADO Y VERIFICADO** | Seis herramientas WebMCP contextuales, invocadas mediante `document.modelContext.executeTool()` en Chrome 156 local; fallback sin API; salida estructurada, validación y limpieza al navegar. |
-| **IMPLEMENTADO Y VERIFICADO** | Corrección de cargo vigente a Frontend Developer desde septiembre de 2025 en experiencia ES/EN, hero, About, JSON-LD Person/ProfilePage, `llms.txt`, `llms-full.txt` derivado, borrador de LinkedIn y PDFs ES/EN. El titular técnico Full Stack Engineer permanece. |
+| **IMPLEMENTADO Y VERIFICADO** | Corrección de cargo vigente a Frontend Developer desde septiembre de 2025 y, desde octubre de 2026, el cargo vigente Development Lead (ascenso de noviembre) en experiencia ES/EN, hero, About, JSON-LD Person/ProfilePage, `llms.txt`, `llms-full.txt` derivado, borrador de LinkedIn y PDFs ES/EN. El titular técnico Full Stack Engineer permanece. |
 | **IMPLEMENTADO Y VERIFICADO** | `hreflang` de artículos basado en traducciones publicadas; sitemap sin fechas de modificación inventadas. Ningún borrador se publicó ni se incluyó en sitemap o herramienta de blog. |
-| **PARCIAL** | La promoción de noviembre de 2026 se preparó en `content/experience/development-lead-2026.json`, pero no se muestra aún en páginas, CV, metadata, JSON-LD, llms ni WebMCP por ser futura. |
-| **PENDIENTE** | Publicación autorizada tras la fecha efectiva, validación externa en producción, acceso a Search Console, mediciones de campo y backlinks reales. |
+| **IMPLEMENTADO Y VERIFICADO** | La promoción de noviembre de 2026 quedó publicada con autorización del propietario: Development Lead vigente y Frontend Developer septiembre 2025–octubre 2026 como historial en experiencia ES/EN, hero factual, About, JSON-LD Person/ProfilePage, `llms.txt`, `llms-full.txt` derivado, borrador de LinkedIn, WebMCP y PDFs ES/EN. El titular técnico Full Stack Engineer se conserva y las responsabilidades previstas no se declaran resultados ya obtenidos. |
+| **PENDIENTE** | Despliegue y validación externa en producción, confirmación con el empleador de la vigencia, acceso a Search Console, mediciones de campo y backlinks reales. |
 | **NO APLICA** | Servidor MCP, endpoints SSE/stdio, artículos ficticios, compra de enlaces, despliegue o publicación automática. |
 
 ## Cambios y archivos
@@ -27,7 +27,7 @@
 | --- | --- | --- |
 | `search_portfolio_projects` | Home | Descubrimiento e invocación con FastAPI; resultados con IDs, stack, estado, URL y evidencia pública |
 | `get_project_details` | Caso de estudio | Caso IDN y error estructurado para ID desconocido |
-| `get_professional_profile` | Home | Perfil con cargo vigente, especialización Full Stack, experiencia pública, enlaces y CV; sin ascenso futuro |
+| `get_professional_profile` | Home | Perfil con Development Lead vigente desde noviembre de 2026 y el historial Frontend Developer septiembre 2025–octubre 2026; especialización Full Stack, enlaces y CV |
 | `search_blog_articles` | Índice del blog | Devuelve lista vacía: no hay artículos publicados |
 | `navigate_to_portfolio_section` | Home | Navega a `/en/cv`; las herramientas de home desaparecen tras desmontar |
 | `prepare_contact_message` | Home | Valida, rellena el formulario visible y devuelve `sent: false`; ninguna solicitud a Web3Forms |
@@ -54,7 +54,7 @@ No se usó un servidor MCP ni se llamó a operaciones administrativas. El formul
 
 ## Riesgos, límites y siguientes acciones
 
-1. **Promoción:** a partir del 1 de noviembre de 2026 y tras confirmar que el nombramiento entró en vigor, mover el borrador `content/experience/development-lead-2026.json` a dos entradas independientes de Coordenadas.co (Development Lead/Líder de Desarrollo desde noviembre; Frontend Developer septiembre 2025–octubre 2026). Actualizar hero factual, About, Person/ProfilePage, `llms.txt`, texto de LinkedIn, CV y `get_professional_profile`; regenerar PDFs, repetir pruebas y desplegar solo con autorización. El titular técnico Full Stack Engineer se conserva. Las responsabilidades previstas no son resultados ya obtenidos.
+1. **Promoción publicada con autorización del propietario (2026-10-30):** `content/experience/development-lead-2026.json` se materializó en dos entradas independientes de Coordenadas.co (Development Lead desde noviembre de 2026, Frontend Developer septiembre 2025–octubre 2026), con hero factual, About, Person/ProfilePage, `llms.txt`, texto de LinkedIn, CV, WebMCP y PDFs regenerados. Queda pendiente confirmar con el empleador que el nombramiento entró en vigencia; el titular técnico Full Stack Engineer se conserva y las responsabilidades declaradas son las previstas, sin presentarlas como resultados ya obtenidos.
 2. **Producción:** no se hizo push ni deploy. Tras autorización, verificar HTML, canonical, hreflang, JSON-LD, sitemap, robots y las seis herramientas en un Chrome compatible sobre HTTPS. La origin trial o la bandera son necesarias según el navegador; no se afirma compatibilidad universal.
 3. **Datos externos:** Search Console, Core Web Vitals de campo, CTR, dominios de referencia y citas de asistentes siguen no verificados. `docs/SEO_GEO_METRICS.md` define el seguimiento sin crear una “puntuación GEO”.
 4. **Contenido:** publicar únicamente artículos aprobados por Content Engine, con fuentes primarias, ejemplos reproducibles, fechas y límites. El blog vacío no se rellenó con contenido ficticio. La estrategia externa de `docs/BACKLINK_STRATEGY.md` requiere trabajo editorial y autorización de cada cuenta.
