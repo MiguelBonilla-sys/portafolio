@@ -3,7 +3,7 @@
 
 // Última vez que cambió el perfil (data/, messages/): actualízala al editar esos archivos.
 // No se calcula en el build: cambiaría en cada deploy aunque el perfil sea el mismo.
-export const PROFILE_UPDATED = "2026-10-26";
+export const PROFILE_UPDATED = "2026-10-30";
 
 // Bogotá no tiene horario de verano: siempre UTC−5
 const BOGOTA_OFFSET = "-05:00";

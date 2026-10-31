@@ -21,7 +21,7 @@ export function personSchema(locale: Locale) {
     "@id": PERSON_ID,
     name: "Miguel Ángel Bonilla Torres",
     alternateName: ["Miguel Bonilla", "mangel14"],
-    jobTitle: "Full Stack Engineer",
+    jobTitle: "Frontend Developer",
     description: description[locale],
     url: absoluteUrl(locale, "/"),
     image: `${SITE_URL}/avatar.png`,

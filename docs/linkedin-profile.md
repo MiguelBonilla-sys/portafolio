@@ -34,7 +34,7 @@ Antes de pegar: cada cifra tiene que ser una que puedas defender en una entrevis
 
 I build web applications end to end: APIs in FastAPI and Django, interfaces in React and Next.js, and LLM and RAG integrations where they solve a real problem.
 
-I'm a Full Stack Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I was a freelance Junior Backend Engineer for Sibartech Technology SAS, working with Django, FastAPI and PostgreSQL in production.
+I'm a Frontend Developer at Coordenadas.co, working remotely with clients in Colombia and the U.S. Before that I was a freelance Junior Backend Engineer for Sibartech Technology SAS, working with Django, FastAPI and PostgreSQL in production.
 
 Some of what I've built:
 - Bikans, the payroll and tax withholding platform for the clients of the accounting firm Bikans Asesores, built at Coordenadas.co. Employee data is entered once instead of being typed into two tools. I built the whole system: Django backend, React frontend, two-factor authentication and admin panel.
@@ -49,7 +49,7 @@ Open to remote Full Stack roles. Portfolio, case studies and resume: mangel14.de
 
 Construyo aplicaciones web de punta a punta: APIs en FastAPI y Django, interfaces en React y Next.js, e integraciones con LLM y RAG cuando resuelven un problema real.
 
-Soy Full Stack Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes fui Junior Backend Engineer freelance para Sibartech Technology SAS, con Django, FastAPI y PostgreSQL en producción.
+Soy Frontend Developer en Coordenadas.co y trabajo de forma remota con clientes de Colombia y EE. UU. Antes fui Junior Backend Engineer freelance para Sibartech Technology SAS, con Django, FastAPI y PostgreSQL en producción.
 
 Algunas cosas que he construido:
 - Bikans, la plataforma de nómina y retención en la fuente para los clientes de la firma contable Bikans Asesores, hecha en Coordenadas.co. Los datos de los empleados se cargan una vez en lugar de digitarse en dos herramientas. Hice el sistema completo: backend en Django, frontend en React, autenticación de dos factores y panel de administración.
@@ -69,7 +69,7 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 
 ## Experiencia
 
-### Coordenadas.co · Full Stack Developer · Aug 2025 – Present · Bogotá (Remote)
+### Coordenadas.co · Frontend Developer · Sep 2025 – Present · Bogotá (Remote)
 
 **EN**
 - Bikans: one payroll and tax withholding platform where employee data is entered once instead of being typed into two tools. I built the whole system with Django, React and PostgreSQL, with a mandatory second factor; it is in production.

@@ -1,0 +1,34 @@
+{
+  "status": "planned_not_public",
+  "effectiveDate": "2026-11-01",
+  "company": "Coordenadas.co",
+  "previousRole": {
+    "title": "Frontend Developer",
+    "startDate": "2025-09-01",
+    "endDateWhenEffective": "2026-10-31"
+  },
+  "en": {
+    "title": "Development Lead",
+    "dateWhenEffective": "Nov 2026 — Present",
+    "description": "Leading the technical development of web platforms, digital products, and automation solutions, bridging hands-on engineering with technical coordination and delivery.",
+    "responsibilities": [
+      "Guide technical decisions, architecture, and development standards across projects.",
+      "Coordinate development priorities and support the delivery of scalable, maintainable solutions.",
+      "Promote code quality, collaborative Git workflows, testing, and deployment best practices.",
+      "Contribute to full-stack development using technologies such as Next.js, React, WordPress, Supabase, and PostgreSQL.",
+      "Support integrations and business process automation through APIs, n8n, Make, and CRM platforms."
+    ]
+  },
+  "es": {
+    "title": "Líder de Desarrollo",
+    "dateWhenEffective": "Nov 2026 — Actualidad",
+    "description": "Liderazgo técnico en el desarrollo de plataformas web, productos digitales y soluciones de automatización, combinando la ingeniería de software con la coordinación técnica y la entrega de proyectos.",
+    "responsibilities": [
+      "Orientar las decisiones técnicas, la arquitectura y los estándares de desarrollo de los proyectos.",
+      "Coordinar prioridades técnicas y facilitar la entrega de soluciones escalables y mantenibles.",
+      "Promover buenas prácticas de Git, revisión de código, pruebas y despliegues.",
+      "Participar en el desarrollo de soluciones con Next.js, React, WordPress, Supabase y PostgreSQL.",
+      "Impulsar integraciones mediante APIs y automatizaciones con n8n, Make y plataformas CRM."
+    ]
+  }
+}

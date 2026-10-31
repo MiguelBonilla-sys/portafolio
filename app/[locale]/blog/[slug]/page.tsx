@@ -11,6 +11,7 @@ import { categoriesWithPages, getPost, getPosts, relatedPosts } from "@/lib/blog
 import { getProject } from "@/lib/content";
 import { blogPostingSchema, breadcrumbSchema, faqSchema } from "@/lib/jsonld";
 import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
+import { articleLanguages } from "@/lib/article-seo";
 import styles from "./post.module.css";
 
 type Params = { locale: Locale; slug: string };
@@ -26,10 +27,16 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
   const post = getPost(locale, slug);
   if (!post) return {};
   const href = { pathname: "/blog/[slug]" as const, params: { slug } };
+  const availableUrls = Object.fromEntries(
+    routing.locales.filter((l) => getPost(l, slug) && !getPost(l, slug)?.draft).map((l) => [l, absoluteUrl(l, href)])
+  );
   return {
     title: post.title,
     description: post.description,
-    alternates: alternatesFor(locale, href),
+    alternates: {
+      ...alternatesFor(locale, href),
+      languages: articleLanguages(Object.keys(availableUrls).length ? availableUrls : { [locale]: absoluteUrl(locale, href) }, routing.defaultLocale),
+    },
     robots: post.draft ? { index: false, follow: false } : undefined,
     authors: [{ name: "Miguel Ángel Bonilla Torres", url: absoluteUrl(locale, "/") }],
     ...socialFor(locale, href, {
