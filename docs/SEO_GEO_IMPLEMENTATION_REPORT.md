@@ -40,14 +40,14 @@ No se usó un servidor MCP ni se llamó a operaciones administrativas. El formul
 | --- | --- |
 | Línea base `pnpm test` | 109/109 antes del cambio |
 | RED de reglas nuevas | Fallos observados en `test/consistency.test.ts`, `test/article-seo.test.ts` y `test/webmcp-data.test.ts` antes de implementar |
-| `pnpm test` final | 116/116 |
+| `pnpm test` final | 117/117 |
 | `pnpm lint` | Aprobado |
 | `pnpm exec tsc --noEmit` | Aprobado |
 | `pnpm build` | Aprobado; rutas principales prerenderizadas |
 | `pnpm test:e2e` con Chrome 156 | 11/11, incluidos WebMCP nativo y navegador sin API |
 | Verificación independiente aislada | `pnpm test` 115 aprobadas y 1 omitida por falta de `.git` en la copia; lint, build, typecheck y E2E 11/11 aprobados. Hallazgo de navegación corregido y revalidado con unit 4/4 y E2E nativo 2/2 |
 | `pnpm cv` y `test/cv.test.ts` | PDFs ES/EN regenerados y 2/2 pruebas de contenido aprobadas |
-| Revisión nativa de commits | `f1bfb40` y `3d02285`: consentimiento individual, revisión aprobada y reconocimiento exacto. La primera revisión dejó una advertencia no bloqueante sobre ampliar las pruebas observables del sitemap. |
+| Revisión nativa de commits | `f1bfb40` y `3d02285`: consentimiento individual, revisión aprobada y reconocimiento exacto. La advertencia no bloqueante sobre el sitemap se atendió con una prueba de resultados en una unidad posterior. |
 | HTTP local | `/es`, `/en`, `/en/blog`, caso Bikans, sitemap, robots y llms: 200; sitemap con 34 URLs y 0 fechas ficticias |
 | Lighthouse 13.6.0 móvil `/en` | Producción previa: Performance/Accessibility/SEO 100/100/100, LCP 1,1 s, CLS 0,001. Build local: 100/100/92, LCP 0,8 s, CLS 0. **No son mediciones comparables**: HTTPS/red real frente a localhost; la única deducción SEO local es que canonical apunta a producción, como debe hacerlo. |
 | PageSpeed Insights API | HTTP 429 por cuota; no se obtuvo medición |
@@ -59,6 +59,6 @@ No se usó un servidor MCP ni se llamó a operaciones administrativas. El formul
 3. **Datos externos:** Search Console, Core Web Vitals de campo, CTR, dominios de referencia y citas de asistentes siguen no verificados. `docs/SEO_GEO_METRICS.md` define el seguimiento sin crear una “puntuación GEO”.
 4. **Contenido:** publicar únicamente artículos aprobados por Content Engine, con fuentes primarias, ejemplos reproducibles, fechas y límites. El blog vacío no se rellenó con contenido ficticio. La estrategia externa de `docs/BACKLINK_STRATEGY.md` requiere trabajo editorial y autorización de cada cuenta.
 5. **Seguridad histórica:** `docs/audit/CONTENT_VERIFICATION.md` y `docs/phase-2/SECURITY_REMEDIATION.md` registran un repositorio externo con credenciales expuestas. No se modificó ni enlazó de nuevo; requiere actuación separada del propietario.
-6. **Pruebas del sitemap:** la revisión recomendó agregar un caso reproducible de artículo publicado en un idioma y traducción borrador en otro, con aserciones sobre URLs, alternates, fechas y estabilidad entre invocaciones. No se presenta la prueba actual basada en código fuente como prueba completa de ese caso.
+6. **Pruebas del sitemap:** `test/article-seo.test.ts` verifica la salida de `articleSitemapEntries` para un artículo EN publicado y una traducción ES en borrador: URL, alternates, fecha de actualización y estabilidad entre invocaciones. El XML del sitemap local permaneció idéntico tras conectar esa función. Esta prueba no sustituye una verificación de producción tras desplegar.
 
 El verificador detectó además que `toString` y `__proto__` podían pasar como secciones válidas por herencia del prototipo del objeto de rutas; se corrigió con `Object.hasOwn` y se añadieron regresiones unitarias y nativas. No se atribuye al navegador ni a la especificación WebMCP.

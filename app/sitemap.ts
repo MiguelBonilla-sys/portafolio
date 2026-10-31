@@ -4,7 +4,7 @@ import { routing } from "@/i18n/routing";
 import { getPosts } from "@/lib/blog";
 import { getProjects } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
-import { articleLanguages } from "@/lib/article-seo";
+import { articleLanguages, articleSitemapEntries } from "@/lib/article-seo";
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 
@@ -21,8 +21,7 @@ function entries(href: Href, locales: readonly (typeof routing.locales)[number][
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const projectIds = getProjects(routing.defaultLocale).map((p) => p.id);
-  const posts = Object.fromEntries(routing.locales.map((locale) => [locale, getPosts(locale).filter((p) => !p.draft)])) as Record<(typeof routing.locales)[number], ReturnType<typeof getPosts>>;
-  const slugs = new Set(routing.locales.flatMap((locale) => posts[locale].map((p) => p.slug)));
+  const posts = Object.fromEntries(routing.locales.map((locale) => [locale, getPosts(locale)])) as Record<(typeof routing.locales)[number], ReturnType<typeof getPosts>>;
 
   // /tarjeta queda fuera: es noindex
   return [
@@ -32,13 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entries("/proyectos"),
     ...entries("/privacidad"),
     ...projectIds.flatMap((id) => entries({ pathname: "/proyectos/[id]", params: { id } })),
-    ...[...slugs].flatMap((slug) => {
-      const locales = routing.locales.filter((locale) => posts[locale].some((p) => p.slug === slug));
-      const modified = Object.fromEntries(locales.map((locale) => {
-        const post = posts[locale].find((p) => p.slug === slug)!;
-        return [locale, post.updated ?? post.date];
-      }));
-      return entries({ pathname: "/blog/[slug]", params: { slug } }, locales, modified);
-    }),
+    ...articleSitemapEntries(posts, routing.locales, routing.defaultLocale, (locale, slug) =>
+      `${SITE_URL}${getPathname({ locale, href: { pathname: "/blog/[slug]", params: { slug } } })}`),
   ];
 }
