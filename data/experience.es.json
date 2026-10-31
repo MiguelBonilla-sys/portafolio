@@ -1,7 +1,25 @@
 [
   {
-    "id": "coordenadas",
-    "date": "Sep 2025 — Presente",
+    "id": "development-lead",
+    "date": "Nov 2026 — Actualidad",
+    "title": "Development Lead",
+    "place": "Coordenadas.co · Bogotá, Colombia (remoto)",
+    "description": "Liderazgo técnico en el desarrollo de plataformas web, productos digitales y soluciones de automatización, combinando la ingeniería de software con la coordinación técnica y la entrega de proyectos.",
+    "stack": [
+      "React",
+      "Django",
+      "PostgreSQL",
+      "n8n",
+      "Docker",
+      "Coolify",
+      "Traefik",
+      "Linux"
+    ],
+    "type": "work"
+  },
+  {
+    "id": "frontend-developer",
+    "date": "Sep 2025 — Oct 2026",
     "title": "Frontend Developer",
     "place": "Coordenadas.co · Bogotá, Colombia (remoto)",
     "description": "Plataformas web, integraciones de APIs y CRM, y automatizaciones para clientes de Colombia y EE. UU.",

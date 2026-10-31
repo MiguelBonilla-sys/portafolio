@@ -32,9 +32,10 @@ test("native WebMCP registers, invokes, and removes contextual tools", { skip: !
     assert.equal(found.ok, true);
     assert.ok(found.data.some((project) => project.id === "idn-phishing-detector"));
     const profile = await execute(page, "get_professional_profile", {});
-    assert.equal(profile.data.currentRole, "Frontend Developer");
-    assert.equal(profile.data.experience[0].dates, "Sep 2025 — Present");
-    assert.ok(!JSON.stringify(profile).includes("Development Lead"));
+    assert.equal(profile.data.currentRole, "Development Lead");
+    assert.equal(profile.data.experience[0].dates, "Nov 2026 — Present");
+    assert.equal(profile.data.experience[1].title, "Frontend Developer");
+    assert.equal(profile.data.experience[1].dates, "Sep 2025 — Oct 2026");
 
     let sends = 0;
     await page.route("https://api.web3forms.com/**", (route) => { sends++; route.abort(); });

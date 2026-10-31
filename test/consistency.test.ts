@@ -37,7 +37,7 @@ test("el mismo posicionamiento en hero, metadata, CV, JSON-LD, imagen OG, llms.t
   assert.equal(es.cv.role, es.hero.role);
   assert.match(en.meta.title, /Full Stack Engineer · Python, React & AI Systems/);
   assert.match(es.meta.title, /Full Stack Engineer · Python, React y sistemas con IA/);
-  assert.match(read("lib/jsonld.ts"), /jobTitle: "Frontend Developer"/);
+  assert.match(read("lib/jsonld.ts"), /jobTitle: "Development Lead"/);
   assert.match(read("app/[locale]/opengraph-image.tsx"), /FULL STACK ENGINEER<\/div>\s*<div[^>]*>PYTHON · REACT · AI SYSTEMS/);
   assert.match(read("app/llms.txt/route.ts"), /Full Stack Engineer \(Python, React & AI systems\)/);
   assert.ok(read("docs/linkedin-profile.md").includes(`\`${POSITIONING} |`), "titular recomendado de LinkedIn");
@@ -68,21 +68,27 @@ test("la experiencia declarada es la misma en todas partes (años, cargos y empl
   }
 });
 
-test("Coordenadas publica el cargo vigente desde septiembre y reserva el ascenso para noviembre", () => {
-  const current = experience.find((job) => job.id === "coordenadas");
-  assert.equal(current?.title, "Frontend Developer");
-  assert.equal(current?.date, "Sep 2025 — Present");
+test("Coordenadas publica el ascenso a Development Lead vigente y conserva el historial de Frontend Developer", () => {
+  const lead = experience.find((job) => job.title === "Development Lead");
+  const frontend = experience.find((job) => job.title === "Frontend Developer");
+  assert.equal(lead?.date, "Nov 2026 — Present");
+  assert.equal(lead?.place, "Coordenadas.co · Bogotá, Colombia (Remote)");
+  assert.equal(frontend?.date, "Sep 2025 — Oct 2026");
+  assert.equal(frontend?.place, "Coordenadas.co · Bogotá, Colombia (Remote)");
+  assert.equal(experience[0]?.title, "Development Lead");
   const spanish = JSON.parse(read("data/experience.es.json")) as typeof experience;
-  assert.equal(spanish.find((job) => job.id === "coordenadas")?.date, "Sep 2025 — Presente");
-  assert.equal(en.hero.factNowValue, "Frontend Developer · Coordenadas.co");
-  assert.equal(es.hero.factNowValue, "Frontend Developer · Coordenadas.co");
-  for (const file of PUBLIC_SURFACES) {
-    assert.doesNotMatch(read(file), /Development Lead|Líder de Desarrollo/, `${file}: cargo futuro publicado antes de noviembre`);
-  }
-  const future = JSON.parse(read("content/experience/development-lead-2026.json"));
-  assert.equal(future.effectiveDate, "2026-11-01");
-  assert.equal(future.en.title, "Development Lead");
-  assert.equal(future.es.title, "Líder de Desarrollo");
+  const sLead = spanish.find((job) => job.title === "Development Lead");
+  const sFrontend = spanish.find((job) => job.title === "Frontend Developer");
+  assert.equal(sLead?.date, "Nov 2026 — Actualidad");
+  assert.equal(sFrontend?.date, "Sep 2025 — Oct 2026");
+  assert.equal(en.hero.factNowValue, "Development Lead · Coordenadas.co");
+  assert.equal(es.hero.factNowValue, "Development Lead · Coordenadas.co");
+  assert.match(read("app/llms.txt/route.ts"), /joined Coordenadas\.co \(https:\/\/coordenadas\.co\/, remote\) as a Frontend Developer in September 2025 and became its Development Lead effective November 2026/);
+  const record = JSON.parse(read("content/experience/development-lead-2026.json"));
+  assert.equal(record.effectiveDate, "2026-11-01");
+  assert.equal(record.status, "published");
+  assert.equal(lead?.description, record.en.description);
+  assert.equal(sLead?.description, record.es.description);
 });
 
 test("los proyectos sin código público no se presentan como trabajo verificable en LinkedIn ni en el CV", () => {
