@@ -53,6 +53,9 @@ importers:
       unpdf:
         specifier: 1.8.1
         version: 1.8.1
+      use-webmcp-tool:
+        specifier: 0.3.0
+        version: 0.3.0(react@19.2.3)
       zod:
         specifier: ^4.6.5
         version: 4.6.7
@@ -2745,6 +2748,11 @@ packages:
       '@types/react':
         optional: true
 
+  use-webmcp-tool@0.3.0:
+    resolution: {integrity: sha512-iwO5KbSdDzcV33PSCZw4baclCD3tEU4drdXAeeKfTCM/+F5t+LAug14UXbYKD3K3tWxBiYCuDuWXmm/q1ZSDjw==}
+    peerDependencies:
+      react: '>=18'
+
   vfile-matter@5.0.1:
     resolution: {integrity: sha512-o6roP82AiX0XfkyTHyRCMXgHfltUNlXSEqCIS80f+mbAyiQBE2fxtDVMtseyytGx75sihiJFo/zR6r/4LTs2Cw==}
 
@@ -2753,6 +2761,9 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  webmcp-types@0.1.10:
+    resolution: {integrity: sha512-U4GQ1RpJ0tqCUt2ALMV9Pnhi+hsy8L31f/Q1v4mLVhW64r5sYhh+2+SjP/Lq4/9jP33vZgNkuRZARJl65A/ZIg==}
 
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
@@ -5963,6 +5974,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
+  use-webmcp-tool@0.3.0(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      webmcp-types: 0.1.10
+
   vfile-matter@5.0.1:
     dependencies:
       vfile: 6.0.3
@@ -5977,6 +5993,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
+
+  webmcp-types@0.1.10: {}
 
   which-boxed-primitive@1.1.1:
     dependencies:

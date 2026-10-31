@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import CaseStudy from "@/components/project/CaseStudy";
+import ProjectDetailsTool from "@/components/webmcp/ProjectDetailsTool";
 import JsonLd from "@/components/seo/JsonLd";
 import { ArrowIcon, ExternalIcon, GithubIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
@@ -9,7 +10,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import { getFeaturedProjects, getProject, getProjects } from "@/lib/content";
 import { breadcrumbSchema, projectSchema } from "@/lib/jsonld";
 import OrgText from "@/components/ui/OrgText";
-import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
+import { SITE_URL, absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./project.module.css";
 
 type Params = { locale: Locale; id: string };
@@ -47,6 +48,7 @@ export default async function ProjectPage({ params }: PageProps<"/[locale]/proye
 
   return (
     <article className={`shell ${styles.article}`}>
+      <ProjectDetailsTool locale={locale} project={project} siteUrl={SITE_URL} />
       <JsonLd
         data={[
           projectSchema(locale, project),

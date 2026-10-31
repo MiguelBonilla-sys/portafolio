@@ -29,6 +29,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "unpdf": "1.8.1",
+    "use-webmcp-tool": "0.3.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
