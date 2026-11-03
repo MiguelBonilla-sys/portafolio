@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { Pool } from "pg";
 import { LEGACY_STATUS, type EditorialStatus } from "../editorial.ts";
 import type { Attachment } from "../inputs.ts";
@@ -63,6 +64,17 @@ CREATE TABLE IF NOT EXISTS rate_events (
   at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS rate_events_idx ON rate_events (key, at);
+
+CREATE TABLE IF NOT EXISTS agent_ideas (
+  id uuid PRIMARY KEY,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  source_url text NOT NULL UNIQUE,
+  title text NOT NULL,
+  summary text NOT NULL,
+  topic text NOT NULL,
+  status text NOT NULL DEFAULT 'pending'
+);
 `;
 
 /** @deprecated nombre anterior; los estados viven en editorial.ts */
@@ -125,6 +137,26 @@ export interface ContentStore {
   rateHit(key: string, windowMs: number, max: number): Promise<boolean>;
   /** Toma un candado atómico que vence solo; false si otro proceso lo tiene */
   tryLock(key: string, ttlMs: number): Promise<boolean>;
+  /** Queues an external idea; if its source_url is already queued, returns that row with created=false */
+  addIdea(idea: IdeaInput): Promise<{ id: string; created: boolean }>;
+  getIdea(id: string): Promise<IdeaRow | null>;
+  /** Moves the idea only if it is still in `from`, so two quick taps cannot move it twice */
+  moveIdea(id: string, from: IdeaStatus, to: IdeaStatus): Promise<boolean>;
+}
+
+/** Idea received by POST /api/agent/inbox. All of its text is external material. */
+export interface IdeaInput {
+  title: string;
+  summary: string;
+  source_url: string;
+  topic: string;
+}
+
+export type IdeaStatus = "pending" | "developing" | "discarded";
+
+export interface IdeaRow extends IdeaInput {
+  id: string;
+  status: IdeaStatus;
 }
 
 /** Material que llega en varios mensajes para una sola pieza (/nuevo … «listo», o un álbum) */
@@ -280,6 +312,27 @@ export function createContentStore(databaseUrl: string): ContentStore {
       if ((rows[0]?.n ?? 0) >= max) return false;
       await db().query("INSERT INTO rate_events (key) VALUES ($1)", [key]);
       return true;
+    },
+
+    async addIdea(idea) {
+      const { rows } = await db().query(
+        `INSERT INTO agent_ideas (id, source_url, title, summary, topic) VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (source_url) DO NOTHING RETURNING id`,
+        [randomUUID(), idea.source_url, idea.title, idea.summary, idea.topic]
+      );
+      if (rows[0]) return { id: rows[0].id as string, created: true };
+      const existing = await db().query("SELECT id FROM agent_ideas WHERE source_url = $1", [idea.source_url]);
+      return { id: existing.rows[0].id as string, created: false };
+    },
+
+    async getIdea(id) {
+      const { rows } = await db().query("SELECT id, source_url, title, summary, topic, status FROM agent_ideas WHERE id = $1", [id]);
+      return (rows[0] as IdeaRow) ?? null;
+    },
+
+    async moveIdea(id, from, to) {
+      const { rowCount } = await db().query("UPDATE agent_ideas SET status = $3, updated_at = now() WHERE id = $1 AND status = $2", [id, from, to]);
+      return rowCount === 1;
     },
   };
 }

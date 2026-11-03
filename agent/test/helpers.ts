@@ -1,9 +1,10 @@
 // Dobles en memoria para probar el grafo y los manejadores sin red ni base de datos.
+import { randomUUID } from "node:crypto";
 import { MemorySaver } from "@langchain/langgraph";
 import type { AgentDeps } from "../deps.ts";
 import { canTransition, type EditorialStatus } from "../editorial.ts";
 import { compileGraph } from "../graph.ts";
-import type { Collection, ContentEvent, ContentRow, ContentStore } from "../lib/db.ts";
+import type { Collection, ContentEvent, ContentRow, ContentStore, IdeaRow } from "../lib/db.ts";
 import { LinkedInAuthError, type LinkedInClient } from "../lib/linkedin.ts";
 import type { SafeResponse } from "../lib/safe-fetch.ts";
 import type { InlineButton, TelegramClient } from "../lib/telegram.ts";
@@ -119,6 +120,7 @@ export function memoryStore() {
   const events: (ContentEvent & { contentId: string })[] = [];
   const claimed = new Set<number>();
   const rate = new Map<string, number[]>();
+  const ideas = new Map<string, IdeaRow>();
   const store: ContentStore = {
     async ensureSchema() {},
     async upsert(id, fields) {
@@ -189,8 +191,24 @@ export function memoryStore() {
       kv.set(key, { lock: true });
       return true;
     },
+    async addIdea(idea) {
+      const existing = [...ideas.values()].find((i) => i.source_url === idea.source_url);
+      if (existing) return { id: existing.id, created: false };
+      const id = randomUUID();
+      ideas.set(id, { ...idea, id, status: "pending" });
+      return { id, created: true };
+    },
+    async getIdea(id) {
+      return ideas.get(id) ?? null;
+    },
+    async moveIdea(id, from, to) {
+      const idea = ideas.get(id);
+      if (idea?.status !== from) return false;
+      idea.status = to;
+      return true;
+    },
   };
-  return { store, rows, kv, events };
+  return { store, rows, kv, events, ideas };
 }
 
 export interface SetupOpts extends FakeOpts {
@@ -204,7 +222,7 @@ export interface SetupOpts extends FakeOpts {
 
 export function setup(opts: SetupOpts = {}) {
   const llm = fakeLlm(opts);
-  const { store, rows, kv, events } = memoryStore();
+  const { store, rows, kv, events, ideas } = memoryStore();
   const messages: { id: number; text: string; buttons?: InlineButton[][] }[] = [];
   const edits: { id: number; text: string }[] = [];
   const documents: string[] = [];
@@ -319,6 +337,7 @@ export function setup(opts: SetupOpts = {}) {
     rows,
     kv,
     events,
+    ideas,
     messages,
     edits,
     documents,

@@ -43,6 +43,10 @@ export const LIMITS = {
   sourceChars: 30_000,
   totalChars: 90_000,
   urls: 3,
+  ideaTitle: 200,
+  ideaSummary: 2000,
+  ideaTopic: 80,
+  ideaUrl: 2000,
 };
 
 const IMAGE_MIME = ["image/png", "image/jpeg", "image/webp"];

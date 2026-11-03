@@ -22,6 +22,8 @@ const envSchema = z.object({
 
   CRON_SECRET: z.string().min(16),
   ADMIN_SECRET: z.string().min(16),
+  /** Optional, with no format check: an invalid value here must not take down the whole engine. handleInbox validates it. */
+  AGENT_INBOX_TOKEN: z.string().optional(),
 
   GITHUB_TOKEN: z.string().min(1),
   GITHUB_REPO: z.string().regex(/^[\w.-]+\/[\w.-]+$/).default("MiguelBonilla-sys/portafolio"),

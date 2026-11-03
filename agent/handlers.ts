@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { Command } from "@langchain/langgraph";
 import { CHANNEL_LABEL, STATUS_LABEL, WAITING_FOR_AUTHOR, isTerminal, type Channel, type EditorialStatus } from "./editorial.ts";
 import { blockers } from "./graph.ts";
-import { LIMITS, type Attachment } from "./inputs.ts";
-import type { Collection, CollectedPart, ContentRow, ContentStore } from "./lib/db.ts";
+import { injectionWarning, LIMITS, type Attachment } from "./inputs.ts";
+import type { Collection, CollectedPart, ContentRow, ContentStore, IdeaInput } from "./lib/db.ts";
 import { logError, toPublicError } from "./lib/redact.ts";
 import { callback, esc, parseCallback, type TelegramClient, type TelegramMessage, type TelegramUpdate } from "./lib/telegram.ts";
 import { describeSlot, parseBogotaDateTime } from "./lib/text.ts";
@@ -25,6 +25,9 @@ const DONE = /^(listo|lista|ya|ya est[aá]|eso es todo|termin[eé]|done|ready|th
 const LOCK_TTL = 5 * 60_000;
 const NEW_PER_HOUR = 10;
 const MIN_NOTE_WORDS = 8;
+
+/** esc() can grow a character 5x. Cuts after escaping, on an entity boundary, so telegram.clip never splits one. */
+const escClip = (text: string, max: number) => esc(text).slice(0, max).replace(/&[a-z]*$/, "");
 
 export const HELP = `<b>Content Engine</b>
 Mándame lo que construiste o aprendiste: notas, un Markdown, un PDF, una imagen o un enlace. Te propongo un enfoque, preparo el artículo (ES y EN) y un post de LinkedIn, y no publico nada sin tu confirmación.
@@ -267,6 +270,21 @@ export function createHandlers(rt: Runtime) {
       linkedinMedia: opts.linkedinMedia,
       status: "received",
     });
+  }
+
+  async function notifyIdea(id: string, idea: IdeaInput) {
+    const warning = injectionWarning(`${idea.title}\n${idea.summary}\n${idea.topic}`);
+    await tg.sendMessage(
+      [
+        "<b>Idea nueva</b> (material externo, sin verificar)",
+        `<b>${escClip(idea.title, 1000)}</b>`,
+        `Tema: ${escClip(idea.topic, 400)}`,
+        escClip(idea.summary, 1200),
+        `Fuente: ${escClip(idea.source_url, 600)}`,
+        warning ? `Aviso: ${warning}.` : "",
+      ].filter(Boolean).join("\n"),
+      { buttons: [[{ text: "Desarrollar", callback_data: `id:${id}` }, { text: "Descartar", callback_data: `ix:${id}` }]] }
+    );
   }
 
   async function resolve(arg: string): Promise<ContentRow | null> {
@@ -755,7 +773,7 @@ export function createHandlers(rt: Runtime) {
       .join("\n");
   }
 
-  return { handleUpdate, runDaily, weeklyReport, startContent };
+  return { handleUpdate, runDaily, weeklyReport, startContent, notifyIdea };
 }
 
 // ── Entradas de producción (rutas de Next) ──
@@ -775,4 +793,12 @@ export async function handleUpdate(update: TelegramUpdate) {
 
 export async function runDaily(now = new Date()) {
   return (await handlers()).runDaily(now);
+}
+
+export async function notifyIdea(id: string, idea: IdeaInput) {
+  try {
+    await (await handlers()).notifyIdea(id, idea);
+  } catch (e) {
+    logError("agent-inbox", e);
+  }
 }
