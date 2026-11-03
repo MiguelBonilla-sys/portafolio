@@ -25,6 +25,9 @@ const DONE = /^(listo|lista|ya|ya est[aá]|eso es todo|termin[eé]|done|ready|th
 const LOCK_TTL = 5 * 60_000;
 const NEW_PER_HOUR = 10;
 const MIN_NOTE_WORDS = 8;
+const IDEA_LOCK = "lock:idea-develop";
+/** Idea buttons: id = develop, ix = discard. parseCallback (lib/telegram.ts) does not recognize this prefix. */
+const IDEA_CALLBACK = /^i([dx]):([0-9a-f-]{36})$/;
 
 /** esc() can grow a character 5x. Cuts after escaping, on an entity boundary, so telegram.clip never splits one. */
 const escClip = (text: string, max: number) => esc(text).slice(0, max).replace(/&[a-z]*$/, "");
@@ -245,8 +248,9 @@ export function createHandlers(rt: Runtime) {
     await run(contentId, new Command({ resume: review }));
   }
 
-  async function startContent(rawText: string, attachments: Attachment[], forwarded = false) {
-    const opts = parseOptions(rawText);
+  async function startContent(rawText: string, attachments: Attachment[], forwarded = false, inbox = false) {
+    // Inbox text is untrusted: it cannot set draft options such as «con imagen»
+    const opts = inbox ? { ...parseOptions(""), note: rawText.trim() } : parseOptions(rawText);
     const words = opts.note.split(/\s+/).filter(Boolean).length;
     if (!attachments.length && words < MIN_NOTE_WORDS && !/https?:\/\//.test(opts.note)) {
       await tg.sendMessage("Necesito un poco más de material: qué construiste, qué decidiste y qué resultado tuvo. También puedes mandarme un archivo o un enlace.");
@@ -257,7 +261,7 @@ export function createHandlers(rt: Runtime) {
       return;
     }
     const contentId = randomUUID();
-    await rt.store.upsert(contentId, { source_type: attachments.length ? "telegram_files" : forwarded ? "telegram_forward" : "telegram_note", status: "received", format: opts.format });
+    await rt.store.upsert(contentId, { source_type: inbox ? "agent_inbox" : attachments.length ? "telegram_files" : forwarded ? "telegram_forward" : "telegram_note", status: "received", format: opts.format });
     await rt.store.event(contentId, { from: null, to: "received" });
     await rt.store.kvSet(ACTIVE, contentId);
     await run(contentId, {
@@ -270,6 +274,12 @@ export function createHandlers(rt: Runtime) {
       linkedinMedia: opts.linkedinMedia,
       status: "received",
     });
+    return contentId;
+  }
+
+  /** Material from outside the chat. forwarded makes it trust "external" (inputs.ts), so its numbers are not publishable as the author's. */
+  function startExternalContent(note: string) {
+    return startContent(note, [], true, true);
   }
 
   async function notifyIdea(id: string, idea: IdeaInput) {
@@ -285,6 +295,40 @@ export function createHandlers(rt: Runtime) {
       ].filter(Boolean).join("\n"),
       { buttons: [[{ text: "Desarrollar", callback_data: `id:${id}` }, { text: "Descartar", callback_data: `ix:${id}` }]] }
     );
+  }
+
+  async function onIdeaCallback(cb: NonNullable<TelegramUpdate["callback_query"]>, action: string, id: string) {
+    const idea = await rt.store.getIdea(id);
+    const stale = () => tg.answerCallback(cb.id, "Esa idea ya no está pendiente.");
+    if (idea?.status !== "pending") return stale();
+    const clear = async () => {
+      if (cb.message?.message_id) await tg.clearButtons(cb.message.message_id);
+    };
+
+    if (action === "x") {
+      if (!(await rt.store.moveIdea(id, "pending", "discarded"))) return stale();
+      await clear();
+      return tg.answerCallback(cb.id, "Idea descartada.");
+    }
+
+    // startContent replaces the active draft, so check-and-start must not interleave with another tap
+    if (!(await rt.store.tryLock(IDEA_LOCK, LOCK_TTL))) return tg.answerCallback(cb.id, "Estoy abriendo otra idea. Vuelve a tocar el botón en un momento.");
+    try {
+      const current = await active();
+      const gathering = await collecting();
+      if (gathering || (current && !isTerminal(current.status) && current.status !== "failed")) {
+        await tg.answerCallback(cb.id, "La idea sigue pendiente.");
+        const why = gathering ? "Estás juntando material para un borrador." : `Ya tienes un borrador activo: «${esc(current!.title ?? current!.content_id.slice(0, 8))}».`;
+        return void (await tg.sendMessage(`${why} La idea «${escClip(idea.title, 1000)}» sigue pendiente: termina o cancela ese borrador y vuelve a tocar Desarrollar.`));
+      }
+      if (!(await rt.store.moveIdea(id, "pending", "developing"))) return stale();
+      await tg.answerCallback(cb.id, "Desarrollando la idea…");
+      const started = await startExternalContent([idea.source_url, idea.title, idea.summary, `Tema: ${idea.topic}`].join("\n\n"));
+      if (!started) return void (await rt.store.moveIdea(id, "developing", "pending"));
+      await clear();
+    } finally {
+      await rt.store.kvDelete(IDEA_LOCK);
+    }
   }
 
   async function resolve(arg: string): Promise<ContentRow | null> {
@@ -636,6 +680,8 @@ export function createHandlers(rt: Runtime) {
   }
 
   async function onCallback(cb: NonNullable<TelegramUpdate["callback_query"]>) {
+    const idea = cb.data?.match(IDEA_CALLBACK);
+    if (idea) return onIdeaCallback(cb, idea[1], idea[2]);
     const parsed = parseCallback(cb.data);
     if (!parsed) return tg.answerCallback(cb.id);
     const { action, contentId, hash } = parsed;
@@ -773,7 +819,7 @@ export function createHandlers(rt: Runtime) {
       .join("\n");
   }
 
-  return { handleUpdate, runDaily, weeklyReport, startContent, notifyIdea };
+  return { handleUpdate, runDaily, weeklyReport, startContent, startExternalContent, notifyIdea };
 }
 
 // ── Entradas de producción (rutas de Next) ──

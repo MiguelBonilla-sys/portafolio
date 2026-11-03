@@ -51,7 +51,7 @@ openssl rand -hex 32   # TOKEN_ENCRYPTION_KEY (exactamente 64 caracteres)
 2. Copia la cadena de conexión con pooling (en Supabase: "Transaction pooler", puerto 6543) y agrega `?sslmode=require` si no lo trae.
 3. Variable: `DATABASE_URL`.
 
-Las tablas (`content_log`, `agent_kv`, `telegram_updates` y las del checkpointer de LangGraph) se crean solas en el paso 8.
+Las tablas (`content_log`, `agent_kv`, `telegram_updates`, `agent_ideas` y las del checkpointer de LangGraph) se crean solas en el paso 8.
 
 ## 5. Bot de Telegram (5 min)
 
@@ -89,6 +89,41 @@ El secreto va en el header y no en la URL, para que no quede en los logs de Verc
 Luego conecta LinkedIn con el enlace que devuelve ese mismo comando en el campo `linkedin`. Es un enlace firmado que vence en 24 horas y no contiene `ADMIN_SECRET`; si vence, vuelve a correr el comando.
 
 El token de LinkedIn dura 60 días. El cron diario te avisa por Telegram 10 días antes con un enlace nuevo.
+
+## 8.1 Puente de ideas (opcional)
+
+`POST /api/agent/inbox` deja que un sistema externo te proponga ideas. Solo las pone en cola: no llama al modelo, no abre ningún borrador y no puede publicar. Cada idea te llega por Telegram con dos botones:
+
+- **Desarrollar** abre el borrador con ese texto marcado como material externo (sus cifras no cuentan como tuyas). Si ya tienes un borrador activo o estás juntando material, no lo toca: la idea sigue pendiente y te avisa. La publicación pide la misma confirmación de siempre.
+- **Descartar** la marca como descartada.
+
+Para activarlo, genera un token y guárdalo en Vercel como `AGENT_INBOX_TOKEN`:
+
+```bash
+openssl rand -hex 24   # AGENT_INBOX_TOKEN
+```
+
+La variable es opcional. Sin ella, el endpoint responde 404 y el resto del agente funciona igual. También responde 404, y deja el error en el log, si el token tiene menos de 16 caracteres o es igual a `ADMIN_SECRET`: nunca reutilices ese secreto.
+
+Para rotarlo, genera uno nuevo, cámbialo en Vercel y en el sistema que llama, y redespliega. El anterior deja de valer con el deploy.
+
+```
+curl -X POST https://mangel14.dev/api/agent/inbox \
+  -H "Authorization: Bearer $AGENT_INBOX_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Colas con Postgres","summary":"Por qué cambiar el broker.","source_url":"https://example.com/colas","topic":"backend"}'
+```
+
+| Respuesta | Significado |
+| --- | --- |
+| 202 `{"id":"…"}` | Idea en cola. Si la misma `source_url` ya estaba, devuelve ese id y no te avisa otra vez. |
+| 400 | JSON o esquema inválido. `fields` lista los campos con problemas. |
+| 401 | Falta el token o es incorrecto. |
+| 404 | `AGENT_INBOX_TOKEN` sin configurar o mal configurado. |
+| 413 | El cuerpo pasa de 16 KB. |
+| 429 | Más de 20 ideas en la última hora. Este límite no descuenta de tus borradores. |
+
+Límites: `title` 200 caracteres, `summary` 2000, `topic` 80 y `source_url` 2000, solo `https` y sin credenciales.
 
 ## 9. Usarlo
 
