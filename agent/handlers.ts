@@ -323,7 +323,11 @@ export function createHandlers(rt: Runtime) {
       }
       if (!(await rt.store.moveIdea(id, "pending", "developing"))) return stale();
       await tg.answerCallback(cb.id, "Desarrollando la idea…");
-      const started = await startExternalContent([idea.source_url, idea.title, idea.summary, `Tema: ${idea.topic}`].join("\n\n"));
+      // A failure here would leave the idea stuck in developing, with buttons that only answer "no longer pending"
+      const started = await startExternalContent([idea.source_url, idea.title, idea.summary, `Tema: ${idea.topic}`].join("\n\n")).catch(async (e) => {
+        await rt.store.moveIdea(id, "developing", "pending");
+        throw e;
+      });
       if (!started) return void (await rt.store.moveIdea(id, "developing", "pending"));
       await clear();
     } finally {

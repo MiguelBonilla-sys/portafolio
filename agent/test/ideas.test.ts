@@ -180,3 +180,19 @@ test("a callback for an unknown or malformed idea does nothing", async () => {
   assert.equal(b.rows.size, 0);
   assert.equal(answers.length, 2, "the callback is always answered");
 });
+
+test("Desarrollar that fails while opening the draft puts the idea back to pending", async () => {
+  const b = bot();
+  const id = await b.idea();
+  const upsert = b.store.upsert;
+  b.store.upsert = async () => {
+    throw new Error("database down");
+  };
+  await assert.rejects(b.press(`id:${id}`), /database down/);
+  assert.equal(b.ideas.get(id)!.status, "pending", "the owner can tap Desarrollar again");
+  assert.equal(b.kv.get("lock:idea-develop"), undefined, "the lock is released");
+
+  b.store.upsert = upsert;
+  await b.press(`id:${id}`);
+  assert.equal(b.ideas.get(id)!.status, "developing");
+});
