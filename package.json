@@ -20,7 +20,7 @@
     "@langchain/openai": "^1.6.2",
     "@vercel/analytics": "^2.0.1",
     "gray-matter": "^4.0.3",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "next-intl": "^4.14.9",
     "next-mdx-remote": "^6.0.0",
     "pdf-lib": "^1.17.1",
