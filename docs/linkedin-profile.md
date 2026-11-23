@@ -1,6 +1,6 @@
 # Perfil de LinkedIn (EN y ES)
 
-> Actualizado: 2026-10-26 (Bikans como sistema completo; proyectos por necesidad y solución; Sibartech como freelance; Coordenadas.co y Bikans enlazadas). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`.
+> Actualizado: 2026-11-23 (checklist de visibilidad en IA y configuración ampliada). Revisión previa: 2026-10-26 (Bikans como sistema completo; proyectos por necesidad y solución; Sibartech como freelance; Coordenadas.co y Bikans enlazadas). Base: `PRODUCT.md`, `data/experience.*.json`, `data/projects.*.json` y `docs/audit/CONTENT_VERIFICATION.md`. Buenas prácticas contrastadas con las skills públicas `brianrwagner/ai-marketing-claude-code-skills` y `paramchoudhary/resumeskills`; límite del titular según el blog de talento de LinkedIn.
 > Esta sesión no tiene acceso a LinkedIn: son textos listos para revisar y pegar a mano. No agregan cargos, cifras ni experiencia que no estén en esas fuentes.
 
 Perfil principal en inglés (mercado remoto) y perfil secundario en español ("Add profile in another language").
@@ -17,8 +17,12 @@ Antes de pegar: cada cifra tiene que ser una que puedas defender en una entrevis
 | Proyecto "API Auth Gateway" con enlace a GitHub | Enlace a la página del proyecto | El repositorio tiene credenciales expuestas pendientes de limpiar |
 | Proyecto "Sentinel RAG" | Retirado | No tiene código ni demo públicos |
 | Top skill "AI Agents" | "Large Language Models (LLM)" | Lo que muestran los proyectos son integraciones con LLM y RAG |
+| Lista de configuración sin foto, URL personalizada ni skills completas | Foto, URL, hasta 50 skills y contacto revisados en la configuración | Son los puntos que las skills públicas revisadas piden; cambios de bajo costo |
+| Sin revisión de visibilidad en buscadores de IA | Checklist de 8 puntos con el estado actual del perfil | Una de las skills revisadas lo usa como auditoría final |
 
 ## Headline (máx. 220 caracteres)
+
+El límite de 220 caracteres lo confirma el blog de talento de LinkedIn. No usar el corte de 60 caracteres en móvil que citan algunos artículos: no encontramos esa regla en una fuente oficial.
 
 **Recomendado**
 - EN: `Full Stack Engineer · Python, React & AI Systems | FastAPI, Django, Next.js, PostgreSQL | LLM integrations & RAG | Open to remote`
@@ -69,7 +73,9 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 
 ## Experiencia
 
-### Coordenadas.co · Development Lead · Nov 2026 – Present · Bogotá (Remote)
+### Coordenadas.co · Bogotá (Remote)
+
+#### Development Lead · Nov 2026 – Present
 
 **EN**
 - Leading the technical development of web platforms, digital products and automation solutions, bridging hands-on engineering with technical coordination and delivery.
@@ -79,7 +85,7 @@ Abierto a roles remotos de Full Stack. Portafolio, casos de estudio y CV: mangel
 
 Skills: React · Django · PostgreSQL · n8n · Docker · Coolify · Traefik · Linux
 
-### Coordenadas.co · Full Stack Developer · Sep 2025 – Oct 2026 · Bogotá (Remote)
+#### Full Stack Developer · Sep 2025 – Oct 2026
 
 **EN**
 - Bikans: one payroll and tax withholding platform where employee data is entered once instead of being typed into two tools. I built the whole system with Django, React and PostgreSQL, with a mandatory second factor; it is in production.
@@ -109,11 +115,11 @@ Skills: Python · Django · FastAPI · PostgreSQL · pytest · Docker
 - Desarrollé y mantuve servicios backend en producción con Python, Django y FastAPI, sobre PostgreSQL.
 - Escribí pruebas con pytest y contenedoricé servicios con Docker.
 
-### Universidad de San Buenaventura · Systems Engineering · 2021 – Present
+### Universidad de San Buenaventura · Systems Engineering · 2021 – 2026
 
-**EN**: 10th semester. Software architecture, distributed systems and networking. Co-authored thesis with Juan Sebastián Fandiño Novoa: IDN homograph phishing detection API (FastAPI, PostgreSQL, Redis, ChromaDB).
+**EN**: Degree completed. Software architecture, distributed systems and networking. Co-authored thesis with Juan Sebastián Fandiño Novoa: IDN homograph phishing detection API (FastAPI, PostgreSQL, Redis, ChromaDB).
 
-**ES**: Décimo semestre. Arquitectura de software, sistemas distribuidos y redes. Tesis en coautoría con Juan Sebastián Fandiño Novoa: API de detección de phishing por homógrafos IDN (FastAPI, PostgreSQL, Redis, ChromaDB).
+**ES**: Título obtenido. Arquitectura de software, sistemas distribuidos y redes. Tesis en coautoría con Juan Sebastián Fandiño Novoa: API de detección de phishing por homógrafos IDN (FastAPI, PostgreSQL, Redis, ChromaDB).
 
 ### Licencias y certificaciones
 
@@ -136,7 +142,7 @@ Enlaza siempre la página del portafolio: ahí está el caso de estudio y desde 
 
 Lo que más visibilidad les da a ellas y a ti no es un enlace en el texto, sino que LinkedIn reconozca la relación:
 
-- **Experiencia → Coordenadas.co:** al escribir la empresa, elígela de la lista desplegable (página `linkedin.com/company/coordenadas-co`), no la escribas a mano. Así aparece su logo, tu cargo enlaza a su página y figuras entre las personas que trabajan allí.
+- **Experiencia → Coordenadas.co:** al escribir la empresa, elígela de la lista desplegable (página `linkedin.com/company/coordenadas-co`), no la escribas a mano. Así aparece su logo, tu cargo enlaza a su página y figuras entre las personas que trabajan allí. Los dos cargos (Development Lead y Full Stack Developer) van bajo esa misma entrada: LinkedIn los agrupa solos cuando la empresa es la misma, así que no crees dos entradas separadas.
 - **Sibartech:** si tiene página en LinkedIn, elígela igual; si no, queda como texto. Tipo de empleo: Freelance.
 - **Proyecto Bikans (sección Projects):** asócialo a la experiencia de Coordenadas.co y, en la descripción, nombra a Bikans Asesores. Enlace del proyecto: la página del portafolio.
 - **Posts:** el Content Engine menciona a la empresa (`@Coordenadas.co`, `@Bikans Asesores`) solo cuando el post dice que el trabajo o el aprendizaje fue allí, y una sola vez. La mención avisa a la página y la enlaza; mencionarla en cada post por cortesía resta, no suma.
@@ -168,5 +174,24 @@ Reglas: sin "emocionado de compartir", "esto lo cambia todo", listas de "5 clave
 - [ ] Perfil en inglés como principal y en español como secundario.
 - [ ] Open to Work visible **solo para recruiters**: "Full Stack Engineer", "Backend Engineer", "Software Engineer"; modalidad remota.
 - [ ] Banner 1584×396 con el símbolo del sitio, el titular y la URL (puede partir de `public/brand/symbol-dark.svg`).
+- [ ] Foto profesional: rostro visible, fondo neutro, sin selfie.
+- [ ] URL personalizada `linkedin.com/in/<nombre>`, sin números aleatorios.
+- [ ] Skills: hasta 50, ordenadas por relevancia para el rol objetivo; pedir endorsements para las 5 fijadas.
+- [ ] Contacto: portafolio `mangel14.dev`. GitHub solo cuando los repos públicos estén limpios (ver la nota de API Auth Gateway).
 - [ ] 2 o 3 recomendaciones de compañeros de Coordenadas o Sibartech.
 - [ ] 2 o 3 comentarios técnicos por semana en publicaciones del área.
+
+## Checklist de visibilidad en IA
+
+Adaptado del checklist de ocho puntos de la skill `brianrwagner/ai-marketing-claude-code-skills`. Es para revisar el perfil, no para pegar.
+
+| Punto | Estado | Qué hacer |
+|---|---|---|
+| 1. Entidad clara: nombre, rol y nicho | Pasa | El titular y la primera línea del About dicen rol y nicho. |
+| 2. Especificidad de nicho | Pasa | "LLM integrations & RAG" en el titular; el caso de nómina en la alternativa. |
+| 3. Menciones de terceros | Pendiente | Las recomendaciones son hoy la única mención externa. Pedir 2 o 3. |
+| 4. Consistencia de vocabulario | Revisar | El titular dice Full Stack Engineer y la experiencia actual dice Development Lead desde noviembre de 2026. Decidir cuál va en el titular. |
+| 5. Respuesta directa | Pasa | La primera línea del About responde qué construye. |
+| 6. Señales de actualidad | Depende de actividad | Mantener 2 o 3 comentarios por semana y el calendario de posts. |
+| 7. URL personalizada | Verificar | Confirmar en el perfil que la URL es `linkedin.com/in/<nombre>`. |
+| 8. Huella en otras plataformas | Pasa parcial | Portafolio, casos y CV enlazados. GitHub pendiente (ver Contacto). |
