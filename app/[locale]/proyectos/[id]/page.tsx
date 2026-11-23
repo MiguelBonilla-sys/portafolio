@@ -31,7 +31,13 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/proyecto
     description: project.description,
     alternates: alternatesFor(locale, href),
     // openGraph reemplaza el objeto del layout: hay que repetir imagen, url y tipo
-    ...socialFor(locale, href, { title: project.title, description: project.description }),
+    ...socialFor(locale, href, {
+      title: project.title,
+      description: project.description,
+      // La imagen vive bajo la ruta interna (/proyectos/): el prefijo localizado /projects/ solo cubre la página
+      image: `${SITE_URL}/${locale}/proyectos/${id}/opengraph-image`,
+      imageAlt: `${project.title}: Miguel Bonilla`,
+    }),
   };
 }
 
