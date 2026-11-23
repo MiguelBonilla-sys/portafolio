@@ -63,9 +63,9 @@
   },
   {
     "id": "usb",
-    "date": "Jan 2021 — Present",
-    "title": "Systems Engineering (in progress)",
-    "place": "Universidad de San Buenaventura · Bogotá · 10th semester",
+    "date": "Jan 2021 — Nov 2026",
+    "title": "Systems Engineering",
+    "place": "Universidad de San Buenaventura · Bogotá",
     "description": "Software architecture, distributed systems and networking.",
     "highlights": [
       "Thesis co-authored with Juan Sebastián Fandiño Novoa: a multi-agent AI system that detects IDN homograph phishing domains."

@@ -2,7 +2,7 @@
 
 ## Problem
 
-Miguel Bonilla, estudiante de noveno semestre de Ingeniería de Sistemas y Full Stack Developer en Coordenadas.co, busca empleo remoto como Full Stack / AI Engineer. Hoy su portafolio está bien construido técnicamente, pero no demuestra lo que promete. El hero menciona WordPress, Next.js y automatización; los proyectos son académicos en Python y Java, sin demos ni resultados medibles. LinkedIn no tiene una estrategia de contenido y el sitio no está preparado para que lo encuentren ni lo citen los buscadores de IA. Con 10 horas a la semana, no puede sostener a mano un blog bilingüe más tres posts semanales.
+Miguel Bonilla, egresado de Ingeniería de Sistemas y Full Stack Developer en Coordenadas.co, busca empleo remoto como Full Stack / AI Engineer. Hoy su portafolio está bien construido técnicamente, pero no demuestra lo que promete. El hero menciona WordPress, Next.js y automatización; los proyectos son académicos en Python y Java, sin demos ni resultados medibles. LinkedIn no tiene una estrategia de contenido y el sitio no está preparado para que lo encuentren ni lo citen los buscadores de IA. Con 10 horas a la semana, no puede sostener a mano un blog bilingüe más tres posts semanales.
 
 ## Success Metrics (v1)
 
