@@ -57,6 +57,13 @@
     "course": "Curso",
     "stack": "Tecnologías"
   },
+  "promo": {
+    "label": "Proyecto nuevo: QuadShip",
+    "eyebrow": "Proyecto nuevo · Prealfa",
+    "body": "Un PaaS self-hosted escrito en Rust. Está en prealfa y aún no está disponible.",
+    "cta": "Visitar quadship.app",
+    "close": "Cerrar"
+  },
   "projects": {
     "title": "Proyectos",
     "lede": "Primero los proyectos con más evidencia: cada uno explica qué necesidad atiende, cómo la resuelve, qué se decidió y qué le falta.",

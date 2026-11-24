@@ -1,5 +1,63 @@
 [
   {
+    "id": "quadship",
+    "title": "QuadShip: PaaS self-hosted en Rust",
+    "language": "Rust",
+    "status": "prototype",
+    "context": "Prealfa, aún no disponible · quadship.app",
+    "description": "Los desarrolladores independientes y los equipos pequeños que operan su propio VPS necesitan publicar aplicaciones en sus servidores, con aislamiento entre proyectos y sin un despliegue que se salte las comprobaciones.",
+    "solves": "Un MVP de un solo host en código: despliega una app desde una imagen de contenedor o un repositorio Git público, comprueba su salud y solo entonces mueve la ruta de Caddy. Probado con fakes y una PostgreSQL desechable; todavía no se ha ejecutado en un host real.",
+    "longDescription": "QuadShip es un PaaS self-hosted escrito en Rust para desarrolladores independientes y equipos de 2 a 10 personas que operan su propio VPS. Está en prealfa: el código está en un repositorio privado, no hay lanzamiento ni fecha.\n\nLo que existe hoy es un MVP de un solo host: inicio de sesión con contraseña y token de configuración de un solo uso, proyectos y entornos, aplicaciones desde una imagen de contenedor o un repositorio Git público con Dockerfile, variables de entorno cifradas en reposo, dominios, un job de deploy blue/green (units de Quadlet, sonda de salud, cambio de ruta en Caddy), historial de deploys y logs por SSE, una API REST con OpenAPI y una interfaz en Vue 3 embebida en el binario del servidor. Está probado con tests unitarios, fakes y una PostgreSQL desechable. Ninguna aplicación se ha desplegado con QuadShip en un host real todavía: esa prueba de punta a punta está pendiente.\n\nEl resto de la versión 1 es diseño: Podman rootless con un usuario Linux por proyecto, un gate de CI sobre el commit exacto, un servidor MCP con aprobación humana para acciones destructivas, MFA, backups y multi-server. La especificación y 19 registros de decisiones de arquitectura están escritos; esas capacidades son objetivos, no funciones terminadas.\n\nLidero su desarrollo de punta a punta: arquitectura, backend, interfaz y experiencia de despliegue.",
+    "tags": [
+      "Rust",
+      "Podman",
+      "Caddy",
+      "PostgreSQL",
+      "Vue 3"
+    ],
+    "links": {
+      "repo": null,
+      "demo": "https://quadship.app/"
+    },
+    "featured": true,
+    "caseStudy": {
+      "need": "Quien despliega en su propio VPS elige entre herramientas self-hosted existentes. Algunas corren un daemon con privilegios de root y le dan al panel acceso al socket de contenedores, así que un panel comprometido es root en todos los servidores. Los equipos chicos además conviven con CI y deploy desconectados, y con accesos compartidos como claves SSH.",
+      "constraints": [
+        "Corre en el VPS del propio operador, con 2 vCPU y 4 GB como hardware de referencia.",
+        "El plano de control no puede ser una vía para llegar a root en el host.",
+        "PostgreSQL es la única fuente de verdad: sin un broker extra que operar."
+      ],
+      "solution": "Un plano de control con API e interfaz web embebida, y un agente que aplica los deploys en el servidor mediante systemd y Podman. En el MVP actual publica una aplicación con cambio blue/green: levanta la versión nueva, comprueba que esté sana y solo entonces mueve la ruta de Caddy.",
+      "architecture": {
+        "summary": "Un workspace de Rust con 22 crates en capas hexagonales. En el MVP el servidor habla con un agente local por un socket unix con un conjunto cerrado de comandos; el diseño de la versión 1 reemplaza ese socket por una conexión gRPC saliente con mTLS.",
+        "flow": [
+          "El navegador o un cliente de la API llama a quadshipd, que sirve la API REST y la interfaz Vue embebida",
+          "quadshipd guarda su estado y encola los jobs en PostgreSQL",
+          "El worker ejecuta el job de deploy y envía comandos al agente",
+          "El agente escribe las units de Quadlet y systemd arranca los contenedores con Podman",
+          "El agente cambia la ruta de Caddy cuando la sonda de salud pasa"
+        ]
+      },
+      "decisions": [
+        "PostgreSQL es la fuente de verdad y la cola de jobs, así que no hay un broker aparte (ADR 0005).",
+        "Caddy es el único proxy y da HTTPS automático (ADR 0004).",
+        "Los jobs se entregan al menos una vez y usan fencing (ADR 0019).",
+        "Los secretos usan cifrado por sobres con credenciales de systemd (ADR 0013).",
+        "Podman rootless con un usuario Linux por proyecto es el modelo de aislamiento de la versión 1 (ADR 0003)."
+      ],
+      "validation": [
+        "Tests unitarios, fakes y una PostgreSQL desechable cubren el MVP implementado.",
+        "Una prueba de punta a punta en una VM Linux está automatizada en el repositorio, pero falta ejecutarla."
+      ],
+      "limitations": [
+        "Prealfa: ninguna aplicación se ha desplegado con QuadShip en un host real todavía.",
+        "Buena parte de la versión 1 sigue siendo diseño: servidor MCP, CLI, MFA, backups y multi-server.",
+        "El código está en un repositorio privado; la página pública es quadship.app."
+      ],
+      "role": "Proyecto personal: lo lidero de punta a punta, desde la arquitectura y el backend hasta la interfaz y la experiencia de despliegue."
+    }
+  },
+  {
     "id": "bikans",
     "title": "Bikans: SaaS de nómina y retención",
     "language": "React · Django",

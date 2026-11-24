@@ -1,0 +1,89 @@
+.promo {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+  width: min(380px, calc(100vw - 32px));
+  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  animation: promo-in 420ms var(--ease-out) both;
+}
+
+@keyframes promo-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* Fondo oscuro fijo: la marca de QuadShip tiene cuadros claros y se perdería sobre el tema claro */
+.mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  background: #0a0b10;
+  border: var(--border);
+}
+
+.eyebrow {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.body {
+  margin: 0.9rem 0 1rem;
+  font-size: 0.975rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.cta {
+  width: 100%;
+  min-height: 46px;
+  font-size: 1.1rem;
+}
+
+.close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 0;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 480px) {
+  .promo {
+    right: 16px;
+    bottom: 16px;
+  }
+}

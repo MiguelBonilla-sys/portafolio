@@ -11,7 +11,7 @@ import styles from "./cv.module.css";
 // demo o documento verificable: taskflow, ledgercore y sentinel-rag salieron hasta tener repositorio
 // (ver docs/audit/CONTENT_VERIFICATION.md).
 // Los proyectos principales, con detalle. Los demás con código público van en una línea aparte
-const CV_PROJECTS = ["bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton"];
+const CV_PROJECTS = ["quadship", "bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton"];
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/cv">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };

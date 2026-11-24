@@ -57,6 +57,13 @@
     "course": "Course",
     "stack": "Technologies"
   },
+  "promo": {
+    "label": "New project: QuadShip",
+    "eyebrow": "New project · Pre-alpha",
+    "body": "A self-hosted PaaS written in Rust. It is in pre-alpha and not available yet.",
+    "cta": "Visit quadship.app",
+    "close": "Close"
+  },
   "projects": {
     "title": "Projects",
     "lede": "The projects with the most evidence come first: each one explains the need it serves, how it solves it, what was decided and what it still lacks.",

@@ -8,6 +8,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import ThemeScript from "@/components/ThemeScript";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import QuadShipPromo from "@/components/ui/QuadShipPromo";
 import { routing } from "@/i18n/routing";
 import { SITE_URL, alternatesFor, socialFor } from "@/lib/site";
 import "../globals.css";
@@ -75,7 +76,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "nav" });
-  const { nav } = await getMessages();
+  const { nav, promo } = await getMessages();
 
   return (
     <html lang={locale} data-theme="dark" suppressHydrationWarning>
@@ -94,6 +95,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
             <Navbar messages={nav} />
             <main id="contenido">{children}</main>
             <Footer />
+            <QuadShipPromo messages={promo} />
         </NextIntlClientProvider>
       </body>
     </html>
