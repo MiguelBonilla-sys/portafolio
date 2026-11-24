@@ -11,7 +11,7 @@ import { createContentStore, type ContentStore } from "./lib/db.ts";
 import { createGitHub } from "./lib/github.ts";
 import { pingIndexNow } from "./lib/indexnow.ts";
 import { createLinkedIn, LinkedInAuthError } from "./lib/linkedin.ts";
-import { createLlm, textOf } from "./lib/llm.ts";
+import { createLlm, providerFetch, textOf } from "./lib/llm.ts";
 import { safeFetch } from "./lib/safe-fetch.ts";
 import { createTelegram, type TelegramClient } from "./lib/telegram.ts";
 import { DESCRIBE_IMAGE } from "./prompts.ts";
@@ -51,7 +51,7 @@ function visionFor(env: AgentEnv): AgentDeps["inputs"]["describeImage"] {
   const model = new ChatOpenAI({
     model: env.LLM_VISION_MODEL,
     apiKey: env.LLM_API_KEY,
-    configuration: { baseURL: env.LLM_BASE_URL },
+    configuration: { baseURL: env.LLM_BASE_URL, fetch: providerFetch(env.LLM_BASE_URL) },
     temperature: 0,
     maxRetries: 1,
     timeout: 90_000,
