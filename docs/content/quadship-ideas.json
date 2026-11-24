@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Un agente de IA borró una base de datos de producción en 9 segundos: el problema es la autoridad, no el modelo",
+    "summary": "El 25 de abril de 2026, según su fundador, un agente de código borró la base de datos de producción de una empresa usando un token creado solo para administrar dominios, que tenía permisos sobre toda la API de la plataforma de alojamiento, sin confirmación ni entorno separado. Ángulo: qué debería exigir un servidor MCP antes de ejecutar una acción destructiva (cola de aprobación humana, permisos por alcance, acciones críticas fuera del agente). Cierre honesto: QuadShip diseña un registro de operaciones MCP con aprobación (ADR 0009); todavía no está implementado, el proyecto está en prealfa. Widget interactivo: línea de tiempo del agente con el control de aprobación activado y desactivado. Contrastar con OWASP LLM06 (Excessive Agency) y con cobertura de prensa independiente; atribuir los hechos al relato del fundador. Widget: approval-gate.",
+    "topic": "Agentes de IA y acciones destructivas: aprobación humana",
+    "source_url": "https://zenity.io/blog/ai-agent-database-deletion-pocketos"
+  },
+  {
+    "title": "Si alguien entra a tu panel de despliegue, ¿a cuántos servidores llega?",
+    "summary": "Varios paneles de despliegue self-hosted corren con privilegios altos y acceso al socket de contenedores, de modo que una inyección de comandos en el panel puede significar root en todos los servidores. Evidencia pública en 2026: CVE de inyección de comandos en un panel de despliegue de código abierto (CVE-2026-34158, CVE-2026-34599) y el bypass de autorización de Docker CVE-2026-34040, cuya mitigación recomendada es Docker rootless o userns-remap. Ángulo: radio de explosión según el modelo (daemon con root frente a un usuario Linux sin privilegios por proyecto). QuadShip diseña Podman rootless con un usuario por proyecto (ADR 0003); el MVP actual corre un agente como root en el mismo host, y eso se dice. Widget interactivo: comprometer el panel y ver qué cae en cada modelo. Ambas CVE requieren un usuario autenticado. Rootless reduce el radio de explosión pero no lo elimina (kernel compartido). Contrastar con la guía de seguridad de OWASP para contenedores. Widget: blast-radius.",
+    "topic": "Seguridad de paneles de despliegue: radio de explosión y rootless",
+    "source_url": "https://nvd.nist.gov/vuln/detail/CVE-2026-34158"
+  },
+  {
+    "title": "Un secreto filtrado sigue vivo años después",
+    "summary": "Según el informe State of Secrets Sprawl 2026 de GitGuardian, de los secretos válidos detectados en 2022, el 64% seguía activo y explotable cuatro años después, y el equipo no rota por miedo a tumbar producción. Ángulo: filtrar un secreto es un problema de cola larga; lo que cuenta es cuánto vive después y si se puede rotar sin tumbar nada (cifrado en reposo, secretos que nunca se devuelven en claro por API, MCP ni logs, credenciales propias por aplicación y rotación). QuadShip diseña cifrado por sobres con credenciales de systemd (ADR 0013) y credenciales por app con rotación (F33). Estado real: las variables de entorno cifradas en reposo ya están en el MVP; la rotación y las credenciales por aplicación todavía no. Widget interactivo: línea de tiempo de una filtración, con y sin rotación. Contrastar con la guía de gestión de secretos de OWASP (automatizar la rotación). La cifra viene de una empresa que vende detección de secretos: atribuirla por nombre. Widget: secret-rotation.",
+    "topic": "Secretos filtrados: cifrado, rotación y credenciales por app",
+    "source_url": "https://www.gitguardian.com/state-of-secrets-sprawl-report-2026"
+  },
+  {
+    "title": "Un backup que nunca restauraste es una suposición",
+    "summary": "Según la encuesta Voice of IT 2026 de Spiceworks, el 41% de los profesionales de TI prueba la restauración de backups solo de forma rara, ocasional, cuando la necesitan, o nunca. Ángulo: la marca verde de un backup prueba que el archivo se movió, no que se puede restaurar; qué verificar (checksum antes de restaurar, restauración de prueba programada, copia fuera del mismo radio de falla). QuadShip diseña backups cifrados a S3 con SHA-256 verificado antes de cualquier restore (F14); los backups no están implementados todavía. Widget interactivo: una fila de backups con marca verde, un botón de restaurar y un interruptor de verificación previa. Contrastar con la guía #StopRansomware de CISA (probar los backups con regularidad). Widget: restore-check.",
+    "topic": "Backups verificados y pruebas de restauración",
+    "source_url": "https://www.spiceworks.com/security/most-it-pros-arent-testing-their-backups-heres-how-to-fix-that/"
+  },
+  {
+    "title": "El día de actualizar el panel: tus apps no deberían enterarse",
+    "summary": "Por defecto, cuando el daemon de Docker se detiene apaga los contenedores en ejecución; la opción live restore los mantiene vivos ante caídas, interrupciones planificadas o upgrades, pero solo en versiones de parche (Docker Docs). Un rolling update bien hecho espera a que lo nuevo esté listo antes de quitar lo viejo y manda tráfico solo a instancias que pueden atender (Kubernetes Docs). Ángulo: separar el plano de control de las cargas de trabajo y comprobar la salud antes de mover el tráfico. QuadShip ya hace blue/green con sonda de salud antes de cambiar la ruta de Caddy (MVP) y diseña supervisión con systemd y Quadlet para que las apps sigan si cae el plano de control; eso último es diseño, sin prueba en un host real. Widget interactivo: línea de tiempo de una actualización con el panel acoplado y desacoplado. Widget: update-day.",
+    "topic": "Actualizar el plano de control sin afectar las apps",
+    "source_url": "https://docs.docker.com/engine/daemon/live-restore/"
+  }
+]
