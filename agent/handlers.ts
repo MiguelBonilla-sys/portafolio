@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Command } from "@langchain/langgraph";
 import { CHANNEL_LABEL, STATUS_LABEL, WAITING_FOR_AUTHOR, isTerminal, type Channel, type EditorialStatus } from "./editorial.ts";
 import { blockers } from "./graph.ts";
+import { widgetHint } from "../lib/explainers/index.ts";
 import { injectionWarning, LIMITS, type Attachment } from "./inputs.ts";
 import type { Collection, CollectedPart, ContentRow, ContentStore, IdeaInput } from "./lib/db.ts";
 import { logError, toPublicError } from "./lib/redact.ts";
@@ -251,6 +252,9 @@ export function createHandlers(rt: Runtime) {
   async function startContent(rawText: string, attachments: Attachment[], forwarded = false, inbox = false) {
     // Inbox text is untrusted: it cannot set draft options such as «con imagen»
     const opts = inbox ? { ...parseOptions(""), note: rawText.trim() } : parseOptions(rawText);
+    // La única excepción: una idea con «Widget: id» de la lista cerrada lleva carrusel, porque sus láminas
+    // salen de los pasos del explicador y no del texto externo.
+    if (inbox && widgetHint(rawText)) opts.format = "carousel";
     const words = opts.note.split(/\s+/).filter(Boolean).length;
     if (!attachments.length && words < MIN_NOTE_WORDS && !/https?:\/\//.test(opts.note)) {
       await tg.sendMessage("Necesito un poco más de material: qué construiste, qué decidiste y qué resultado tuvo. También puedes mandarme un archivo o un enlace.");

@@ -64,6 +64,19 @@ test("idea text cannot set draft options", async () => {
   assert.equal(values.linkedinMedia, "none");
 });
 
+test("an idea that asks for an explainer from the closed list gets a carousel; an unknown id does not", async () => {
+  const b = bot();
+  await b.press(`id:${await b.idea({ summary: "Un ángulo con explicador interactivo. Widget: blast-radius." })}`);
+  const [row] = [...b.rows.values()];
+  assert.equal((await b.state(row.content_id)).values.format, "carousel");
+
+  const c = bot();
+  await c.press(`id:${await c.idea({ summary: "Un ángulo con una pista falsa. Widget: constructor." })}`);
+  const [other] = [...c.rows.values()];
+  assert.equal((await c.state(other.content_id)).values.format, "text");
+  assert.equal((await c.state(other.content_id)).values.linkedinMedia, "none", "the other options stay locked");
+});
+
 test("Desarrollar with an active draft does not overwrite it: the idea stays pending and the owner is told", async () => {
   const b = bot();
   await b.say(NOTE);
