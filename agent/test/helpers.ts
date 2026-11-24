@@ -281,6 +281,7 @@ export function setup(opts: SetupOpts = {}) {
     },
   };
 
+  const fetched: string[] = [];
   const deps: AgentDeps = {
     llm,
     telegram,
@@ -317,10 +318,16 @@ export function setup(opts: SetupOpts = {}) {
     renderVisual: async () => new Uint8Array([4, 5, 6]),
     indexNow: async () => 202,
     fetchStatus: async () => (deployOk ? 200 : 404),
-    fetchPage: async (url) => ({
+    fetchPage: async (url) => {
+      // llms.txt y llms-full.txt listan las páginas del artículo que se pidieron antes
+      if (/\/llms(-full)?\.txt$/.test(url)) return { status: 200, html: fetched.join("\n") };
+      if (/\/sitemap\.xml$/.test(url)) return { status: 200, html: fetched.map((u) => `<url><loc>${u}</loc></url>`).join("") };
+      fetched.push(url);
+      return {
       status: 200,
       html: `<title>Post | Miguel Bonilla</title><link rel="canonical" href="${url}"/><link rel="alternate" hrefLang="en" href="x"/><script type="application/ld+json">{"@type":"BlogPosting"}</script>`,
-    }),
+      };
+    },
     sleep: async () => {},
     siteUrl: "https://mangel14.dev",
     timezone: "America/Bogota",

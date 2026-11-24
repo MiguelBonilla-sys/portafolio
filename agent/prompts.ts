@@ -83,6 +83,7 @@ Escribe solo las secciones que los HECHOS respaldan; nunca un encabezado vacío 
 - Código solo si está en los hechos y completo (nada de fragmentos decorativos que no corren).
 - Una tabla solo si compara opciones con criterios explícitos.
 - FAQ: solo si el material contiene preguntas reales que el artículo responde; si no, [].
+- Si el material trae una línea «Widget: id», no la copies ni la menciones: el sitio inserta solo ese explicador interactivo.
 - Termina con lo que el lector puede reproducir o con las limitaciones, no con una conclusión genérica.`,
     user: `Tema: ${topic}
 Categoría: ${CATEGORY_LABEL[category].es}

@@ -19,6 +19,13 @@ export type PublicArticle = {
   category: string;
   draft: boolean;
   date?: string;
+  /** Solo los usa get_blog_article, en la página del artículo */
+  updated?: string;
+  readingMinutes?: number;
+  faq?: { q: string; a: string }[];
+  sources?: { title: string; url: string }[];
+  projects?: string[];
+  hasTranslation?: boolean;
 };
 
 type Result<T> = { ok: true; data: T } | { ok: false; error: { code: string; message: string } };
@@ -101,6 +108,24 @@ export function searchBlogArticles(posts: PublicArticle[], input: unknown, local
     category: p.category, published: p.date ?? null,
     canonicalUrl: `${siteUrl}/${locale}/blog/${encodeURIComponent(p.slug)}`,
   })) };
+}
+
+export function getArticleDetails(posts: PublicArticle[], slug: unknown, locale: Locale, siteUrl: string): Result<{
+  slug: string; title: string; summary: string; tags: string[]; category: string; published: string | null; updated: string | null;
+  readingMinutes: number | null; faq: { q: string; a: string }[]; sources: { title: string; url: string }[]; projects: string[];
+  canonicalUrl: string; translationUrl: string | null;
+}> {
+  if (typeof slug !== "string" || !/^[a-z0-9-]{1,120}$/.test(slug)) return bad("invalid_input", "Invalid article slug");
+  const post = posts.filter((p) => !p.draft).find((p) => p.slug === slug);
+  if (!post) return bad("not_found", "Article not found");
+  const other = locale === "en" ? "es" : "en";
+  return { ok: true, data: {
+    slug: post.slug, title: post.title, summary: post.summary, tags: post.tags, category: post.category,
+    published: post.date ?? null, updated: post.updated ?? null, readingMinutes: post.readingMinutes ?? null,
+    faq: post.faq ?? [], sources: post.sources ?? [], projects: post.projects ?? [],
+    canonicalUrl: `${siteUrl}/${locale}/blog/${encodeURIComponent(post.slug)}`,
+    translationUrl: post.hasTranslation ? `${siteUrl}/${other}/blog/${encodeURIComponent(post.slug)}` : null,
+  } };
 }
 
 export function navigateToSection(section: unknown, locale: Locale, projectIds: string[]): Result<{ path: string }> {

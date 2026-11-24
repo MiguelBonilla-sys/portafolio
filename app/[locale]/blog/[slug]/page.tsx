@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Prose from "@/components/blog/Prose";
+import ArticleDetailsTool from "@/components/webmcp/ArticleDetailsTool";
 import JsonLd from "@/components/seo/JsonLd";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -10,7 +11,7 @@ import { CATEGORY_PAGE_MIN_POSTS, CATEGORY_LABEL, ARTICLE_TYPE_LABEL } from "@/l
 import { categoriesWithPages, getPost, getPosts, relatedPosts } from "@/lib/blog";
 import { getProject } from "@/lib/content";
 import { blogPostingSchema, breadcrumbSchema, faqSchema } from "@/lib/jsonld";
-import { absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
+import { SITE_URL, absoluteUrl, alternatesFor, socialFor } from "@/lib/site";
 import { articleLanguages } from "@/lib/article-seo";
 import styles from "./post.module.css";
 
@@ -84,6 +85,15 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
   return (
     <article className={`shell ${styles.article}`}>
       <JsonLd data={schemas} />
+      <ArticleDetailsTool
+        locale={locale}
+        siteUrl={SITE_URL}
+        post={{
+          slug: post.slug, title: post.title, summary: post.summary, tags: post.tags, category: post.category, draft: post.draft,
+          date: post.date, updated: post.updated, readingMinutes: post.readingMinutes, faq: post.faq, sources: post.sources,
+          projects: post.projects, hasTranslation,
+        }}
+      />
       <nav className={styles.crumbs} aria-label="Breadcrumb">
         <Link href="/blog" className="data">
           ← {t("back")}
@@ -126,7 +136,7 @@ export default async function PostPage({ params }: PageProps<"/[locale]/blog/[sl
         </p>
       </header>
 
-      <Prose source={post.body} />
+      <Prose source={post.body} locale={locale} />
 
       {post.faq.length > 0 && (
         <section className={styles.block} aria-labelledby="faq-title">

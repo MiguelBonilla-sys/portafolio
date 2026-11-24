@@ -2,6 +2,7 @@
 // y relación con los proyectos del portafolio. No promete posiciones: detecta problemas concretos.
 
 import projectsEs from "../data/projects.es.json" with { type: "json" };
+import { imageProblems } from "./lib/images.ts";
 import type { BlogDraft } from "./state.ts";
 
 export interface SeoReport {
@@ -52,7 +53,9 @@ export function seoReport(draft: BlogDraft, locale: "es" | "en"): SeoReport {
   const h2 = body.match(/^##\s+.+$/gm) ?? [];
   if (h2.length < 2 && n > 500) warnings.push(es ? "más de 500 palabras con menos de 2 secciones ##" : "500+ words with fewer than 2 ## sections");
   if (new Set(h2.map((h) => norm(h))).size !== h2.length) warnings.push(es ? "encabezados repetidos" : "duplicate headings");
-  if ((body.match(/!\[\s*\]\(/g) ?? []).length) errors.push(es ? "imagen sin texto alternativo" : "image without alt text");
+  const img = imageProblems(body);
+  if (img.missingAlt) errors.push(es ? "imagen sin texto alternativo" : "image without alt text");
+  if (img.missingTitle) errors.push(es ? "imagen sin título" : "image without title");
   if (draft.faq.length > 0 && draft.faq.length < 2) warnings.push(es ? "una FAQ de una sola pregunta no aporta: quítala o súmala al cuerpo" : "single-question FAQ");
   const internal = (body.match(/\]\(\/(es|en)\//g) ?? []).length;
   const related = relatedProjects(draft);

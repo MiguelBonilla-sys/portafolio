@@ -1,0 +1,99 @@
+.widget {
+  margin: 2rem 0;
+  max-width: 44rem;
+}
+
+.frame {
+  padding: 1rem;
+  background: var(--surface);
+  border: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.frame:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stepLabel {
+  color: var(--ink-2);
+  font-size: 0.875rem;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.35rem 0.9rem;
+  background: var(--ground);
+  color: var(--ink);
+  border: var(--border);
+  font: inherit;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.switch strong {
+  min-width: 4.2ch;
+  padding: 0.1rem 0.5rem;
+  background: var(--ink-2);
+  color: var(--ground);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.switch[aria-checked="true"] strong {
+  background: var(--accent);
+  color: var(--ink-on-accent);
+}
+
+.caption {
+  min-height: 3.2rem;
+  margin: 0.25rem 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.controls,
+.decide {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.decide span {
+  flex-basis: 100%;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+
+.controls :global(.btn),
+.decide :global(.btn) {
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  font-size: 1.05rem;
+}
+
+.note {
+  margin-top: 0.6rem;
+  color: var(--ink-2);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 480px) {
+  .caption {
+    font-size: 1.0625rem;
+  }
+}

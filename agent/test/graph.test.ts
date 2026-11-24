@@ -60,6 +60,53 @@ test("flujo feliz: propuesta, borrador versionado y publicación confirmada en b
   assert.match(ctx.last().text, /pasó la revisión/);
   assert.deepEqual(invalidTransitions(ctx.events), []);
   assert.equal(ctx.rows.get(ID)?.status, "published");
+  // El artículo debe aparecer en los archivos para modelos de cada idioma
+  assert.equal(done.checks.length, 2);
+  for (const c of done.checks) {
+    assert.deepEqual([c.checks["llms.txt"], c.checks["llms-full.txt"], c.checks["sitemap.xml"]], [true, true, true], c.url);
+    assert.equal(c.checks["imágenes con alt y título"], true, c.url);
+  }
+});
+
+test("si el artículo no entra al sitemap, la revisión posterior lo avisa", async () => {
+  const ctx = setup();
+  const page = ctx.deps.fetchPage;
+  ctx.deps.fetchPage = async (url) => (/\/sitemap\.xml$/.test(url) ? { status: 200, html: "<urlset></urlset>" } : page(url));
+  await start(ctx);
+  await resume(ctx, { action: "accept", instructions: "" });
+  const s = await state(ctx);
+  await resume(ctx, { action: "approve", channels: ["blog"], hash: s.contentHash });
+  const text = ctx.messages.map((m) => m.text).join("\n");
+  assert.match(text, /falta sitemap\.xml/);
+  assert.doesNotMatch(text, /pasó la revisión/);
+});
+
+test("una imagen sin alt o sin título en la página publicada se avisa", async () => {
+  const ctx = setup();
+  const page = ctx.deps.fetchPage;
+  ctx.deps.fetchPage = async (url) => {
+    const r = await page(url);
+    return /\/blog\//.test(url) ? { ...r, html: `${r.html}<img src="/x.png" alt="Only alt"/>` } : r;
+  };
+  await start(ctx);
+  await resume(ctx, { action: "accept", instructions: "" });
+  const s = await state(ctx);
+  await resume(ctx, { action: "approve", channels: ["blog"], hash: s.contentHash });
+  assert.match(ctx.messages.map((m) => m.text).join("\n"), /falta imágenes con alt y título/);
+});
+
+test("si el artículo no aparece en llms.txt ni llms-full.txt, la revisión posterior lo avisa", async () => {
+  const ctx = setup();
+  const page = ctx.deps.fetchPage;
+  ctx.deps.fetchPage = async (url) => (/\/llms(-full)?\.txt$/.test(url) ? { status: 200, html: "# Miguel Bonilla" } : page(url));
+  await start(ctx);
+  await resume(ctx, { action: "accept", instructions: "" });
+  const s = await state(ctx);
+  await resume(ctx, { action: "approve", channels: ["blog"], hash: s.contentHash });
+  const text = ctx.messages.map((m) => m.text).join("\n");
+  assert.match(text, /falta llms\.txt/);
+  assert.match(text, /falta llms-full\.txt/);
+  assert.doesNotMatch(text, /pasó la revisión/);
 });
 
 test("una aprobación de una versión anterior no publica la versión editada", async () => {
@@ -209,7 +256,8 @@ test("un flujo en el material genera un diagrama SVG que se publica con texto al
   const svg = ctx.files.get(`public/blog/${done.slug}/flujo.svg`);
   assert.ok(svg?.startsWith("<svg"));
   assert.match(svg!, /<desc id="v-flujo-d">Diagrama de flujo «Cómo decide el gateway»/);
-  assert.match(ctx.files.get(`content/blog/es/${done.slug}.mdx`)!, new RegExp(`!\\[Diagrama de flujo[^\\]]+\\]\\(/blog/${done.slug}/flujo\\.svg\\)`));
+  assert.match(ctx.files.get(`content/blog/es/${done.slug}.mdx`)!, new RegExp(`!\\[Diagrama de flujo[^\\]]+\\]\\(/blog/${done.slug}/flujo\\.svg "Diagrama de flujo[^"]+"\\)`), "alt y título siempre");
+  assert.match(ctx.files.get(`content/blog/en/${done.slug}.mdx`)!, new RegExp(`!\\[Flow diagram[^\\]]+\\]\\(/blog/${done.slug}/flujo\\.svg "Flow diagram[^"]+"\\)`), "también en inglés");
 });
 
 test("si el deploy no responde, queda en espera; al reintentar no se repite el commit", async () => {
@@ -275,6 +323,30 @@ test("formato carrusel genera láminas y adjunta el PDF en la vista previa", asy
   await resume(ctx, { action: "accept" });
   assert.equal((await state(ctx)).slides.length, 6);
   assert.ok(ctx.documents.some((d) => d.endsWith(".pdf")));
+});
+
+test("una idea con «Widget: id» deja el explicador en el artículo (es y en) y arma el carrusel con sus pasos", async () => {
+  const ctx = setup();
+  await start(ctx, { format: "carousel", note: `${NOTE}\n\nWidget: blast-radius.` });
+  await resume(ctx, { action: "accept" });
+  const s = await state(ctx);
+  for (const body of [s.blogEs!.body, s.blogEn!.body]) {
+    assert.equal(body.match(/```widget\nblast-radius\n```/g)?.length, 1);
+    assert.doesNotMatch(body, /Widget:/);
+  }
+  assert.equal(s.slides[0].title, "One break-in, how far?", "el carrusel sale de los pasos del explicador");
+  assert.ok(s.slides.length >= 6 && s.slides.length <= 10);
+  const body = s.blogEs!.body;
+  assert.ok(body.indexOf("```widget") < body.lastIndexOf("\n## "), "el bloque va antes del segundo encabezado");
+});
+
+test("un id de explicador desconocido se ignora: ni bloque en el artículo ni carrusel propio", async () => {
+  const ctx = setup();
+  await start(ctx, { format: "carousel", note: `${NOTE}\n\nWidget: constructor.` });
+  await resume(ctx, { action: "accept" });
+  const s = await state(ctx);
+  assert.doesNotMatch(s.blogEs!.body, /```widget/);
+  assert.equal(s.slides.length, 6, "el carrusel lo redacta el modelo como siempre");
 });
 
 // ── Funciones puras ──

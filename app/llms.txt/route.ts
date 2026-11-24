@@ -19,7 +19,7 @@ const STATUS: Record<Project["status"], string> = {
 export function GET() {
   const projects = getProjects("en");
   const experience = getExperience("en");
-  const posts = [...getPosts("en"), ...getPosts("es")].filter((p) => !p.draft).slice(0, 20);
+  const posts = [...getPosts("en"), ...getPosts("es")].filter((p) => !p.draft).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 40);
 
   const lines = [
     "# Miguel Bonilla",

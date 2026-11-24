@@ -27,6 +27,7 @@ export default async function AboutSection() {
               <Image
                 src="/avatar.png?v=20260315"
                 alt={t("portraitAlt")}
+                title={t("portraitAlt")}
                 width={379}
                 height={659}
                 sizes="(max-width: 900px) 70vw, 380px"

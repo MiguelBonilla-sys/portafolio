@@ -102,7 +102,7 @@ export default async function PrivacyPage({ params }: PageProps<"/[locale]/priva
   return (
     <article className={`shell ${styles.wrap}`}>
       <h1 className={styles.title}>{TEXT[locale].title}</h1>
-      <Prose source={TEXT[locale].body} />
+      <Prose source={TEXT[locale].body} locale={locale} />
     </article>
   );
 }

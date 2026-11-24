@@ -1,0 +1,50 @@
+.link {
+  stroke-width: 3;
+  fill: none;
+  transition: opacity 400ms var(--ease-out), stroke 300ms var(--ease-out);
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.rootLink {
+  stroke: var(--danger);
+  stroke-width: 5;
+}
+
+.limitedLink {
+  stroke: var(--accent);
+  stroke-dasharray: 3 9;
+}
+
+.server rect {
+  stroke-dasharray: 8 6;
+}
+
+.userChip rect {
+  fill: var(--accent);
+  stroke: var(--ink);
+}
+
+.userChip text {
+  fill: var(--ink-on-accent);
+}
+
+.rootChip rect {
+  fill: var(--danger);
+  stroke: var(--ink);
+}
+
+.rootChip text {
+  fill: var(--ground);
+}
+
+.limitedChip rect {
+  fill: var(--accent);
+  stroke: var(--ink);
+}
+
+.limitedChip text {
+  fill: var(--ink-on-accent);
+}

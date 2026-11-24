@@ -1,0 +1,35 @@
+.updating rect {
+  stroke: var(--accent);
+  stroke-dasharray: 8 6;
+  stroke-width: 3;
+}
+
+.chip rect {
+  fill: var(--accent);
+  stroke: var(--ink);
+}
+
+.chip text {
+  fill: var(--ink-on-accent);
+}
+
+.stream {
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-dasharray: 3 9;
+  transition: stroke 300ms var(--ease-out);
+}
+
+.streamBad {
+  stroke: var(--danger);
+  stroke-dasharray: none;
+  opacity: 0.4;
+}
+
+.downtime rect {
+  fill: var(--danger);
+}
+
+.downtime text {
+  fill: var(--ground);
+}

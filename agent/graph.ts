@@ -7,6 +7,7 @@ import { extractSources, LIMITS, sourcesBlock, type SourceDoc } from "./inputs.t
 import { askJson, askText } from "./lib/json.ts";
 import { LinkedInAuthError } from "./lib/linkedin.ts";
 import { describeFindings, lintText, type LintReport } from "./lib/lint.ts";
+import { ensureImageTitles } from "./lib/images.ts";
 import { assetPath, blogPath, buildMdx, validateBlogMdx } from "./lib/mdx.ts";
 import { toPublicError, UserFacingError } from "./lib/redact.ts";
 import { callback, esc, type InlineButton } from "./lib/telegram.ts";
@@ -20,6 +21,7 @@ import {
   localizePrompt,
   researchPrompt,
 } from "./prompts.ts";
+import { ensureWidget, explainerSlides, widgetHint } from "../lib/explainers/index.ts";
 import { seoReport } from "./seo.ts";
 import { ContentState, type BlogDraft, type Claim, type PublishCheck, type RawClaim, type Review, type State, type Update } from "./state.ts";
 import { altText, VisualFitError, type VisualSpec } from "./visuals/scene.ts";
@@ -185,6 +187,12 @@ export function editTarget(instructions: string): "blog" | "linkedin" | "both" {
   return li && !blog ? "linkedin" : blog && !li ? "blog" : "both";
 }
 
+/** Imagen con alt y título (el título repite el alt): nunca una imagen sin uno de los dos */
+/** Toda <img> de la página lleva alt y title no vacíos */
+export const imgTagsOk = (html: string) => [...html.matchAll(/<img\b[^>]*>/gi)].every((m) => /\salt="[^"]+"/i.test(m[0]) && /\stitle="[^"]+"/i.test(m[0]));
+
+export const figureMarkdown = (alt: string, path: string) => `![${alt}](${path} "${alt.replace(/"/g, "”")}")`;
+
 /** Inserta un diagrama al final de la primera sección del artículo */
 export function insertFigure(body: string, markdown: string): string {
   const h2 = [...body.matchAll(/^##\s.+$/gm)];
@@ -192,6 +200,9 @@ export function insertFigure(body: string, markdown: string): string {
   const at = h2[1].index ?? body.length;
   return `${body.slice(0, at).trimEnd()}\n\n${markdown}\n\n${body.slice(at)}`;
 }
+
+/** Explicador interactivo que pide el material ("Widget: id"); null si no pide ninguno o el id no está en la lista */
+export const widgetOf = (s: Pick<State, "sources">) => widgetHint(s.sources.map((x) => x.text).join("\n"));
 
 export function buildGraph(deps: AgentDeps) {
   // ── Utilidades de estado ──
@@ -445,10 +456,18 @@ export function buildGraph(deps: AgentDeps) {
       const e = editPrompt("en", blogEn.body, factsFor(s), describeFindings(lint));
       blogEn = { ...blogEn, body: await askText(deps.llm, e.system, e.user) };
     }
+    // El explicador interactivo lo inserta el sitio, no el modelo: un bloque ```widget con un id de la lista cerrada
+    const widget = widgetOf(s);
+    if (widget) {
+      return { blogEs: { ...s.blogEs, body: ensureWidget(s.blogEs.body, widget) }, blogEn: { ...blogEn, body: ensureWidget(blogEn.body, widget) } };
+    }
     return { blogEn };
   }
 
   async function draftCarousel(s: State): Promise<Update> {
+    // Con explicador, las láminas salen de los mismos pasos que anima el sitio (sin pedirle láminas al modelo)
+    const widget = widgetOf(s);
+    if (widget) return { slides: explainerSlides(widget, s.linkedinLang) };
     const p = carouselPrompt(s.linkedinLang, factsFor(s), s.blogEs?.title ?? s.research?.topic ?? "");
     const r = await askJson(deps.llm, p.system, p.user, slidesSchema);
     return { slides: r.slides };
@@ -513,12 +532,16 @@ export function buildGraph(deps: AgentDeps) {
   }
 
   async function validate(s: State): Promise<Update> {
-    const seo = s.blogEs ? seoReport(s.blogEs, "es") : null;
+    // Título de imagen siempre: se completa con el alt; un alt que falta bloquea en el informe SEO
+    const titled = (d: BlogDraft | null): BlogDraft | null => (d ? { ...d, body: ensureImageTitles(d.body) } : d);
+    const blogEs = titled(s.blogEs);
+    const blogEn = titled(s.blogEn);
+    const seo = blogEs ? seoReport(blogEs, "es") : null;
     const version = s.version + 1;
-    const hash = contentHash({ es: s.blogEs, en: s.blogEn, li: s.linkedin, slides: s.slides, visuals: s.visuals });
+    const hash = contentHash({ es: blogEs, en: blogEn, li: s.linkedin, slides: s.slides, visuals: s.visuals });
     await deps.store.upsert(s.contentId, { version, content_hash: hash });
     const pr = await progress(s, s.version === 0 ? "Borrador disponible. Validación completada." : `Versión ${version} lista. Validación completada.`);
-    return { ...pr, seo, version, contentHash: hash, relatedProjects: seo?.relatedProjects ?? [] };
+    return { ...pr, blogEs, blogEn, seo, version, contentHash: hash, relatedProjects: seo?.relatedProjects ?? [] };
   }
 
   async function evaluate(s: State): Promise<Update> {
@@ -732,8 +755,8 @@ export function buildGraph(deps: AgentDeps) {
       const { repoPath, publicPath } = assetPath(slug, v.name);
       assetFiles.push({ path: repoPath, content: renderSvg(v, "es"), name: v.name });
       assets.push(publicPath);
-      if (blogEs) blogEs = { ...blogEs, body: insertFigure(blogEs.body, `![${altText(v, "es")}](${publicPath})`) };
-      if (blogEn) blogEn = { ...blogEn, body: insertFigure(blogEn.body, `![${altText(v, "en")}](${publicPath})`) };
+      if (blogEs) blogEs = { ...blogEs, body: insertFigure(blogEs.body, figureMarkdown(altText(v, "es"), publicPath)) };
+      if (blogEn) blogEn = { ...blogEn, body: insertFigure(blogEn.body, figureMarkdown(altText(v, "en"), publicPath)) };
     }
     const mdxFiles: { path: string; content: string; locale: "es" | "en" }[] = [];
     for (const [locale, draft] of [["es", blogEs], ["en", blogEn]] as const) {
@@ -784,9 +807,16 @@ export function buildGraph(deps: AgentDeps) {
   async function validatePublished(s: State): Promise<Update> {
     if (!s.approvedChannels.includes("blog") || s.steps.validated) return {};
     const checks: PublishCheck[] = [];
-    for (const locale of ["es", "en"] as const) {
-      const url = postUrl(s.slug, locale);
-      const page = await deps.fetchPage(url).catch(() => ({ status: 0, html: "" }));
+    const pages = await Promise.all(
+      (["es", "en"] as const).map(async (locale) => {
+        const url = postUrl(s.slug, locale);
+        return { url, page: await deps.fetchPage(url).catch(() => ({ status: 0, html: "" })) };
+      })
+    );
+    // Los archivos para modelos se arman en el build: si el artículo no aparece, los agentes no lo encuentran
+    const llmsFile = async (name: string) => (await deps.fetchPage(`${deps.siteUrl}/${name}`).catch(() => ({ status: 0, html: "" }))).html;
+    const [llms, llmsFull, sitemap] = await Promise.all([llmsFile("llms.txt"), llmsFile("llms-full.txt"), llmsFile("sitemap.xml")]);
+    for (const { url, page } of pages) {
       const h = page.html;
       checks.push({
         url,
@@ -797,6 +827,10 @@ export function buildGraph(deps: AgentDeps) {
           hreflang: /hrefLang="(es|en)"|hreflang="(es|en)"/.test(h),
           "JSON-LD BlogPosting": h.includes('"@type":"BlogPosting"'),
           indexable: !/<meta name="robots" content="[^"]*noindex/i.test(h),
+          "sitemap.xml": sitemap.includes(`<loc>${url}</loc>`),
+          "llms.txt": llms.includes(url),
+          "llms-full.txt": llmsFull.includes(url),
+          "imágenes con alt y título": imgTagsOk(h),
         },
       });
     }

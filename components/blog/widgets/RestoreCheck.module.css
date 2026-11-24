@@ -1,0 +1,67 @@
+.card rect {
+  fill: var(--ground);
+  stroke: var(--ink);
+  stroke-width: 2;
+  transition: stroke 300ms var(--ease-out), fill 300ms var(--ease-out);
+}
+
+.mark {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke: var(--accent);
+}
+
+.silent rect {
+  stroke: var(--danger);
+  stroke-dasharray: 6 6;
+}
+
+.failed rect {
+  stroke: var(--danger);
+  fill: color-mix(in srgb, var(--danger) 14%, var(--ground));
+}
+
+.failed .mark,
+.flagged .mark {
+  stroke: var(--danger);
+}
+
+.flagged rect {
+  stroke: var(--danger);
+}
+
+.tested rect {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.tag {
+  fill: var(--accent);
+}
+
+.arrow {
+  transition: transform 650ms var(--ease-out);
+}
+
+.arrow path {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 6;
+  stroke-linecap: square;
+}
+
+.arrow text {
+  fill: var(--blue);
+}
+
+.lost path {
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 4;
+}
+
+.lost text {
+  fill: var(--danger);
+}

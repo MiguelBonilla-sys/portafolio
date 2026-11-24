@@ -1,0 +1,30 @@
+.hot rect:first-child {
+  stroke: var(--accent);
+}
+.tokenChip rect {
+  fill: var(--accent);
+  stroke: var(--ink);
+}
+.tokenChip text {
+  fill: var(--ink-on-accent);
+  font-size: 15px;
+}
+.gateOff rect {
+  stroke-dasharray: 5 6;
+  stroke: var(--ink-2);
+}
+.gateOff text {
+  fill: var(--ink-2);
+}
+.gateOn rect {
+  stroke: var(--accent);
+  stroke-width: 4;
+}
+.packet {
+  transition: transform 650ms var(--ease-out), opacity 250ms var(--ease-out);
+}
+.packet circle {
+  fill: var(--blue);
+  stroke: var(--ink);
+  stroke-width: 2;
+}

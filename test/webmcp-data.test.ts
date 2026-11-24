@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  getArticleDetails,
   getProjectDetails,
   navigateToSection,
   searchBlogArticles,
@@ -51,4 +52,31 @@ test("navigation uses localized same-origin routes and rejects unknown sections"
   assert.equal(navigateToSection("project:unknown", "en", ["thesis"]).ok, false);
   assert.equal(navigateToSection("toString", "en", ["thesis"]).ok, false);
   assert.equal(navigateToSection("__proto__", "en", ["thesis"]).ok, false);
+});
+
+test("article details return only the published article, with FAQ, sources and canonical URLs", () => {
+  const post = {
+    slug: "backup-restore-test", title: "Backup restore test", summary: "Restore it to know.", tags: ["backups"], category: "backend", draft: false,
+    date: "2026-12-04", updated: "2026-12-05", readingMinutes: 3, faq: [{ q: "How often?", a: "Monthly." }],
+    sources: [{ title: "Report", url: "https://example.com/report" }], projects: ["quadship"], hasTranslation: true,
+  };
+  const found = getArticleDetails([post], "backup-restore-test", "en", "https://mangel14.dev");
+  assert.equal(found.ok, true);
+  if (found.ok) {
+    assert.equal(found.data.canonicalUrl, "https://mangel14.dev/en/blog/backup-restore-test");
+    assert.equal(found.data.translationUrl, "https://mangel14.dev/es/blog/backup-restore-test");
+    assert.deepEqual(found.data.faq, post.faq);
+    assert.deepEqual(found.data.projects, ["quadship"]);
+  }
+  const noTranslation = getArticleDetails([{ ...post, hasTranslation: false }], "backup-restore-test", "es", "https://mangel14.dev");
+  assert.equal(noTranslation.ok && noTranslation.data.translationUrl, null);
+});
+
+test("article details reject bad slugs, unknown articles and drafts", () => {
+  const draft = { slug: "wip", title: "WIP", summary: "x", tags: [], category: "backend", draft: true };
+  assert.equal(getArticleDetails([draft], "wip", "en", "https://mangel14.dev").ok, false);
+  assert.deepEqual(getArticleDetails([], "missing", "en", "https://mangel14.dev"), { ok: false, error: { code: "not_found", message: "Article not found" } });
+  for (const bad of ["../etc", "UPPER", "a b", 42, undefined, "x".repeat(121)]) {
+    assert.equal(getArticleDetails([draft], bad, "en", "https://mangel14.dev").ok, false);
+  }
 });

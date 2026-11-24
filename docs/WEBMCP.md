@@ -11,9 +11,10 @@
 | Home ES/EN | `search_portfolio_projects`, `get_professional_profile`, `navigate_to_portfolio_section`, `prepare_contact_message` | Proyectos visibles, perfil público y formulario visible |
 | Caso de estudio ES/EN | `get_project_details` | Solo el caso abierto |
 | Índice de blog ES/EN | `search_blog_articles` | Solo artículos con `draft: false` |
+| Artículo ES/EN | `get_blog_article` | Solo el artículo abierto: resumen, FAQ, fuentes, proyectos relacionados y URLs canónicas. Todo artículo publicado la registra solo, sin tocar código |
 | CV y demás rutas | Ninguna | No se anuncian capacidades sin contexto |
 
-Las seis herramientas tienen `inputSchema` y salida `{ok, data}` o `{ok: false, error}`. Las consultas de datos llevan `readOnlyHint`; navegación y preparación de formulario no. `prepare_contact_message` valida y rellena campos, pero **nunca envía**: la persona debe pulsar el botón de envío. No se incluyen credenciales, rutas administrativas ni contenido oculto. Los IDs de proyecto se validan contra la lista pública; la navegación utiliza rutas locales cerradas y nunca acepta una URL arbitraria. El texto de proyectos y artículos se devuelve como dato no privilegiado, no como instrucciones para el agente.
+Las siete herramientas tienen `inputSchema` y salida `{ok, data}` o `{ok: false, error}`. Las consultas de datos llevan `readOnlyHint`; navegación y preparación de formulario no. `prepare_contact_message` valida y rellena campos, pero **nunca envía**: la persona debe pulsar el botón de envío. No se incluyen credenciales, rutas administrativas ni contenido oculto. Los IDs de proyecto se validan contra la lista pública; la navegación utiliza rutas locales cerradas y nunca acepta una URL arbitraria. El texto de proyectos y artículos se devuelve como dato no privilegiado, no como instrucciones para el agente.
 
 ## Compatibilidad y prueba
 
@@ -28,7 +29,7 @@ pnpm start
 WEBMCP_CHROME_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' pnpm test:e2e
 ```
 
-`e2e/webmcp.test.mjs` arranca Chrome con `--enable-features=WebMCP --enable-webmcp-testing`, consulta `document.modelContext.getTools()` e invoca `executeTool()` de verdad. Comprueba seis nombres y rutas, búsqueda, perfil, caso de estudio, blog vacío, validación del contacto, ausencia de envío y limpieza al navegar. También abre el sitio en Chrome sin la bandera y comprueba que no hay errores de página. En un entorno sin `WEBMCP_CHROME_PATH`, la prueba nativa se omite explícitamente; las pruebas unitarias puras siguen corriendo con `pnpm test`.
+`e2e/webmcp.test.mjs` arranca Chrome con `--enable-features=WebMCP --enable-webmcp-testing`, consulta `document.modelContext.getTools()` e invoca `executeTool()` de verdad. Comprueba los nombres y rutas, búsqueda, perfil, caso de estudio, blog vacío, validación del contacto, ausencia de envío y limpieza al navegar. También abre el sitio en Chrome sin la bandera y comprueba que no hay errores de página. En un entorno sin `WEBMCP_CHROME_PATH`, la prueba nativa se omite explícitamente; las pruebas unitarias puras siguen corriendo con `pnpm test`.
 
 Ejemplo para DevTools en una página de inicio compatible:
 
