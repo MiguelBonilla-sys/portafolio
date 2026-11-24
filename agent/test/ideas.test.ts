@@ -77,6 +77,26 @@ test("an idea that asks for an explainer from the closed list gets a carousel; a
   assert.equal((await c.state(other.content_id)).values.linkedinMedia, "none", "the other options stay locked");
 });
 
+test("if the draft fails to start, the idea goes back to pending with its buttons and can be tried again", async () => {
+  const b = bot();
+  const real = b.graph.invoke;
+  let broken = true;
+  b.graph.invoke = ((...args: Parameters<typeof real>) => (broken ? Promise.reject(new Error("403 subscription required")) : real.apply(b.graph, args))) as typeof real;
+  const id = await b.idea();
+  await b.press(`id:${id}`);
+
+  assert.equal(b.ideas.get(id)!.status, "pending", "the idea is not lost");
+  const [row] = [...b.rows.values()];
+  assert.equal(row.status, "failed");
+  assert.ok(b.messages.some((m) => /No pude terminar el borrador/.test(m.text)));
+  assert.ok(b.messages.some((m) => /sigue pendiente: el borrador falló al empezar/.test(m.text)));
+
+  broken = false;
+  await b.press(`id:${id}`);
+  assert.equal(b.ideas.get(id)!.status, "developing", "the second try works once the cause is fixed");
+  assert.equal([...b.rows.values()].filter((r) => r.status === "awaiting_input").length, 1);
+});
+
 test("Desarrollar with an active draft does not overwrite it: the idea stays pending and the owner is told", async () => {
   const b = bot();
   await b.say(NOTE);

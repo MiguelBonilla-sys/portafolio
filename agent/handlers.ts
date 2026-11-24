@@ -333,6 +333,12 @@ export function createHandlers(rt: Runtime) {
         throw e;
       });
       if (!started) return void (await rt.store.moveIdea(id, "developing", "pending"));
+      // run() atrapa los errores del modelo y deja la pieza en "failed": la idea no se pierde, vuelve a quedar
+      // pendiente con sus botones para reintentar cuando el problema se resuelva.
+      if ((await rt.store.get(started))?.status === "failed") {
+        await rt.store.moveIdea(id, "developing", "pending");
+        return void (await tg.sendMessage(`La idea «${escClip(idea.title, 1000)}» sigue pendiente: el borrador falló al empezar. Cuando se resuelva, toca Desarrollar otra vez.`));
+      }
       await clear();
     } finally {
       await rt.store.kvDelete(IDEA_LOCK);

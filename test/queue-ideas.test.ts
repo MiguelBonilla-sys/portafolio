@@ -41,3 +41,19 @@ test("queueIdeas envía el token por cabecera, no lo imprime y se detiene ante 4
   const dry = await queueIdeas({ ideas, baseUrl: "https://site.test", token: undefined, dryRun: true, fetchImpl: () => assert.fail("no debe enviar"), log: () => {} });
   assert.ok(dry.every((x: { ok: boolean }) => x.ok));
 });
+
+test("--only sends the chosen ideas and --fresh makes a stuck idea count as a new one", async () => {
+  const bodies: { source_url: string; title: string }[] = [];
+  const ok = async (_url: string | URL | Request, init?: RequestInit) => {
+    bodies.push(JSON.parse(String(init?.body)));
+    return new Response(JSON.stringify({ id: `id-${bodies.length}` }), { status: 202 });
+  };
+  const r = await queueIdeas({ ideas, baseUrl: "https://site.test", token: "x".repeat(20), fetchImpl: ok, only: [1], fresh: true, log: () => {} });
+  assert.equal(r.length, 1);
+  assert.equal(bodies.length, 1);
+  assert.match(bodies[0].source_url, new RegExp(`^${ideas[0].source_url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}#r[a-z0-9]+$`));
+  assert.equal(bodies[0].title, ideas[0].title);
+  const plain = await queueIdeas({ ideas, baseUrl: "https://site.test", token: "x".repeat(20), fetchImpl: ok, only: [2, 3], log: () => {} });
+  assert.equal(plain.length, 2);
+  assert.equal(bodies.at(-1)!.source_url, ideas[2].source_url, "without --fresh the source stays as it is");
+});

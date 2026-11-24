@@ -1,6 +1,8 @@
 // Sube ideas a la bandeja del agente (POST /api/agent/inbox) desde un archivo JSON.
 // Uso:  AGENT_INBOX_TOKEN=... node scripts/queue-ideas.mjs docs/content/quadship-ideas.json [--dry-run]
 // El token se lee del entorno y nunca se imprime. Cada idea llega a Telegram como pendiente; no se publica nada.
+// --only=1,3 sube solo esas ideas (por número). --fresh agrega #r<código> a la fuente para que cuente como idea nueva
+// (úsalo si una idea quedó atascada en «desarrollándose» con una versión anterior del agente).
 // BASE_URL cambia el sitio (por defecto https://mangel14.dev). Repetir una source_url no duplica la idea.
 import { readFileSync } from "node:fs";
 
@@ -20,9 +22,12 @@ export function problems(idea) {
   return out;
 }
 
-export async function queueIdeas({ ideas, baseUrl, token, fetchImpl = fetch, dryRun = false, log = console.log }) {
+/** @param {{ ideas: any[], baseUrl: string, token?: string, fetchImpl?: typeof fetch, dryRun?: boolean, only?: number[], fresh?: boolean, log?: (message: string) => void }} opts */
+export async function queueIdeas({ ideas, baseUrl, token, fetchImpl = fetch, dryRun = false, only = undefined, fresh = false, log = console.log }) {
   const results = [];
-  for (const [i, idea] of ideas.entries()) {
+  for (const [i, original] of ideas.entries()) {
+    if (only && !only.includes(i + 1)) continue;
+    const idea = fresh && typeof original.source_url === "string" ? { ...original, source_url: `${original.source_url.split("#")[0]}#r${Date.now().toString(36)}` } : original;
     const label = `${i + 1}/${ideas.length} ${idea.title?.slice(0, 50) ?? ""}`;
     const bad = problems(idea);
     if (bad.length) {
@@ -56,6 +61,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith("--"));
   const dryRun = args.includes("--dry-run");
+  const fresh = args.includes("--fresh");
+  const onlyArg = args.find((a) => a.startsWith("--only="));
+  const only = onlyArg ? onlyArg.slice(7).split(",").map(Number).filter(Boolean) : undefined;
   const token = process.env.AGENT_INBOX_TOKEN;
   if (!file) {
     console.error("Uso: AGENT_INBOX_TOKEN=... node scripts/queue-ideas.mjs <archivo.json> [--dry-run]");
@@ -66,6 +74,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(2);
   }
   const ideas = JSON.parse(readFileSync(file, "utf8"));
-  const results = await queueIdeas({ ideas, baseUrl: (process.env.BASE_URL ?? "https://mangel14.dev").replace(/\/$/, ""), token, dryRun });
+  const results = await queueIdeas({ ideas, baseUrl: (process.env.BASE_URL ?? "https://mangel14.dev").replace(/\/$/, ""), token, dryRun, only, fresh });
   process.exit(results.every((r) => r.ok) ? 0 : 1);
 }
