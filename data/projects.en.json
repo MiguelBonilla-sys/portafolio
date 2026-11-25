@@ -55,7 +55,10 @@
         "The code is in a private repository; the public page is quadship.app."
       ],
       "role": "Personal project: I lead it end to end, from architecture and backend to the interface and the deployment experience."
-    }
+    },
+    "cv": [
+      "Rust PaaS with a REST API, a Vue 3 interface and a blue/green deployment MVP with a health probe (Podman, Caddy), tested with unit tests and a disposable PostgreSQL."
+    ]
   },
   {
     "id": "bikans",
@@ -140,7 +143,7 @@
     ],
     "links": {
       "repo": "https://github.com/MiguelBonilla-sys/backendTesis",
-      "demo": null
+      "demo": "https://dashdect.mangel.dpdns.org/extension.html"
     },
     "featured": true,
     "caseStudy": {
@@ -185,14 +188,18 @@
         "Without API keys, the threat intelligence signals default to zero."
       ],
       "role": "Thesis built by Juan Sebastián Fandiño Novoa and me. Together we built the backend described on this page, the browser extension with the Outlook add-in, the admin dashboard, and the local and lab infrastructure with Docker Compose and Kubernetes."
-    }
+    },
+    "cv": [
+      "Co-authored: multi-agent FastAPI service with RAG (ChromaDB) and an LLM that analyzes URLs and emails and returns a verdict, a risk score and the reasons.",
+      "972 passing tests with 92.6% coverage (September 2026), including an adversarial suite covering OWASP Top 10 for LLM categories."
+    ]
   },
   {
     "id": "portafolio-content-engine",
     "title": "mangel14.dev & Content Engine",
     "language": "TypeScript",
     "status": "deployed",
-    "context": "This site · mangel14.dev",
+    "context": "mangel14.dev",
     "description": "Publishing steadily about what I build without a model making up facts in my name, on a portfolio that search engines and AI assistants can read and cite.",
     "solves": "Turns the notes, documents and links I send it on Telegram into blog posts and LinkedIn posts. No number goes out without its source, and nothing is published without my confirmation.",
     "longDescription": "The site you're reading: Next.js 16 with static generation, in Spanish and English, with structured data, `llms.txt` and a sitemap with per-language alternates.\n\nThe Content Engine, a LangGraph.js graph, runs in the same Vercel deployment. It takes what I send on Telegram, proposes an angle, drafts the post and the LinkedIn version, checks them against a style linter and waits for my approval of an exact version before publishing.",
@@ -244,7 +251,10 @@
         "LinkedIn publishing is implemented with the Posts API but hasn't been tested against the real account; LinkedIn has no idempotency key, so an attempt cut off midway asks for confirmation before repeating."
       ],
       "role": "Personal project: design, code, content and deployment."
-    }
+    },
+    "cv": [
+      "LangGraph.js and Next.js agent that drafts in two languages and publishes only the version a person approved; it treats external content as data, never as instructions."
+    ]
   },
   {
     "id": "api-auth-hackaton",

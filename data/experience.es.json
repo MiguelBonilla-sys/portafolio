@@ -15,7 +15,10 @@
       "Traefik",
       "Linux"
     ],
-    "type": "work"
+    "type": "work",
+    "cv": [
+      "Liderazgo técnico y entrega de plataformas web, productos digitales y automatizaciones."
+    ]
   },
   {
     "id": "full-stack-developer",
@@ -39,7 +42,14 @@
       "Traefik",
       "Linux"
     ],
-    "type": "work"
+    "type": "work",
+    "cv": [
+      "Construí de punta a punta Bikans, SaaS de nómina y retención en la fuente en producción (Django, React, PostgreSQL), con 2FA TOTP y 105 pruebas automatizadas en el backend.",
+      "Unifiqué en un solo registro los datos de empleados que antes se digitaban dos veces en dos herramientas.",
+      "Implementé la distribución de contenido de 6 proyectos inmobiliarios en un solo sistema reutilizable que personaliza los datos para cada contacto.",
+      "Desarrollé plugins e integraciones de APIs para clientes de EE. UU. en 3 industrias.",
+      "Despliego y mantengo los proyectos en un servidor Linux con Docker, Coolify y Traefik: HTTPS automático y bases de datos sin puertos expuestos."
+    ]
   },
   {
     "id": "sibartech",
@@ -77,7 +87,8 @@
       "Redis",
       "ChromaDB"
     ],
-    "type": "education"
+    "type": "education",
+    "cv": []
   },
   {
     "id": "ethical-hacking",

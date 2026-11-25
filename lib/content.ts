@@ -13,11 +13,11 @@ const experience: Record<Locale, ExperienceItem[]> = {
   en: experienceEn as ExperienceItem[],
 };
 
-export const PHONE = "+57 319 518 0894";
+export const PHONE = "+57 315 002 4744";
 export const GITHUB_URL = "https://github.com/MiguelBonilla-sys";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/miguel-bonilla-sys";
 export const X_URL = "https://x.com/_mangel14_";
-export const EMAIL = "miguelangelboto14@gmail.com";
+export const EMAIL = "miguelangelboto09@gmail.com";
 
 export function getProjects(locale: Locale): Project[] {
   return projects[locale].filter((p) => !p.hidden);

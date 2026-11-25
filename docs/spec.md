@@ -90,4 +90,4 @@ Miguel Bonilla, egresado de Ingeniería de Sistemas y Full Stack Developer en Co
 
 - [x] Dominio de producción: `mangel14.dev` (por defecto en el código). `www.`, `portafolio.` y el alias `.vercel.app` redirigen con 301 (`next.config.ts`).
 - [ ] Confirmar que los términos de OpenCode Go permiten este uso y elegir el proveedor de respaldo. Owner: Miguel. Antes de T21.
-- [x] Email de contacto: `miguelangelboto14@gmail.com` (confirmado por el CV).
+- [x] Email de contacto: `miguelangelboto09@gmail.com` (actualizado el 25 de noviembre de 2026).

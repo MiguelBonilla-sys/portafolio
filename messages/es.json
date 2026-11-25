@@ -172,15 +172,11 @@
     "skills": "Habilidades",
     "experience": "Experiencia",
     "projects": "Proyectos principales",
-    "education": "Formación",
-    "courses": "Cursos y certificados",
-    "strengths": "Fortalezas",
-    "strengthsList": "Responsabilidad técnica de punta a punta · Resolución de problemas con fecha límite · Comunicación asíncrona · Comunicación con clientes de distintas industrias · Aprendizaje autónomo · Autonomía en trabajo remoto",
-    "summaryText": "Full Stack Engineer con más de 2 años de experiencia profesional en desarrollo de software. Construyo y despliego productos SaaS, APIs REST y automatizaciones, e integro LLM, RAG y agentes en aplicaciones. Trabajo con Python, FastAPI, Django, React, TypeScript, PostgreSQL, Docker y Linux. Experiencia en autenticación, integraciones con APIs de terceros, resolución de problemas en producción y colaboración remota con clientes internacionales.",
+    "education": "Formación y cursos",
+    "summaryText": "Full Stack Engineer con más de 2 años de experiencia profesional en backends con Python (Django, FastAPI) y frontends en React sobre PostgreSQL. He puesto un SaaS en producción e integro LLM, RAG y agentes en aplicaciones.",
     "technologies": "Tecnologías",
     "otherLang": "Read in English",
-    "role": "Full Stack Engineer · Python, React y sistemas con IA",
-    "otherProjects": "Otros proyectos"
+    "role": "Full Stack Engineer · Python, React y sistemas con IA"
   },
   "card": {
     "title": "Tarjeta de contacto",

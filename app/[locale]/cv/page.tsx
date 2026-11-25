@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills, skillNames } from "@/lib/content";
+import { EMAIL, GITHUB_URL, LINKEDIN_URL, PHONE, getExperience, getProjects, getSkills } from "@/lib/content";
 import OrgText from "@/components/ui/OrgText";
 import { SITE_URL, alternatesFor, socialFor } from "@/lib/site";
 import styles from "./cv.module.css";
@@ -10,8 +10,10 @@ import styles from "./cv.module.css";
 // Proyectos y orden que lleva el CV (los demás quedan en el portafolio). Solo proyectos con código,
 // demo o documento verificable: taskflow, ledgercore y sentinel-rag salieron hasta tener repositorio
 // (ver docs/audit/CONTENT_VERIFICATION.md).
-// Los proyectos principales, con detalle. Los demás con código público van en una línea aparte
-const CV_PROJECTS = ["quadship", "bikans", "idn-phishing-detector", "portafolio-content-engine", "api-auth-hackaton"];
+// Una página: Bikans ya está en la experiencia, así que no se repite como proyecto
+const CV_PROJECTS = ["quadship", "idn-phishing-detector", "portafolio-content-engine"];
+// Secundarias que las vacantes piden por nombre; las principales van todas
+const CV_EXTRA_SKILLS = ["Java", "ChromaDB", "Docker Compose", "CI/CD", "AWS (EC2, S3, RDS)", "TOTP 2FA", "OWASP Top 10"];
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/cv">): Promise<Metadata> {
   const { locale } = (await params) as { locale: Locale };
@@ -37,8 +39,6 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
   const education = experience.filter((e) => e.type === "education");
   const courses = experience.filter((e) => e.type === "course");
   const projects = CV_PROJECTS.map((id) => getProjects(locale).find((p) => p.id === id)).filter((p) => p !== undefined);
-  // Sin los que no tienen código ni demo públicos: el CV solo lista lo que se puede revisar
-  const otherProjects = getProjects(locale).filter((p) => !CV_PROJECTS.includes(p.id) && p.status !== "unverified");
   const site = SITE_URL.replace(/^https?:\/\//, "");
 
   return (
@@ -75,7 +75,7 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
           <dl className={styles.skills}>
             {getSkills(locale).map((c) => (
               <div key={c.id}>
-                <dt>{c.label}:</dt> <dd>{skillNames(c).join(", ")}</dd>
+                <dt>{c.label}:</dt> <dd>{[...c.core, ...c.items.filter((i) => CV_EXTRA_SKILLS.includes(i))].join(", ")}</dd>
               </div>
             ))}
           </dl>
@@ -95,7 +95,7 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
                 {job.title} · {job.place.split(" · ").slice(1).join(" · ")}
               </p>
               <ul>
-                {(job.highlights ?? [job.description]).map((h) => (
+                {(job.cv ?? job.highlights ?? [job.description]).map((h) => (
                   <li key={h}>
                     <OrgText text={h} />
                   </li>
@@ -119,17 +119,20 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
               </div>
               <p className={styles.sub}>
                 {t("technologies")}: {p.tags.join(", ")}
+                {p.links.demo && !p.context?.includes(new URL(p.links.demo).host) && (
+                  <>
+                    {" · Demo: "}
+                    <a href={p.links.demo}>{p.links.demo.replace("https://", "")}</a>
+                  </>
+                )}
               </p>
               <ul>
-                <li>{p.description}</li>
+                {(p.cv ?? [p.description]).map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
               </ul>
             </div>
           ))}
-          {otherProjects.length > 0 && (
-            <p className={styles.sub}>
-              <strong>{t("otherProjects")}:</strong> {otherProjects.map((p) => p.title).join(" · ")}
-            </p>
-          )}
         </section>
 
         <section className={styles.block}>
@@ -144,30 +147,15 @@ export default async function CvPage({ params }: PageProps<"/[locale]/cv">) {
                 {e.title} · {e.place.split(" · ").slice(1).join(" · ")}
               </p>
               <ul>
-                <li>{e.description}</li>
-                {(e.highlights ?? []).map((h) => (
+                {(e.cv ?? e.highlights ?? [e.description]).map((h) => (
                   <li key={h}>{h}</li>
                 ))}
               </ul>
             </div>
           ))}
+          <p>{courses.map((c) => `${c.title} · ${c.place}, ${c.date}`).join(" | ")}</p>
         </section>
 
-        <section className={styles.block}>
-          <h2>{t("courses")}</h2>
-          <ul className={styles.plain}>
-            {courses.map((c) => (
-              <li key={c.id}>
-                {c.title} · {c.place}, {c.date}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className={styles.block}>
-          <h2>{t("strengths")}</h2>
-          <p>{t("strengthsList")}</p>
-        </section>
       </article>
     </div>
   );

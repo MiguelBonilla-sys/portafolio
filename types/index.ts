@@ -57,6 +57,8 @@ export interface Project {
   /** Fuera de todas las superficies públicas hasta que el autor confirme qué existe */
   hidden?: boolean;
   caseStudy?: CaseStudy;
+  /** Líneas para el CV (una página); si falta, se usa la descripción */
+  cv?: string[];
 }
 
 type Localized = { es: string; en: string };
@@ -77,6 +79,8 @@ export interface ExperienceItem {
   place: string;
   description: string;
   highlights?: string[];
+  /** Logros para el CV (una página); si falta, se usan highlights o la descripción. [] = sin viñetas */
+  cv?: string[];
   /** Tecnologías usadas en el cargo, tal como aparecen en los logros */
   stack?: string[];
   type: "work" | "education" | "course";

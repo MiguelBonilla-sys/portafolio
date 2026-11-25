@@ -15,7 +15,10 @@
       "Traefik",
       "Linux"
     ],
-    "type": "work"
+    "type": "work",
+    "cv": [
+      "Technical leadership and delivery of web platforms, digital products and automations."
+    ]
   },
   {
     "id": "full-stack-developer",
@@ -39,7 +42,14 @@
       "Traefik",
       "Linux"
     ],
-    "type": "work"
+    "type": "work",
+    "cv": [
+      "Built Bikans end to end, a payroll and withholding tax SaaS running in production (Django, React, PostgreSQL), with TOTP 2FA and 105 automated backend tests.",
+      "Merged into a single record the employee data that used to be typed twice into two tools.",
+      "Implemented content distribution for 6 real estate projects in one reusable system that personalizes the data for each contact.",
+      "Developed plugins and API integrations for US clients across 3 industries.",
+      "Deploy and maintain the projects on a Linux server with Docker, Coolify and Traefik: automatic HTTPS and databases with no exposed ports."
+    ]
   },
   {
     "id": "sibartech",
@@ -77,7 +87,8 @@
       "Redis",
       "ChromaDB"
     ],
-    "type": "education"
+    "type": "education",
+    "cv": []
   },
   {
     "id": "ethical-hacking",
